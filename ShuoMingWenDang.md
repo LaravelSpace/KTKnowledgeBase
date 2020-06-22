@@ -12,12 +12,14 @@
 
 #### 文件头部
 
+```json
 {
   "title": "标题a",
   "updated_at": "yyyy-mm-dd",
   "updated_by": "用户a",
   "tags": "标签1,标签2"
 }
+```
 
 #### 参考来源
 

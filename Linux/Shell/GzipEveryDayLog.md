@@ -17,6 +17,8 @@ dir_date=$(date -d yesterday +%Y-%m-%d)
 cd /tmp/logs/$dir_date/
 
 find ./ -name '*.log' | xargs -i gzip {}
+
+exit;
 ```
 
 这段脚本用于每天压缩前一天的日志文件。
