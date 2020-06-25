@@ -7,6 +7,8 @@
 }
 ```
 
+---
+
 ## 批量重启 Laravel 的 Job
 
 ```shell

@@ -7,6 +7,8 @@
 }
 ```
 
+---
+
 ## CGI,FastCHI,PHP-CGI,PHP-FPM 的关系
 
 #### 问题背景

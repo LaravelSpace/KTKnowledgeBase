@@ -7,6 +7,8 @@
 }
 ```
 
+---
+
 ## PHP 手册 —— [语言参考](https://www.php.net/manual/zh/langref.php) 01
 
 ### [类型](https://www.php.net/manual/zh/language.types.php)
