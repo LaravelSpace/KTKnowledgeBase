@@ -13,6 +13,10 @@
 
 ### [类型](https://www.php.net/manual/zh/language.types.php)
 
+#### [Float 浮点型](https://www.php.net/manual/zh/language.types.float.php)
+
+PHP 程序里对 float 类型尽量做二次处理（取整数、取 2 位小数等），防止出现 2.23 变成 2.229999999997 这样的情况。
+
 #### [String 字符串](https://www.php.net/manual/zh/language.types.string.php)
 
 一个字符串 string 就是由一系列的字符组成，其中每个字符等同于一个字节。这意味着 PHP 只能支持 256 的字符集，因此不支持 Unicode 。string 最大可以达到 2GB。
@@ -66,6 +70,25 @@ echo $a + ++$a;
 $i = 1;
 $array = [];
 $array[$i] = $i++;
+```
+
+#### [比较运算符](https://www.php.net/manual/zh/language.operators.comparison.php)
+
+由于浮点数 float 的内部表达方式，不应比较两个浮点数 float 是否相等。 
+
+三元运算符：“?:”。表达式 (expr1) ? (expr2) : (expr3) 在 expr1 求值为 TRUE 时的值为 expr2，在 expr1 求值为 FALSE 时的值为 expr3。自 PHP 5.3 起，可以省略三元运算符中间那部分。表达式 expr1 ?: expr3 在 expr1 求值为 TRUE 时返回 expr1，否则返回 expr3。 注意三元运算符是个语句，因此其求值不是变量，而是语句的结果。
+
+建议避免将三元运算符堆积在一起使用。当在一条语句中使用多个三元运算符时，将会按照从左往右计算的顺序。如果一定要堆积使用，建议将每一组三元运算符及其参数使用括号分组。
+
+PHP 7 开始存在 "??" （NULL 合并）运算符。当 expr1 为 NULL，表达式 (expr1) ?? (expr2) 等同于 expr2，否则为 expr1。尤其要注意，当不存在左侧的值时，此运算符也和 isset() 一样不会产生警告。 对于 array 键尤其有用。NULL 合并运算符是一个表达式，产生的也是表达式结果，而不是变量。
+
+值得注意的一点。?? 运算符是以判断 $a 变量是否存在于上下文环境中作为条件，而 ?: 不具备这种判断。所以 ?? 运算符可用于判断 $a 变量不存在的情况，而使用 ?: 判断一个未定义的变量，PHP 会抛出异常。所以下面的例子，用 ?: 和 ?? 分别判断一个赋值为 0 的变量的时候，结果是不一样的。
+
+```php
+$a = 0; $c = 1; $b = $a ?? $c;
+// a:0,b:0,c:1
+$a = 0; $c = 1; $b = $a ? $a : $c;
+// a:0,b:1,c:1
 ```
 
 ### [流程控制](https://www.php.net/manual/zh/language.control-structures.php)

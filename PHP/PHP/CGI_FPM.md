@@ -1,6 +1,6 @@
 ```json
 {
-  "title": "CGI,FastCHI,PHP-CGI,PHP-FPM 的关系",
+  "title": "CGI,FastCGI,PHP-CGI,PHP-FPM 的关系",
   "updated_at": "2020-06-20",
   "updated_by": "KelipuTe",
   "tags": "PHP"
@@ -9,15 +9,11 @@
 
 ---
 
-## CGI,FastCHI,PHP-CGI,PHP-FPM 的关系
+## CGI,FastCGI,PHP-CGI,PHP-FPM 的关系
 
 #### 问题背景
 
-想要了解 CGI,FastCHI,PHP-CGI,PHP-FPM 的关系，首先需要了解一些 Web 服务的基础知识。
-
-在 Web 服务中，Web Server 一般指 Apache、Nginx、Tomcat、IIS、Lighttpd 等服务器，Web Application 一般指 PHP、Java、.NET 等应用程序。
-
-在整个网站架构中，Web Server（Apache,Nginx）只是内容的分发者。
+想要了解 CGI,FastCGI,PHP-CGI,PHP-FPM 的关系，首先需要了解一些 Web 服务的基础知识。在 Web 服务中，Web Server 一般指 Apache、Nginx、Tomcat、IIS、Lighttpd 等服务器，Web Application 一般指 PHP、Java、.NET 等应用程序。在整个网站架构中，Web Server（Apache,Nginx）只是内容的分发者。
 
 举个例子，如果客户端请求的是 index.html，那么 Web Server 会去文件系统中找到这个文件，发送给浏览器，这里分发的是静态数据。
 
@@ -27,13 +23,9 @@
 
 ![CGI_FPM_02](./CGI_FPM_02.png)
 
-当 Web Server 收到 index.php 这个请求后，会启动对应的 CGI  程序，这里就是 PHP 的解析器。
+当 Web Server 收到 index.php 这个请求后，会启动对应的 CGI  程序，这里就是 PHP 的解析器。接下来 PHP 解析器会解析 php.ini 文件，初始化执行环境，然后处理请求，再以规定 CGI 规定的格式返回处理后的结果，退出进程，Web Server 再把结果返回给浏览器。这就是一个完整的动态 PHP Web 访问流程，接下来再引出这些概念，就好理解多了。
 
-接下来 PHP 解析器会解析 php.ini 文件，初始化执行环境，然后处理请求，再以规定 CGI 规定的格式返回处理后的结果，退出进程，Web Server 再把结果返回给浏览器。
-
-这就是一个完整的动态 PHP Web 访问流程，接下来再引出这些概念，就好理解多了。
-
-#### CGI,FastCHI,PHP-CGI,PHP-FPM
+#### CGI,FastCGI,PHP-CGI,PHP-FPM
 
 CGI：全称通用网关接口（Commom Gateway Interface）。是 Web Server 与 Web Application 之间数据交换的一种协议。
 
@@ -71,7 +63,7 @@ SAPI，即是 Server Application Programming Interface 的首字母缩写，意�
 
 下面详细描述 Apache、SAPI、PHP 的关系。
 
-![CGI_FPM_03](E:\Workspace\NotesManuscript\PHP\PHP\CGI_FPM_03.png)
+![CGI_FPM_03](./CGI_FPM_03.png)
 
 从上图中，可以看出 SAPI 处于中间位置，SAPI 提供了一个和外部通信的接口，使得 PHP 可以和其他应用（Apache，Nginx 等）进行数据交互。在 Apache 中调用 PHP 脚本执行的过程为：Apache => httpd => php7_module => SAPI => PHP。
 
@@ -99,7 +91,7 @@ FastCGI 进程管理器需要单独启动。启动 FastCGI 后，会生成一个
 
 #### FastCGI 的工作原理
 
-![CGI_FPM_04](E:\Workspace\NotesManuscript\PHP\PHP\CGI_FPM_04.png)
+![CGI_FPM_04](./CGI_FPM_04.png)
 
 1、Web Server 启动时载入 FastCGI 进程管理器（Apache Module 或 IIS ISAPI 等）。
 
@@ -111,17 +103,20 @@ FastCGI 进程管理器需要单独启动。启动 FastCGI 后，会生成一个
 
 #### PHP-FPM
 
-PHP-FPM：全称 PHP FastCGI 进程管理器（FastCGI Process Manager）
+PHP-FPM：全称 PHP FastCGI 进程管理器（FastCGI Process Manager）。
 
 PHP-FPM 就是 PHP 中的 FastCGI 进程管理器。PHP-FPM 的管理对象是 PHP-CGI。PHP-FPM 提供了更好的 PHP 进程管理方式，可以有效控制内存和进程、可以平滑重载 PHP 配置。
 
 
 ## 参考
 
-[CGI、FastCGI和PHP-FPM关系详解](https://www.cnblogs.com/zzx-hjl/p/10583849.html)
+[Go 和 PHP 在运行的时候有什么区别和优势](https://learnku.com/articles/44432)
 
 [PHP中的SAPI是什么？如何实现？（图文）](https://www.php.cn/php-weizijiaocheng-410435.html)
 
-[CGI、FastCGI和php-fpm概念和区别](https://blog.csdn.net/IT_10/article/details/92801153)
+[CGI、FastCGI和PHP-FPM关系详解](https://www.cnblogs.com/zzx-hjl/p/10583849.html)
 
 [简单了解下CGI、FastCGI和php-fpm的概念和区别和运行原理](https://www.cnblogs.com/wt645631686/p/8065103.html)
+
+[CGI、FastCGI和php-fpm概念和区别](https://blog.csdn.net/IT_10/article/details/92801153)
+
