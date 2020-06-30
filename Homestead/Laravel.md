@@ -7,9 +7,9 @@
 }
 ```
 
-## 使用 Homestead 搭建 Laravel 开发环境
-
 ---
+
+## 使用 Homestead 搭建 Laravel 开发环境
 
 #### 安装 VirtualBox 和 Vagrant
 
@@ -284,6 +284,8 @@ Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 如果出现启动虚拟机后访问不通 192.168.10.10 的问题，可以尝试使用 `$ vagrant provision && vagrant reload` 命令重新应用更改 vagrant 配置，并重启虚拟机。 
 
 如果修改了 Homestead 的配置，也需要使用上面的命令重新应用更改 vagrant 配置，并重启虚拟机。
+
+---
 
 ## 参考
 

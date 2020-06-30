@@ -1,3 +1,14 @@
+```json
+{
+  "title": "在 Windows 中安装 MySql",
+  "updated_at": "2020-06-29",
+  "updated_by": "KelipuTe",
+  "tags": "Windows,Mysql"
+}
+```
+
+---
+
 ﻿## 在 Windows 中安装 MySql
 
 #### 下载 MySql
@@ -10,9 +21,9 @@
 
 #### 添加系统环境变量
 
-**新建**变量：**MYSQL_HOME** ==> `C:\Learning\MySQL\mysql-5.7.18-winx64`（你的MySQL根目录）
+**新建**变量：**MYSQL_HOME** => C:\Learning\MySQL\mysql-5.7.18-winx64（你的MySQL根目录）
 
-**追加**变量：**PATH** ==> `%MYSQL_HOME%\bin`（你的MySQL根目录下bin文件夹）
+**追加**变量：**PATH** => `%MYSQL_HOME%\bin`（你的MySQL根目录下bin文件夹）
 
 #### 配置 **my.ini** 文件
 
@@ -88,7 +99,7 @@ navicat 连接 MySQL 报错 Authentication plugin 'caching_sha2_password' cannot
 适用场景
 
     第一次构建容器/安装
-
+    
     已安装完成后新增用户
 
 配置

@@ -1,3 +1,14 @@
+```json
+{
+  "title": "中间件（Middleware）",
+  "updated_at": "2020-06-29",
+  "updated_by": "KelipuTe",
+  "tags": "设计模式,中间件,Middleware"
+}
+```
+
+---
+
 ## 中间件（Middleware）
 
 这个设计模式由 PHP 编码实现。
@@ -93,11 +104,11 @@ call_user_func($callback);
 
 管道调用的方式，看起来比较复杂，而且可以注意到，数组的顺序是反的，这里做一个程序运行流程的解释。
 
-第一次执行 $stack=handle()，$pipe=CookieHandler。
+第一次执行 stack=handle()，pipe=CookieHandler。
 
 执行的结果返回了一个函数 CookieHandler::handle(handle())。
 
-第二次执行 $stack=CookieHandler::handle(handle())，$pipe=VerifyAuth。
+第二次执行 stack=CookieHandler::handle(handle())，pipe=VerifyAuth。
 
 执行的结果 VerifyAuth::handle(CookieHandler::handle(handle()))。
 
@@ -105,7 +116,9 @@ call_user_func($callback);
 
 这样就比较容易理解，为什么数组中的元素和中间件执行的顺序是反的了。
 
-最后 $callback 是一个回调函数，需要执行才会出结果。`$callback()` 这样也可以。
+最后 callback 是一个回调函数，需要执行才会出结果。`$callback()` 这样也可以。
+
+---
 
 ## 参考
 

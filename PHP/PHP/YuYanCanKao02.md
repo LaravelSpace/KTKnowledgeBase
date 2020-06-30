@@ -312,6 +312,8 @@ public static __callStatic ( string $name , array $arguments ) : mixed
 
 为了能够 unserialize() 一个对象，这个对象的类必须已经定义过。如果序列化类 A 的一个对象，将会返回一个跟类A相关，而且包含了对象所有变量值的字符串。如果要想在另外一个文件中解序列化一个对象，这个对象的类必须在解序列化之前定义，可以通过包含一个定义该类的文件或使用函数 spl_autoload_register() 来实现。
 
+---
+
 ## 参考
 
 [PHP 核心特性 - Trait](https://learnku.com/articles/35908)

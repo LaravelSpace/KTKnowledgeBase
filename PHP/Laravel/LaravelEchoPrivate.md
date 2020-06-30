@@ -1,4 +1,15 @@
-## 在 Laravel-echo-server 中使用私有频道
+```json
+{
+  "title": "在 Laravel Echo 中使用私有频道",
+  "updated_at": "2020-06-30",
+  "updated_by": "KelipuTe",
+  "tags": "PHP,Laravel,Laravel Echo"
+}
+```
+
+---
+
+## 在 Laravel Echo 中使用私有频道
 
 这里介绍使用中间件进行 Token 认证的方式，授权私有频道。
 
@@ -100,6 +111,8 @@ Broadcast::channel('broadcast-user.{id}', function ($user, $id) {
 ```
 
 这里文档里描述的是返回 true 或者 false 就可以表示授权成功或者失败。具体实现时，返回 true 是没问题的。但是返回 false 的时候，实际上是触发了一个 **AccessDeniedHttpException** 异常。
+
+---
 
 #### 参考
 

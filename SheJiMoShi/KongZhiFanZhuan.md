@@ -1,3 +1,14 @@
+```json
+{
+  "title": "控制反转（IOC）",
+  "updated_at": "2020-06-29",
+  "updated_by": "KelipuTe",
+  "tags": "设计模式,控制反转,IOC"
+}
+```
+
+---
+
 ## 控制反转（IOC）
 
 这个设计模式由 PHP 编码实现。
@@ -194,6 +205,8 @@ $ioc->bind('LogService','LogService');
 $logService = $ioc->make('LogService');
 $logService->saveLog();
 ```
+
+---
 
 ## 参考
 

@@ -1,4 +1,15 @@
-## 使用 Laravel-echo-server 构建实时应用
+```json
+{
+  "title": "使用 Laravel Echo 构建实时应用",
+  "updated_at": "2020-06-30",
+  "updated_by": "KelipuTe",
+  "tags": "PHP,Laravel,Laravel Echo"
+}
+```
+
+---
+
+## 使用 Laravel Echo 构建实时应用
 
 #### 安装 laravel-echo-server
 
@@ -221,6 +232,8 @@ window.Echo.channel('test-event')
 ```
 
 另外需要注意的是，如果 Laravel 项目里，事件不是在 **app/Events** 目录下的而是在其他地方，比如 `App\Events\Community\NotificationEvent` 这样的。那么前端监听事件时，也要相应地变成：`listen('Community\\NotificationEvent', (e) => {})`。
+
+---
 
 #### 参考
 

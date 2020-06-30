@@ -7,11 +7,11 @@
 }
 ```
 
-## 在 Homestead 里安装 swoole 扩展
-
 ---
 
-这里推荐使用 **pecl** 安装，执行 `$ pecl install swoole` 命令安装 swoole 扩展。这里有可能会出现下面两种问题。
+## 在 Homestead 里安装 swoole 扩展
+
+这里推荐使用 **pec**l 安装，执行 `$ pecl install swoole` 命令安装 swoole 扩展。这里有可能会出现下面两种问题。
 
 第一种问题：
 
@@ -71,7 +71,7 @@ configuration option "php_ini" is not set to php.ini location
 You should add "extension=swoole.so" to php.ini
 ```
 
-最后要在正在使用的 PHP 版本的 **php.ini** 中添加 swoole 扩展。
+最后要在**正在使用**的 PHP 版本的 php.ini 中添加 swoole 扩展。
 
 可以通过 `$ php -i | grep php.ini` 命令，查看 php.ini 文件的位置。
 
@@ -89,6 +89,8 @@ Loaded Configuration File => /etc/php/7.2/cli/php.ini
 vagrant@homestead:/etc/php/7.2/cli$ php -m | grep swoole
 swoole
 ```
+
+---
 
 ## 参考
 

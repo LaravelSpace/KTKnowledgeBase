@@ -1,4 +1,15 @@
-## 在 Windows 中使用 Redis
+```json
+{
+  "title": "在 Windows 中安装 Redis",
+  "updated_at": "2020-06-29",
+  "updated_by": "KelipuTe",
+  "tags": "Windows,Redis"
+}
+```
+
+---
+
+## 在 Windows 中安装 Redis
 
 #### 下载 Redis
 
@@ -34,7 +45,7 @@ $ redis-server --service-uninstall // 卸载 redis 服务
 
 这个用过 `Navicat` 的话应该会很熟悉。端口默认就是 6379。
 
-![p01](.\images\redis_windows\p01.png)
+![WindowsAnZhuangRedis_01](./WindowsAnZhuangRedis_01.png)
 
 #### 异常处理 1067 程序意外终止
 
@@ -52,11 +63,11 @@ $ redis-server --service-uninstall // 卸载 redis 服务
 
 3、 检查一下 Windows 服务，看一下这里是不是网络服务。
 
-![p02](.\images\redis_windows\p02.png)
+![WindowsAnZhuangRedis_02](./WindowsAnZhuangRedis_02.png)
 
 如果是网络服务，右击属性，改成本地服务。
 
-![p03](.\images\redis_windows\p03.png)
+![WindowsAnZhuangRedis_03](./WindowsAnZhuangRedis_03.png)
 
 ## 参考
 

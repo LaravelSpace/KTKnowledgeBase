@@ -7,9 +7,9 @@
 }
 ```
 
-## Apache 服务配置多个版本 PHP
-
 ---
+
+## Apache 服务配置多个版本 PHP
 
 ### 在 Windows 10 中，配置两个版本的 PHP
 
@@ -69,6 +69,8 @@ $ httpd.exe -k install -n Apache2.4_php7.1 -D php7.1
 #### 卸载 Apache
 
 首先关闭 Apache 服务（方式很多）。然后在命令行中运行命令：`$ sc delete Apache2.4_php5.6`
+
+---
 
 ## 参考
 

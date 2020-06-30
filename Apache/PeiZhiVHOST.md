@@ -7,9 +7,11 @@
 }
 ```
 
+---
+
 ## 配置 Apache vhost
 
-####  Laravel 配置 Apache vhost
+###  Laravel 配置 Apache vhost
 
 首先文档内容提示：
 
@@ -74,6 +76,8 @@ A3.1的apache是2.4的，规则里不支持Options -MultiViews中的 - 号，这
 ```
 
 这么干确实有用，但是问什么有用，没有深究。
+
+---
 
 ## 参考
 

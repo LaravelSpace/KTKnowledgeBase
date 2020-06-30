@@ -1,18 +1,28 @@
-# 在 Laravel 中使用 PHPUnit
+```json
+{
+  "title": "在 Laravel 中使用 PHPUnit",
+  "updated_at": "2020-06-30",
+  "updated_by": "KelipuTe",
+  "tags": "PHP,Laravel,PHPUnit"
+}
+```
 
-### 简介
+---
+
+## 在 Laravel 中使用 PHPUnit
+
 
 PHPUnit 是一个面向 PHP 程序员的测试框架，这是一个 xUnit 的体系结构的单元测试框架。
 
 Laravel 框架默认就支持使用 PHPUnit 进行测试。
 
-### 使用
+#### 使用
 
 Laravel 的 PHPUnit 使用 Composer 安装 ，在项目根目录使用 `vendor\bin\phpunit` 命令来使用 PHPUnit。
 
 可以使用 `vendor\bin\phpunit --version` 命令来检查 PHPUnit 是否可用。
 
-### 编写 PHPUnit 测试
+#### 编写 PHPUnit 测试
 
 通常，使用 PHPUnit 框架编写测试脚本是需要继承 `PHPUnit\Framework\TestCase` 类，但是在 Laravel 框架中，框架提供了可供继承的类 `Tests\TestCase`。这个类在最底层依然继承了`PHPUnit\Framework\TestCase` 类，并提供了大量便利的方法以供使用。
 
@@ -97,7 +107,7 @@ Tests: 5, Assertions: 5, Failures: 2.
 
 包含失败的输出会在输出中展示具体某个测试的某些断言条件没有满足，同时也会标注断言所在的具体位置。
 
-### 输出日志
+#### 输出日志
 
 如果想要输出日志可以选择在命令行追加参数 `vendor\bin\phpunit --log-junit /temp/phpunit.xml`。
 

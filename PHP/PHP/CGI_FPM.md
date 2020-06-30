@@ -107,6 +107,8 @@ PHP-FPM：全称 PHP FastCGI 进程管理器（FastCGI Process Manager）。
 
 PHP-FPM 就是 PHP 中的 FastCGI 进程管理器。PHP-FPM 的管理对象是 PHP-CGI。PHP-FPM 提供了更好的 PHP 进程管理方式，可以有效控制内存和进程、可以平滑重载 PHP 配置。
 
+---
+
 
 ## 参考
 

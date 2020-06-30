@@ -1,3 +1,14 @@
+```json
+{
+  "title": "外观模式（Facade）",
+  "updated_at": "2020-06-29",
+  "updated_by": "KelipuTe",
+  "tags": "设计模式,外观模式,Facade"
+}
+```
+
+---
+
 ## 外观模式（Facade）
 
 这个设计模式由 PHP 编码实现。
@@ -28,7 +39,7 @@
 
 Laravel 中像 `LogServiceFacade::saveLog();` 这样使用的外观模式需要 IOC 容器提供支持。
 
-下面在**KongZhiFanZhuan.md** 那篇的代码的基础上，给出日志服务外观模式的代码。
+下面在 **KongZhiFanZhuan.md** 那篇的代码的基础上，给出日志服务外观模式的代码。
 
 ```php
 class LogServiceFacade
@@ -75,6 +86,8 @@ Laravel Facade 的核心实现原理就是在 LogServiceFacade 中提前注入 I
 定义一个服务提供者的外观类，在该类定义一个类的变量，变量值和在 IOC 容器绑定抽象类时使用的 key 一样。这个操作是为了让注入外观类的 IOC 容器构造实例。
 
 使用静态方法的方式调用目标方法时，通过静态魔术方法 __callStatic() 在调用目标方法之前调用 IOC 容器的 make() 方法构造出实例，然后再调用实例的目标方法。
+
+---
 
 ## 参考
 

@@ -7,9 +7,9 @@
 }
 ```
 
-## 在 Homestead 中使用 Redis
-
 ---
+
+## 在 Homestead 中使用 Redis
 
 #### 修改 Redis 密码
 
@@ -22,6 +22,8 @@
 修改 Redis配置文件 `sudo vim /etc/redis/redis.conf`。找到  requirepass 参数，修改成 `requirepass password`，password 就是密码。如果需要外部访问还需要注释掉 `bind 127.0.0.1`。修改完成后保存。
 
 重启 Redis `sudo /etc/init.d/redis-server restart`。
+
+---
 
 ## 参考
 
