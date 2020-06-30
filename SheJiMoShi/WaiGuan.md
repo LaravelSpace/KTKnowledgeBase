@@ -42,6 +42,9 @@ Laravel 中像 `LogServiceFacade::saveLog();` 这样使用的外观模式需要 
 下面在 **KongZhiFanZhuan.md** 那篇的代码的基础上，给出日志服务外观模式的代码。
 
 ```php
+// 外观模式需要 IOC 容器支持
+require_once 'KongZhiFanZhuan.php';
+
 class LogServiceFacade
 {
     // 维护 Ioc 容器

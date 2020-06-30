@@ -13,36 +13,40 @@
 
 这个设计模式由 PHP 编码实现。
 
-IOC（Inversion of Control，缩写为 IOC）翻译过来就是控制反转。
-
-在介绍 IOC 容器之前，首先要介绍依赖注入，反射和控制反转的概念。
+IOC（Inversion of Control，缩写为 IOC）翻译过来就是控制反转。在介绍 IOC 容器之前，首先要介绍依赖注入，反射和控制反转的概念。
 
 #### 控制反转（IOC）
 
 首先看这样一段代码：
 
 ```php
-// 日志接口
-interface Log
+/**
+ * Interface LogInterface 日志接口
+ */
+interface LogInterface
 {
-    public function write();
+    public function saveLog();
 }
 
-// 文件记录日志
-class FileLog implements Log
+/**
+ * Class FileLog 文件记录日志
+ */
+class FileLog implements LogInterface
 {
-    public function write()
+    public function saveLog()
     {
-        echo 'file log write...';
+        echo "save log by file" . PHP_EOL;
     }
 }
 
-// 数据库记录日志
-class DatabaseLog implements Log
+/**
+ * Class DatabaseLog 数据库记录日志
+ */
+class DatabaseLog implements LogInterface
 {
-    public function write()
+    public function saveLog()
     {
-        echo 'database log write...';
+        echo "save log by database" . PHP_EOL;
     }
 }
 
@@ -56,55 +60,50 @@ class LogService
         $this->log = new FileLog();
     }
 
-    public function write()
+    public function saveLog()
     {
-        $this->log->write();
+        $this->log->saveLog();
     }
 }
 
 $logService = new LogService();
-$logService->write();
+$logService->saveLog();
 ```
 
-这样的写法其实存在一个问题，如果需要修改 FileLog 变成 DatabaseLog，这时就需要修改 LogService 类。
-
-这种写法没达到解耦合（耦合，是对模块间关联程度的度量），也不符合编程开放封闭原则（开放封闭原则的核心的思想是软件实体是可扩展，而不可修改的。也就是说，对扩展是开放的，而对修改是封闭的）。所以需要对 LogService 类进行改进。
+这样的写法其实存在一个问题，如果需要修改 FileLog 变成 DatabaseLog，这时就需要修改 LogService 类。这种写法没达到解耦合（耦合，是对模块间关联程度的度量），也不符合编程开放封闭原则（开放封闭原则的核心的思想是软件实体是可扩展，而不可修改的。也就是说，对扩展是开放的，而对修改是封闭的）。所以需要对 LogService 类进行改进。
 
 ```php
+/**
+ * Class LogService 日志操作类
+ */
 class LogService
 {
     protected $log;
 
-    public function __construct(Log $log)
+    public function __construct(LogInterface $log)
     {
         $this->log = $log;
     }
 
-    public function write()
+    public function saveLog()
     {
-        $this->log->write();
+        $this->log->saveLog();
     }
 }
 
 $logService = new LogService(new DatabaseLog());
-$logService->write();
+$logService->saveLog();
 ```
 
-这样修改以后只需要通过构造函数参数传递不同的日志接口实例，就可以实现不同的日志记录方式。
-
-这种由外部负责解决类的内部的实例创建的行为，可以称其为控制反转。
+这样修改以后只需要通过构造函数参数传递不同的日志接口实例，就可以实现不同的日志记录方式。这种由外部负责解决类的内部的实例创建的行为，可以称其为控制反转。
 
 #### 依赖注入（DI）
 
-上面的例子也算是依赖注入，LogService 类不是由自己内部创建实例，而是通过构造函数传递进来的。
-
-通过构造函数或者方法传递实例到类的内部的行为都属于依赖注入。
+上面的例子也算是依赖注入，LogService 类不是由自己内部创建实例，而是通过构造函数传递进来的。通过构造函数或者方法传递实例到类的内部的行为都属于依赖注入。
 
 #### 反射
 
-在面向对象的编码中，对象被赋予了自省的能力，而这个自省的过程就是反射。
-
-直观理解就是，根据一个具体的对象，可以获得这个对象的是哪个类，构造函数是什么样的，有哪些属性和方法。
+在面向对象的编码中，对象被赋予了自省的能力，而这个自省的过程就是反射。直观理解就是，根据一个具体的对象，可以获得这个对象的是哪个类，构造函数是什么样的，有哪些属性和方法。
 
 PHP IOC 容器常用的方法有下面这几个。
 
@@ -128,12 +127,18 @@ $logService = $reflector->newInstanceArgs($dependencies = []);
 IOC 容器的代码如下。
 
 ```php
-// IOC 容器
+/**
+ * Class IOC 容器
+ */
 class IOC
 {
     protected $binding = [];
 
-    // 绑定抽象类和实例类的关系
+    /**
+     * 绑定抽象类和实例类的关系
+     * @param $abstract
+     * @param $concrete
+     */
     public function bind($abstract, $concrete)
     {
         // 因为 bind() 的时候还不需要创建对象，所以采用 closure，等到 make() 的时候再创建对象
