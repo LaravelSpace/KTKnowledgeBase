@@ -1,7 +1,7 @@
 ```json
 {
   "title": "控制反转（IOC）",
-  "updated_at": "2020-06-29",
+  "updated_at": "2020-05-21",
   "updated_by": "KelipuTe",
   "tags": "设计模式,控制反转,IOC"
 }

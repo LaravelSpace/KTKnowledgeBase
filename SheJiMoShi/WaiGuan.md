@@ -1,9 +1,9 @@
 ```json
 {
   "title": "外观模式（Facade）",
-  "updated_at": "2020-06-29",
+  "updated_at": "2020-05-21",
   "updated_by": "KelipuTe",
-  "tags": "设计模式,外观模式,Facade"
+  "tags": "设计模式,外观,Facade"
 }
 ```
 
