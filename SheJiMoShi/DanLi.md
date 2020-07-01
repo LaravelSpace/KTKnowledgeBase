@@ -20,9 +20,7 @@
 下面给出豆浆机的代码：
 
 ```php
-/**
- * Class DouJiangJi 豆浆机
- */
+// 豆浆机单例类
 class DouJiangJi
 {
     // 用静态私有变量保存该类唯一实例

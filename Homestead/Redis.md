@@ -1,8 +1,7 @@
 ```json
 {
-  "title": "在 Homestead 中使用 Redis",
-  "updated_at": "2020-06-29",
   "updated_by": "KelipuTe",
+  "updated_at": "2020-06-29",
   "tags": "Homestead,Redis"
 }
 ```

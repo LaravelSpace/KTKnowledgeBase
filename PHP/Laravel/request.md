@@ -42,3 +42,5 @@ protected function getInputSource()
 Illuminate\Http\Request 继承了 Symfony\Component\HttpFoundation\Request。上面代码片段中的 `$this->query` 和 `$this->request` 都可以直接找到。都是 Symfony\Component\HttpFoundation\ParameterBag 的实例。Json 请求的参数则相对复杂。
 
 上面代码片段中的 `$this->query` 和 `$this->request` 都可以在 Illuminate\Http\Request 中直接使用。如果在控制器里，则可以通过 `$request->query` 和 `$request->request` 直接调用。
+
+再给 Laravel 项目发 json 请求的时候要带上 header，要不然可能会解析错误。
