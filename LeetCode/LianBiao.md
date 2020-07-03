@@ -1,8 +1,8 @@
 ```json
 {
   "updated_by": "KelipuTe",
-  "updated_at": "2020-06-19",
-  "tags": "数据结构,二叉树"
+  "updated_at": "2020-07-03",
+  "tags": "数据结构,链表"
 }
 ```
 
