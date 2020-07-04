@@ -76,4 +76,4 @@
 
 ## 参考
 
-[极客时间 -- 后端存储实践课](https://time.geekbang.org/column/intro/287)
+[后端存储实践课](https://time.geekbang.org/column/intro/287)
