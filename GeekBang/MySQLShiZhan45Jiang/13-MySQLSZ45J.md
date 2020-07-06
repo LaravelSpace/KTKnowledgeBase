@@ -106,7 +106,7 @@ alter table t add FULLTEXT(field_name);
 
 还有一种可能，在重建表的时候，InnoDB 不会把整张表占满，每个页留了 1/16 给后续的更新用。也就是说，其实重建表之后不是“最”紧凑的。
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 

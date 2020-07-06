@@ -135,7 +135,7 @@ mysql> select field_list from t where id_card_crc=crc32('input_id_card_string') 
 
 一个学校每年预估2万新生，50年才100万记录，省不了多少空间，直接全字段索引。省去了开发转换及局限性风险，碰到超大量迫不得已再用后两种办法。从业务量预估优化和收益，这个意识很好。
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 

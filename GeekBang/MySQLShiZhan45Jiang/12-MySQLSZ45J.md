@@ -99,7 +99,7 @@ select @a/@b;
 
 每次事务提交都要写 redo log，如果设置太小，很快就会被写满，也就是下面这个图的状态，这个“环”将很快被写满，write pos 一直追着 CP。这时候系统不得不停止所有更新，去推进 checkpoint。这时，你看到的现象就是磁盘压力很小，但是数据库出现间歇性的性能下跌。
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 

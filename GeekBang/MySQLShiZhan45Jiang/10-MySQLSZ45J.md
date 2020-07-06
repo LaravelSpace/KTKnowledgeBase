@@ -146,7 +146,7 @@ mysql> explain select * from t where (a between 1 and 1000) and (b between 50000
 
 然后你会说，不对啊，主键上的数据也不能删，那没有使用 force index 的语句，使用 explain 命令看到的扫描行数为什么还是 100000  左右？（潜台词，如果这个也翻倍，也许优化器还会认为选字段 a  作为索引更合适）是的，不过这个是主键，主键是直接按照表的行数来估计的。而表的行数，优化器直接用的是 show table status 的值。
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 

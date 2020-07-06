@@ -86,7 +86,7 @@ change buffer  一开始是写内存的，那么如果这个时候机器掉电�
 
 merge  的执行流程是这样的：1、从磁盘读入数据页到内存（老版本的数据页）；2、从 change buffer 里找出这个数据页的 change buffer  记录 (可能有多个），依次应用，得到新版数据页；3、写 redo log。这个 redo log 包含了数据的变更和 change buffer  的变更。到这里 merge 过程就结束了。这时候，数据页和内存中 change buffer  对应的磁盘位置都还没有修改，属于脏页，之后各自刷回自己的物理数据，就是另外一个过程了。
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 

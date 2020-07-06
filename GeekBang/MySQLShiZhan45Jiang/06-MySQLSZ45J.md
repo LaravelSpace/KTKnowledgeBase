@@ -122,7 +122,7 @@ DDL  从主库传过来的时间按照效果不同，我打了四个时刻。题
 
 4、从“时刻 4”开始，mysqldump 释放了 MDL 读锁，现象：没有影响，备份拿到的是 DDL 前的表结构。
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 

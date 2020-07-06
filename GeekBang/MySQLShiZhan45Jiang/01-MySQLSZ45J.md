@@ -68,6 +68,6 @@ MySQL  通过分析器知道了你要做什么，通过优化器知道了该怎�
 
 分析器
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)

@@ -106,7 +106,7 @@ select * from geek where c=N order by b limit 1;
 
 主键 a，b 的聚簇索引组织顺序相当于 order by a,b ，也就是先按 a 排序，再按 b 排序，c 无序。索引 ca 的组织是先按 c 排序，再按 a 排序，同时记录主键，这个跟索引 c 的数据是一模一样的。索引 cb 的组织是先按 c 排序，在按 b 排序，同时记录主键。
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 

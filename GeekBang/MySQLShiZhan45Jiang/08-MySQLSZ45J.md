@@ -143,7 +143,7 @@ insert into t(id, c) values(1,1),(2,2),(3,3),(4,4);
 
 <img src="../../Image/08-MySQLSZ45J_img11.png" style="zoom: 67%;" />
 
-## 参考
+## 参考来源
 
 [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
 
