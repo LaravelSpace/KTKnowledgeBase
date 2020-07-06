@@ -25,7 +25,7 @@ mysql> CREATE TABLE `t` (
 insert into t(id, k) values(1,1),(2,2);
 ```
 
-<img src="../Image/08-MySQLSZ45J_img01.png" style="zoom: 67%;" />
+<img src="../../Image/08-MySQLSZ45J_img01.png" style="zoom: 67%;" />
 
 这里，我们需要注意的是事务的启动时机。`begin/start transaction` 命令并不是一个事务的起点，在执行到它们之后的第一个操作 InnoDB  表的语句，事务才真正启动。如果你想要马上启动一个事务，可以使用 `start transaction with consistent  snapshot` 这个命令。第一种启动方式，一致性视图是在执行第一个快照读语句时创建的；第二种启动方式，一致性视图是在执行 start transaction with consistent snapshot 时创建的。还需要注意的是，如果没有特别说明，都默认 autocommit=1。
 
@@ -41,7 +41,7 @@ insert into t(id, k) values(1,1),(2,2);
 
 InnoDB 里面每个事务有一个**唯一的事务 ID**，叫作 transaction  id。它是在事务开始的时候向 InnoDB  的事务系统申请的，是**按申请顺序严格递增的**。而每行数据也都是有多个版本的。每次事务更新数据的时候，都会生成一个新的数据版本，并且把  transaction id 赋值给这个数据版本的事务 ID，记为 row  trx_id。同时，旧的数据版本要保留，并且在新的数据版本中，能够有信息可以直接拿到它。也就是说，数据表中的一行记录，其实可能有多个版本  (row)，每个版本有自己的 row trx_id。如图所示，就是一个记录被多个事务连续更新后的状态。
 
-<img src="../Image/08-MySQLSZ45J_img02.png" style="zoom:50%;" />
+<img src="../../Image/08-MySQLSZ45J_img02.png" style="zoom:50%;" />
 
 图中虚线框里是同一行数据的 4  个版本，当前最新版本是 V4，k 的值是 22，它是被 transaction id 为 25 的事务更新的，因此它的 row trx_id  也是 25。你可能会问，前面的文章不是说，语句更新会生成 undo log（回滚日志）吗？那么，undo log 在哪呢？实际上，图 2  中的三个虚线箭头，就是 undo log；而 V1、V2、V3 并不是物理上真实存在的，而是每次需要的时候根据当前版本和 undo log  计算出来的。比如，需要 V2 的时候，就是通过 V4 依次执行 U3、U2 算出来。
 
@@ -49,7 +49,7 @@ InnoDB 里面每个事务有一个**唯一的事务 ID**，叫作 transaction  i
 
 在实现上， InnoDB  为每个事务构造了一个数组，用来保存这个事务启动瞬间，当前正在“活跃”的所有事务 ID。“活跃”指的就是，启动了但还没提交。数组里面事务 ID  的最小值记为低水位，当前系统里面已经创建过的事务 ID 的最大值加 1  记为高水位。这个视图数组和高水位，就组成了当前事务的一致性视图（read-view）。而数据版本的可见性规则，就是基于数据的 row  trx_id 和这个一致性视图的对比结果得到的。这个视图数组把所有的 row trx_id 分成了几种不同的情况。
 
-<img src="../Image/08-MySQLSZ45J_img03.png" style="zoom:50%;" />
+<img src="../../Image/08-MySQLSZ45J_img03.png" style="zoom:50%;" />
 
 这样，对于当前事务的启动瞬间来说，一个数据版本的 row  trx_id，有以下几种可能：1、如果落在绿色部分，表示这个版本是已提交的事务或者是当前事务自己生成的，这个数据是可见的；2、如果落在红色部分，表示这个版本是由将来启动的事务生成的，是肯定不可见的；3、如果落在黄色部分，那就包括两种情况a.  若 row trx_id 在数组中，表示这个版本是由还没提交的事务生成的，不可见；b.  若 row trx_id  不在数组中，表示这个版本是已经提交了的事务生成的，可见。
 
@@ -63,7 +63,7 @@ InnoDB 利用了“所有数据都有多个版本”的这个特性，实现了�
 
 这样，事务 A 的视图数组就是[99,100], 事务 B 的视图数组是[99,100,101], 事务 C 的视图数组是[99,100,101,102]。为了简化分析，把其他干扰语句去掉，只画出跟事务 A 查询逻辑有关的操作：
 
-<img src="../Image/08-MySQLSZ45J_img04.png" style="zoom:50%;" />
+<img src="../../Image/08-MySQLSZ45J_img04.png" style="zoom:50%;" />
 
 从图中可以看到，第一个有效更新是事务  C，把数据从 (1,1) 改成了 (1,2)。这时候，这个数据的最新版本的 row trx_id 是 102，而 90  这个版本已经成为了历史版本。第二个有效更新是事务 B，把数据从 (1,2) 改成了 (1,3)。这时候，这个数据的最新版本（即 row  trx_id）是 101，而 102 又成为了历史版本。你可能注意到了，在事务 A 查询的时候，其实事务 B 还没有提交，但是它生成的  (1,3) 这个版本已经变成当前版本了。但这个版本对事务 A 必须是不可见的，否则就变成脏读了。
 
@@ -79,7 +79,7 @@ InnoDB 利用了“所有数据都有多个版本”的这个特性，实现了�
 
 下中，事务 B 的视图数组是先生成的，之后事务 C 才提交，不是应该看不见 (1,2) 吗，怎么能算出 (1,3) 来？
 
-<img src="../Image/08-MySQLSZ45J_img05.png" style="zoom:50%;" />
+<img src="../../Image/08-MySQLSZ45J_img05.png" style="zoom:50%;" />
 
 是的，如果事务 B  在更新之前查询一次数据，这个查询返回的 k 的值确实是 1。但是，当它要去更新数据的时候，就不能再在历史版本上更新了，否则事务 C  的更新就丢失了。因此，事务 B 此时的 set k=k+1  是在（1,2）的基础上进行的操作。所以，这里就用到了这样一条规则：**更新数据都是先读后写的，而这个读，只能读当前的值，称为“当前读”**（current read）。
 
@@ -94,11 +94,11 @@ mysql> select k from t where id=1 for update;
 
 再往前一步，假设事务 C 不是马上提交的，而是变成了下面的事务 C’，会怎么样呢？
 
-<img src="../Image/08-MySQLSZ45J_img06.png" style="zoom: 67%;" />
+<img src="../../Image/08-MySQLSZ45J_img06.png" style="zoom: 67%;" />
 
 事务  C’ 的不同是，更新后并没有马上提交，在它提交前，事务 B 的更新语句先发起了。前面说过了，虽然事务 C’还没提交，但是 (1,2)  这个版本也已经生成了，并且是当前的最新版本。这时候“两阶段锁协议”就要上场了。事务 C’没提交，也就是说 (1,2)  这个版本上的写锁还没释放。而事务 B 是当前读，必须要读最新版本，而且必须加锁，因此就被锁住了，必须等到事务  C’ 释放这个锁，才能继续它的当前读。
 
-<img src="../Image/08-MySQLSZ45J_img07.png" style="zoom: 50%;" />
+<img src="../../Image/08-MySQLSZ45J_img07.png" style="zoom: 50%;" />
 
 到这里，一致性读、当前读和行锁就串起来了。
 
@@ -110,7 +110,7 @@ mysql> select k from t where id=1 for update;
 
 下面是读提交时的状态图，可以看到这两个查询语句的创建视图数组的时机发生了变化，就是图中的 read view 框。（注意：这里，我们用的还是事务 C 的逻辑直接提交，而不是事务 C’）
 
-<img src="../Image/08-MySQLSZ45J_img08.jpg" style="zoom: 50%;" />
+<img src="../../Image/08-MySQLSZ45J_img08.jpg" style="zoom: 50%;" />
 
 这时，事务 A  的查询语句的视图数组是在执行这个语句的时候创建的，时序上 (1,2)、(1,3)  的生成时间都在创建这个视图数组的时刻之前。但是，在这个时刻：(1,3) 还没提交，属于情况 1，不可见；(1,2) 提交了，属于情况  3，可见。所以，这时候事务 A 查询语句返回的是 k=2。显然地，事务 B 查询结果 k=3。
 
@@ -131,17 +131,17 @@ mysql> CREATE TABLE `t` (
 insert into t(id, c) values(1,1),(2,2),(3,3),(4,4);
 ```
 
-<img src="../Image/08-MySQLSZ45J_img09.png"  />
+<img src="../../Image/08-MySQLSZ45J_img09.png"  />
 
 复现出来以后，请你再思考一下，在实际的业务开发中有没有可能碰到这种情况？你的应用代码会不会掉进这个“坑”里，你又是怎么解决的呢？
 
 场景 1：
 
-<img src="../Image/08-MySQLSZ45J_img10.png" style="zoom: 67%;" />
+<img src="../../Image/08-MySQLSZ45J_img10.png" style="zoom: 67%;" />
 
 场景 2：
 
-<img src="../Image/08-MySQLSZ45J_img11.png" style="zoom: 67%;" />
+<img src="../../Image/08-MySQLSZ45J_img11.png" style="zoom: 67%;" />
 
 ## 参考
 

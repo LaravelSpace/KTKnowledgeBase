@@ -36,9 +36,9 @@ mysql> alter table SUser add index index2(email(6));
 
 第一个语句创建的 index1 索引里面，包含了每个记录的整个字符串；而第二个语句创建的 index2 索引里面，对于每个记录都是只取前 6 个字节。那么，这两种不同的定义在数据结构和存储上有什么区别呢？如图所示，就是这两个索引的示意图。
 
-<img src="../Image/11-MySQLSZ45J_img01.jpg" style="zoom:50%;" />
+<img src="../../Image/11-MySQLSZ45J_img01.jpg" style="zoom:50%;" />
 
-<img src="../Image/11-MySQLSZ45J_img01.jpg" style="zoom:50%;" />
+<img src="../../Image/11-MySQLSZ45J_img01.jpg" style="zoom:50%;" />
 
 从图中你可以看到，由于 email(6) 这个索引结构中每个邮箱字段都只取前 6 个字节（即：zhangs），所以占用的空间会更小，这就是使用前缀索引的优势。但，这同时带来的损失是，可能会增加额外的记录扫描次数。
 

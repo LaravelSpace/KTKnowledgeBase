@@ -14,7 +14,7 @@
 
 简单起见，我们还是用第 4 篇文章《深入浅出索引（上）》中的例子来说明，假设字段 k 上的值都不重复。
 
-<img src="../Image/04-MySQLSZ45J_img04.png" style="zoom:50%;" />
+<img src="../../Image/04-MySQLSZ45J_img04.png" style="zoom:50%;" />
 
 ### 查询过程
 
@@ -64,7 +64,7 @@ change buffer 用的是 buffer pool 里的内存，因此不能无限增大。ch
 
 现在，我们要在表上执行这个插入语句：`mysql> insert into t(id,k) values(id1,k1),(id2,k2);`。这里，我们假设当前 k 索引树的状态，查找到位置后，k1 所在的数据页在内存 (InnoDB buffer pool) 中，k2 所在的数据页不在内存中。如图所示是带 change buffer 的更新状态图。
 
-<img src="../Image/09-MySQLSZ45J_img02.png" style="zoom:50%;" />
+<img src="../../Image/09-MySQLSZ45J_img02.png" style="zoom:50%;" />
 
 分析这条更新语句，你会发现它涉及了四个部分：内存、redo log（ib_log_fileX）、  数据表空间（t.ibd）、系统表空间（ibdata1）。这条更新语句做了如下的操作（按照图中的数字顺序）：1、Page 1  在内存中，直接更新内存；2、Page 2 没有在内存中，就在内存的 change buffer 区域，记录下“我要往 Page 2  插入一行”这个信息；3、将上述两个动作记入 redo log 中（图中 3 和  4）。
 
@@ -72,7 +72,7 @@ change buffer 用的是 buffer pool 里的内存，因此不能无限增大。ch
 
 如果读语句发生在更新语句后不久，内存中的数据都还在，那么此时的这两个读操作就与系统表空间（ibdata1）和 redo log（ib_log_fileX）无关了。所以，我在图中就没画出这两部分。
 
-<img src="../Image/09-MySQLSZ45J_img03.png" style="zoom:50%;" />
+<img src="../../Image/09-MySQLSZ45J_img03.png" style="zoom:50%;" />
 
 从图中可以看到：1、读 Page 1  的时候，直接从内存返回。有几位同学在前面文章的评论中问到，WAL 之后如果读数据，是不是一定要读盘，是不是一定要从 redo log  里面把数据更新以后才可以返回？其实是不用的。你可以看一下图 3  的这个状态，虽然磁盘上还是之前的数据，但是这里直接从内存返回结果，结果是正确的。2、要读 Page 2 的时候，需要把 Page 2  从磁盘读入内存中，然后应用 change buffer 里面的操作日志，生成一个正确的版本并返回结果。可以看到，直到需要读 Page 2  的时候，这个数据页才会被读入内存。
 

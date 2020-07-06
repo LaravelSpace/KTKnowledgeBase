@@ -14,7 +14,7 @@
 
 在两阶段提交的不同瞬间，MySQL 如果发生异常重启，是怎么保证数据完整性的？
 
-<img src="../Image/15-MySQLSZ45J_img01.jpg" style="zoom:50%;" />
+<img src="../../Image/15-MySQLSZ45J_img01.jpg" style="zoom:50%;" />
 
 这里，我要先和你解释一个误会式的问题。有同学在评论区问到，这个图不是一个 update 语句的执行流程吗，怎么还会调用 commit 语句？他产生这个疑问的原因，是把两个“commit”的概念混淆了：1、他说的“commit 语句”，是指 MySQL 语法中，用于提交一个事务的命令。一般跟 begin/start transaction 配对使用。2、而我们图中用到的这个“commit 步骤”，指的是事务提交过程中的一个小步骤，也是最后一步。当这个步骤执行完成后，这个事务就提交完成了。3、“commit 语句”执行的时候，会包含“commit 步骤”。而我们这个例子里面，没有显式地开启事务，因此这个 update 语句自己就是一个事务，在执行完成后提交事务时，就会用到这个“commit 步骤“。
 
@@ -48,7 +48,7 @@
 
 而如果说实现上的原因的话，就有很多了。就按照问题中说的，只用 binlog 来实现崩溃恢复的流程，我画了一张示意图，这里就没有 redo log 了。这样的流程下，binlog 还是不能支持崩溃恢复的。我说一个不支持的点吧：binlog 没有能力恢复“数据页”。如果在图中标的位置，也就是 binlog2  写完了，但是整个事务还没有 commit 的时候，MySQL 发生了 crash。重启后，引擎内部事务 2 会回滚，然后应用 binlog2  可以补回来；但是对于事务 1 来说，系统已经认为提交完成了，不会再应用一次 binlog1。
 
-<img src="../Image/15-MySQLSZ45J_img02.jpg" style="zoom:50%;" />
+<img src="../../Image/15-MySQLSZ45J_img02.jpg" style="zoom:50%;" />
 
 InnoDB 在作为 MySQL 的插件加入 MySQL 引擎家族之前，就已经是一个提供了崩溃恢复和事务支持的引擎了。InnoDB 接入了 MySQL 后，发现既然 binlog 没有崩溃恢复的能力，那就用 InnoDB 原有的 redo log 好了。InnoDB 引擎使用的是 WAL 技术，执行事务的时候，写完内存和日志，事务就算完成了。如果之后崩溃，要依赖于日志来恢复数据页。
 
@@ -115,7 +115,7 @@ CREATE TABLE `friend` (
 
 在并发场景下，同时有两个人，设置为关注对方，就可能导致无法成功加为朋友关系。用时刻顺序表的形式，把这两个事务的执行语句列出来：
 
-<img src="../Image/15-MySQLSZ45J_img05.png" style="zoom:50%;" />
+<img src="../../Image/15-MySQLSZ45J_img05.png" style="zoom:50%;" />
 
 由于一开始 A 和 B  之间没有关注关系，所以两个事务里面的 select 语句查出来的结果都是空。因此，session 1 的逻辑就是“既然 B 没有关注  A，那就只插入一个单向关注关系”。session 2 也同样是这个逻辑。这个结果对业务来说就是 bug  了。因为在业务设定里面，这两个逻辑都执行完成以后，是应该在 friend 表里面插入一行记录的。
 
@@ -175,23 +175,23 @@ mysql> update t set a=2 where id=1;
 
 你会看到这样的结果：
 
-<img src="../Image/15-MySQLSZ45J_img06.png" style="zoom:80%;" />
+<img src="../../Image/15-MySQLSZ45J_img06.png" style="zoom:80%;" />
 
 结果显示，匹配 (rows matched)  了一行，修改 (Changed) 了 0 行。仅从现象上看，MySQL  内部在处理这个命令的时候，可以有以下三种选择：1、更新都是先读后写的，MySQL 读出数据，发现 a 的值本来就是  2，不更新，直接返回，执行结束；2、MySQL 调用了 InnoDB 引擎提供的“修改为  (1,2)”这个接口，但是引擎发现值与原来相同，不更新，直接返回；3、InnoDB 认真执行了“把这个值修改成  (1,2)"这个操作，该加锁的加锁，该更新的更新。你觉得实际情况会是以上哪种呢？你可否用构造实验的方式，来证明你的结论？进一步地，可以思考一下，MySQL 为什么要选择这种策略呢？
 
 第一个选项是，MySQL 读出数据，发现值与原来相同，不更新，直接返回，执行结束。这里我们可以用一个锁实验来确认。假设，当前表 t 里的值是 (1,2)。session B 的 update 语句被 blocked 了，加锁这个动作是 InnoDB 才能做的，所以排除选项 1。
 
-<img src="../Image/15-MySQLSZ45J_img07.png" style="zoom: 67%;" />
+<img src="../../Image/15-MySQLSZ45J_img07.png" style="zoom: 67%;" />
 
 第二个选项是，MySQL 调用了 InnoDB 引擎提供的接口，但是引擎发现值与原来相同，不更新，直接返回。有没有这种可能呢？这里我用一个可见性实验来确认。假设当前表里的值是 (1,2)。session A 的第二个 select 语句是一致性读（快照读)，它是不能看见 session B 的更新的。现在它返回的是 (1,3)，表示它看见了某个新的版本，这个版本只能是 session A 自己的 update 语句做更新的时候生成。
 
-<img src="../Image/15-MySQLSZ45J_img08.png" style="zoom: 67%;" />
+<img src="../../Image/15-MySQLSZ45J_img08.png" style="zoom: 67%;" />
 
 答案应该是选项 3，即：InnoDB 认真执行了“把这个值修改成 (1,2)"这个操作，该加锁的加锁，该更新的更新。
 
 然后你会说，MySQL 怎么这么笨，就不会更新前判断一下值是不是相同吗？如果判断一下，不就不用浪费 InnoDB 操作，多去更新一次了？其实 MySQL 是确认了的。只是在这个语句里面，MySQL 认为读出来的值，只有一个确定的 (id=1), 而要写的是 (a=3)，只从这两个信息是看不出来“不需要修改”的。作为验证，你可以看一下下面这个例子。
 
-<img src="../Image/15-MySQLSZ45J_img09.png" style="zoom: 67%;" />
+<img src="../../Image/15-MySQLSZ45J_img09.png" style="zoom: 67%;" />
 
 ### 为什么要学原理
 
