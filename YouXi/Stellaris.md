@@ -1,6 +1,5 @@
 ```json
 {
-  "title": "Stellaris —— 群星",
   "updated_at": "2020-06-29",
   "updated_by": "KelipuTe",
   "tags": "Stellaris"
