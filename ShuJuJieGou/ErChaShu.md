@@ -77,29 +77,35 @@
 
 ```php
 /**
- * Class ShuJieDian [定义二叉树结点]
+ * Class ErChaShuJieDian [二叉树结点]
  * @package App\ShuJuJieGou
  */
-class ShuJieDian
+class ErChaShuJieDian
 {
     /**
      * @var int 结点值
      */
-    public $value = null;
+    public $jieDianZhi;
 
     /**
-     * @var ShuJieDian 左子树
+     * @var ErChaShuJieDian 左子树
      */
-    public $left = null;
+    public $zuoZiShu;
 
     /**
-     * @var ShuJieDian 右子树
+     * @var ErChaShuJieDian 右子树
      */
-    public $right = null;
+    public $youZiShu;
 
-    public function __construct($value)
+    /**
+     * ErChaShuJieDian constructor.
+     * @param $jieDianZhi [结点值]
+     */
+    public function __construct($jieDianZhi)
     {
-        $this->value = $value;
+        $this->jieDianZhi = $jieDianZhi;
+        $this->zuoZiShu = null;
+        $this->youZiShu = null;
     }
 }
 ```
@@ -119,10 +125,14 @@ class ErChaShu
     protected $yuanSuList;
 
     /**
-     * @var ShuJieDian [根结点]
+     * @var ErChaShuJieDian [根结点]
      */
     protected $genJieDian;
 
+    /**
+     * ErChaShu constructor.
+     * @param $yuanSuList [二叉树元素数组]
+     */
     public function __construct($yuanSuList)
     {
         $this->yuanSuList = $yuanSuList;
@@ -137,17 +147,17 @@ class ErChaShu
         // 空数组返回 null
         if (count($this->yuanSuList) === 0) return null;
         // 创建根结点
-        $this->genJieDian = new ShuJieDian($this->yuanSuList[0]);
+        $this->genJieDian = new ErChaShuJieDian($this->yuanSuList[0]);
         for ($i = 1, $numLen = count($this->yuanSuList); $i < $numLen; $i++) {
             // 依次添加结点
-            $jieDian = new ShuJieDian($this->yuanSuList[$i]);
+            $jieDian = new ErChaShuJieDian($this->yuanSuList[$i]);
             $this->chaRuJieDianByNLR($jieDian);
         }
     }
 
     /**
      * 获取二叉树
-     * @return ShuJieDian
+     * @return ErChaShuJieDian
      */
     public function getErChaShu()
     {
@@ -161,7 +171,7 @@ class ErChaShu
 ```php
     /**
      * 以先序遍历的顺序插入结点（根左右）
-     * @param ShuJieDian $jieDian
+     * @param ErChaShuJieDian $jieDian
      */
     protected function chaRuJieDianByNLR($jieDian)
     {
@@ -195,12 +205,36 @@ class ErChaShu
     }
 ```
 
+在构造完二叉树之后，我们要把填充的空叶子结点剪了。
+
+```php
+    /**
+     * 使用前序遍历移除多余的空结点
+     * @param ErChaShuJieDian $genJieDian
+     */
+    public function qianXuBianLiXiuJian($genJieDian)
+    {
+        if ($genJieDian === null) return;
+        if ($genJieDian->jieDianZhi === null) return;
+        if ($genJieDian->zuoZiShu !== null && $genJieDian->zuoZiShu->jieDianZhi === null) {
+            $genJieDian->zuoZiShu = null;
+        } else {
+            $this->qianXuBianLiXiuJian($genJieDian->zuoZiShu);
+        }
+        if ($genJieDian->youZiShu !== null && $genJieDian->youZiShu->jieDianZhi === null) {
+            $genJieDian->youZiShu = null;
+        } else {
+            $this->qianXuBianLiXiuJian($genJieDian->youZiShu);
+        }
+    }
+```
+
 前序遍历，中序遍历，后序遍历都采用递归实现。
 
 ```php
     /**
      * 前序遍历
-     * @param ShuJieDian $genJieDian
+     * @param ErChaShuJieDian $genJieDian
      * @return string
      */
     public function qianXuBianLi($genJieDian)
@@ -217,7 +251,7 @@ class ErChaShu
 
     /**
      * 中序遍历
-     * @param ShuJieDian $genJieDian
+     * @param ErChaShuJieDian $genJieDian
      * @return string
      */
     public function zhongXuBianLi($genJieDian)
@@ -234,7 +268,7 @@ class ErChaShu
 
     /**
      * 后序遍历
-     * @param ShuJieDian $genJieDian
+     * @param ErChaShuJieDian $genJieDian
      * @return string
      */
     public function houXuBianLi($genJieDian)
@@ -255,7 +289,7 @@ class ErChaShu
 ```php
     /**
      * 计算二叉树的最大深度
-     * @param ShuJieDian $genJieDian
+     * @param ErChaShuJieDian $genJieDian
      * @return int
      */
     public function zuiDaShenDu($genJieDian)
@@ -274,7 +308,7 @@ class ErChaShu
 ```php
     /**
      * 广度优先遍历
-     * @param ShuJieDian $genJieDian
+     * @param ErChaShuJieDian $genJieDian
      * @return array
      */
     public function guangDuYouXianBianLi($genJieDian)
@@ -305,7 +339,7 @@ class ErChaShu
 ```php
     /**
      * 广度优先遍历，可分层输出结果
-     * @param ShuJieDian $genJieDian
+     * @param ErChaShuJieDian $genJieDian
      * @return array
      */
     public function guangDuYouXianBianLiFenCeng($genJieDian)
@@ -340,7 +374,7 @@ class ErChaShu
 ```php
     /**
      * 深度优先遍历
-     * @param ShuJieDian $genJieDian
+     * @param ErChaShuJieDian $genJieDian
      * @return array
      */
     public function shenDuYouXianBianLi($genJieDian)
