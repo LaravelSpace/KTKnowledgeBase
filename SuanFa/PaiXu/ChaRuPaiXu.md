@@ -10,7 +10,11 @@
 
 ## 插入排序
 
-插入排序（Insertion Sort）的算法描述是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+插入排序（Insertion Sort）的算法描述是一种简单直观的排序算法。
+
+它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+
+时间复杂度 $O(n^2)$，空间复杂度 $T(1)$。
 
 ### 排序步骤
 
@@ -25,7 +29,7 @@
 
 ### 动图演示
 
-<img src="E:\Workspace\KTKnowledgeBase\Image\SuanFa\ChaRuPaiXu_img01.gif" style="zoom: 67%;" />
+<img src="E:\Workspace\KTKnowledgeBase\Image\SuanFa\ChaRuPaiXu_img01.gif" style="zoom:67%;" />
 
 
 
