@@ -2,7 +2,7 @@
 {
   "updated_at": "2020-07-18",
   "updated_by": "KelipuTe",
-  "tags": "数据结构,哈夫曼树,Huffman Tree"
+  "tags": "数据结构,Data Structure,树,Tree"
 }
 ```
 
@@ -89,8 +89,7 @@ class ErChaShuJieDian
 
 ```php
 /**
- * 哈夫曼树结点
- * Class HaFuManShuJieDian
+ * Class HaFuManShuJieDian [哈夫曼树结点]
  * @package App\ShuJuJieGou
  */
 class HaFuManShuJieDian extends ErChaShuJieDian
@@ -102,7 +101,7 @@ class HaFuManShuJieDian extends ErChaShuJieDian
 
     /**
      * HaFuManShuJieDian constructor.
-     * @param string $jieDianZhi
+     * @param string $jieDianZhi [结点值]
      * @param int $quanZhong [结点权重]
      */
     public function __construct($jieDianZhi, $quanZhong)
@@ -117,8 +116,7 @@ class HaFuManShuJieDian extends ErChaShuJieDian
 
 ```php
 /**
- * 哈夫曼树
- * Class HaFuManShu
+ * Class HaFuManShu [哈夫曼树]
  * @package App\ShuJuJieGou
  */
 class HaFuManShu
@@ -159,9 +157,7 @@ class HaFuManShu
         $this->haFuManBianMaBiao = [];
         $this->genJieDian = null;
 
-        if (!empty($string)) {
-            $this->setMuBiaoZiFuChuan($string);
-        }
+        if (!empty($string)) $this->setMuBiaoZiFuChuan($string);
     }
 
     /**
@@ -170,7 +166,8 @@ class HaFuManShu
      */
     public function setMuBiaoZiFuChuan($string)
     {
-        if(empty($string)) return;
+        if (!is_string($string)) return;
+        if (strlen($string) < 1) return;
         $this->muBiaoZiFuZhuan = $string;
         $strLen = strlen($string);
         for ($i = 0; $i < $strLen; ++$i) {
@@ -347,10 +344,5 @@ echo json_encode($bianMa);
 echo json_encode($haFuManShu->ziFuChanJieMa($bianMa));
 ```
 
----
 
-## 参考来源
 
-《大话数据结构》，程杰 著，清华大学出版社，2011年6月第1版，2020年3月第24次印刷。
-
-[百度文库--哈夫曼树](https://baike.baidu.com/item/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/2305769?fr=aladdin#6)

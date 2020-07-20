@@ -102,7 +102,7 @@ class XianSuoErChaShu
     protected $qianQuJieDian;
 
     /**
-     * @var XianSuoErChaShuJieDian [前驱结点值]
+     * @var XianSuoErChaShuJieDian [前驱结点]
      * 前驱结点需要额外记录，而后继结点不需要
      */
     protected $qianQuJieDianZhi;

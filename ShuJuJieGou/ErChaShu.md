@@ -2,7 +2,7 @@
 {
   "updated_at": "2020-07-11",
   "updated_by": "KelipuTe",
-  "tags": "数据结构,Data Structure,树,Tree,二叉树,Binary Tree"
+  "tags": "数据结构,Data Structure,树,Tree"
 }
 ```
 
@@ -77,8 +77,7 @@
 
 ```php
 /**
- * 二叉树结点
- * Class ErChaShuJieDian
+ * Class ErChaShuJieDian [二叉树结点]
  * @package App\ShuJuJieGou
  */
 class ErChaShuJieDian
@@ -100,9 +99,9 @@ class ErChaShuJieDian
 
     /**
      * ErChaShuJieDian constructor.
-     * @param $jieDianZhi [结点值]
+     * @param string $jieDianZhi [结点值]
      */
-    public function __construct($jieDianZhi)
+    public function __construct($jieDianZhi = '')
     {
         $this->jieDianZhi = $jieDianZhi;
         $this->zuoZhiZhen = null;
@@ -115,8 +114,7 @@ class ErChaShuJieDian
 
 ```php
 /**
- * 二叉树
- * Class ErChaShu
+ * Class ErChaShu [二叉树]
  * @package App\ShuJuJieGou
  */
 class ErChaShu
@@ -133,7 +131,7 @@ class ErChaShu
 
     /**
      * ErChaShu constructor.
-     * @param $yuanSuList [二叉树元素数组]
+     * @param $yuanSuList
      */
     public function __construct($yuanSuList = [])
     {
@@ -150,6 +148,7 @@ class ErChaShu
     public function setYuanSuList($yuanSuList)
     {
         if (!is_array($yuanSuList)) return;
+        if (count($yuanSuList) < 1) return;
         $this->yuanSuList = $yuanSuList;
         $this->buildTreeWithArray();
         $this->qianXuBianLiXiuJian();
@@ -181,11 +180,11 @@ class ErChaShu
 }
 ```
 
-插入结点的方法，这里用队列实现。
+插入结点的方法，这里用队列实现。在PHP里可以使用数组构造一个简单的队列。使用`array_unshift()`方法和`array_pop()`方法模拟入队和出队。用`array_push()`和`array_shift()`这组方法也可以。
 
 ```php
     /**
-     * 以先序遍历的顺序插入结点（根左右）
+     * 以层次遍历的顺序插入结点
      * @param ErChaShuJieDian $jieDian
      */
     protected function chaRuJieDianByNLR($jieDian)
@@ -270,6 +269,7 @@ class ErChaShu
         $xuLie .= $genJieDian->jieDianZhi . ';';
         $xuLie .= $this->qianXuBianLiDiGui($genJieDian->zuoZhiZhen);
         $xuLie .= $this->qianXuBianLiDiGui($genJieDian->youZhiZhen);
+        
         return $xuLie;
     }
 
@@ -412,7 +412,7 @@ class ErChaShu
     }
 ```
 
-除了广度优先遍历还可以使用深度优先遍历，与广度优先遍历使用队列不同的是，深度优先遍历要用到栈结构。
+除了广度优先遍历还可以使用深度优先遍历，与广度优先遍历使用队列不同的是，深度优先遍历要用到栈结构。在PHP中栈结构也可以用数组构造一个简单的，使用`array_push()`和`array_pop()`模拟入栈和出栈
 
 ```php
     /**
@@ -456,11 +456,3 @@ echo json_encode($erChaShu->getErChaShu());
 // echo json_encode($erChaShu->guangDuYouXianBianLiFenCeng());
 // echo json_encode($erChaShu->shenDuYouXianBianLi());
 ```
-
----
-
-## 参考来源
-
-《大话数据结构》，程杰 著，清华大学出版社，2011年6月第1版，2020年3月第24次印刷。
-
-[百度文库--二叉树](https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91)
