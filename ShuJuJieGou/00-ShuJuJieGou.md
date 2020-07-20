@@ -32,8 +32,4 @@
 
 《大话数据结构》，程杰 著，清华大学出版社，2011年6月第1版，2020年3月第24次印刷。
 
-[百度百科--二叉树](https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91)
-
-[百度百科--哈夫曼树](https://baike.baidu.com/item/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/2305769?fr=aladdin#6)
-
-[百度百科--图](https://baike.baidu.com/item/%E5%9B%BE/13018767?fr=aladdin)
+[百度百科](https://baike.baidu.com)

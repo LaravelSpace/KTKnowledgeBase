@@ -71,9 +71,9 @@
 
 已知前序遍历序列和后序遍历序列，**不能**唯一确定一课二叉树。
 
-##### PHP 代码
+### PHP 代码
 
-树节点的定义
+首先我们要定义二叉树的结点：
 
 ```php
 /**
@@ -101,16 +101,23 @@ class ErChaShuJieDian
      * ErChaShuJieDian constructor.
      * @param string $jieDianZhi [结点值]
      */
-    public function __construct($jieDianZhi = '')
+    public function __construct($jieDianZhi)
     {
-        $this->jieDianZhi = $jieDianZhi;
+        $this->jieDianZhi = '';
         $this->zuoZhiZhen = null;
         $this->youZhiZhen = null;
+        if (is_string($jieDianZhi) && strlen($jieDianZhi) > 0) {
+            $this->jieDianZhi = $jieDianZhi;
+        }
     }
 }
 ```
 
-为了方便保存，我们用一个一维数组保存一棵二叉树。首先将二叉树用空结点补全成满二叉树，然后，从上到下，从左到右，依次编号后存入数组对应位置。如上文中的二叉树就可以表示成数组`[1,2,3,null,5,4,null]`，这也是二对叉树进行前序遍历的结果。将数组转换成二叉树的代码如下。
+为了方便保存，我们用一个一维数组保存一棵二叉树。首先将二叉树用空结点补全成满二叉树，然后，从上到下，从左到右，依次编号后存入数组对应位置。如上文中的二叉树就可以表示成数组`[1,2,3,null,5,4,null]`，这也是对二叉树进行层次遍历的结果。
+
+同时由于PHP里没有C语言的指针这样的东西，所以我们用一个key-value数组，模拟内存中指针和指针指向的内存空间的关系。在这里指针映射成了数组的下标，指针指向的内存空间就是数组的值。
+
+将数组转换成二叉树的代码如下：
 
 ```php
 /**
@@ -120,129 +127,191 @@ class ErChaShuJieDian
 class ErChaShu
 {
     /**
-     * @var array [二叉树元素数组]
+     * @var array [二叉树元素表]
      */
-    protected $yuanSuList;
+    protected $yuanSuBiao;
 
     /**
-     * @var ErChaShuJieDian [根结点]
+     * @var array [虚拟内存空间]
+     * 用于模拟C语言中的指针
      */
-    protected $genJieDian;
+    protected $xuNiNeiCunKongJian;
+
+    /**
+     * @var int [虚拟内存大小]
+     * 用于记录分配内存的数量
+     */
+    protected $xuNiNeiCunDaXiao;
+
+    /**
+     * @var string [根结点指针]
+     */
+    protected $genJieDianZhiZhen;
 
     /**
      * ErChaShu constructor.
-     * @param $yuanSuList
+     * @param array $yuanSuBiao [二叉树元素表]
+     * @throws \Exception
      */
-    public function __construct($yuanSuList = [])
+    public function __construct($yuanSuBiao)
     {
-        $this->yuanSuList = [];
-        $this->genJieDian = null;
-
-        if (is_array($yuanSuList) && count($yuanSuList) > 0) $this->setYuanSuList($yuanSuList);
-    }
-
-    /**
-     * 设置二叉树元素数组
-     * @param $yuanSuList
-     */
-    public function setYuanSuList($yuanSuList)
-    {
-        if (!is_array($yuanSuList)) return;
-        if (count($yuanSuList) < 1) return;
-        $this->yuanSuList = $yuanSuList;
-        $this->buildTreeWithArray();
-        $this->qianXuBianLiXiuJian();
-    }
-
-    /**
-     * 用数组构造二叉树
-     */
-    protected function buildTreeWithArray()
-    {
-        if (count($this->yuanSuList) === 0) return null;
-        // 创建根结点
-        $this->genJieDian = new ErChaShuJieDian($this->yuanSuList[0]);
-        for ($i = 1, $numLen = count($this->yuanSuList); $i < $numLen; $i++) {
-            // 依次添加结点
-            $jieDian = new ErChaShuJieDian($this->yuanSuList[$i]);
-            $this->chaRuJieDianByNLR($jieDian);
+        $this->yuanSuBiao = [];
+        $this->xuNiNeiCunKongJian = [];
+        $this->xuNiNeiCunDaXiao = 0;
+        $this->genJieDianZhiZhen = null;
+        if (is_array($yuanSuBiao) && count($yuanSuBiao) > 0) {
+            $this->yuanSuBiao = $yuanSuBiao;
+            $this->gouZaoErChaShu();
+            $this->qianXuBianLiXiuJian();
+            $this->zhenLiXuNiNeiCunKongJian();
         }
     }
 
     /**
      * 获取二叉树
-     * @return ErChaShuJieDian
+     * @return array
      */
     public function getErChaShu()
     {
-        return $this->genJieDian;
+        return [
+            'gen_jie_dian_zhi_zhen' => $this->genJieDianZhiZhen,
+            'xu_ni_nei_cun_kong_jian' => $this->xuNiNeiCunKongJian
+        ];
+    }
+
+    /**
+     * 用二叉树元素表构造二叉树
+     * @throws \Exception
+     */
+    protected function gouZaoErChaShu()
+    {
+        if (count($this->yuanSuBiao) < 1) {
+            return;
+        }
+        // 创建根结点
+        $this->genJieDianZhiZhen = $this->fenPeiXuNiNeiCun($this->yuanSuBiao[0]);
+        $biaoChang = count($this->yuanSuBiao);
+        for ($i = 1; $i < $biaoChang; $i++) {
+            // 依次添加结点
+            $jieDianZhiZhen = $this->fenPeiXuNiNeiCun($this->yuanSuBiao[$i]);
+            $this->yiCiChaRuJieDian($jieDianZhiZhen);
+        }
+    }
+
+    /**
+     * 分配虚拟内存
+     * @param string $jieDianZhi
+     * @return string
+     */
+    protected function fenPeiXuNiNeiCun($jieDianZhi)
+    {
+        $zhiZhen = 'zhi_zhen_' . $this->xuNiNeiCunDaXiao;
+        ++$this->xuNiNeiCunDaXiao;
+        $this->xuNiNeiCunKongJian[$zhiZhen] = new ErChaShuJieDian($jieDianZhi);
+
+        return $zhiZhen;
     }
 }
 ```
 
-插入结点的方法，这里用队列实现。在PHP里可以使用数组构造一个简单的队列。使用`array_unshift()`方法和`array_pop()`方法模拟入队和出队。用`array_push()`和`array_shift()`这组方法也可以。
+插入结点的方法，这里用队列结构实现。在PHP里可以使用数组构造一个简单的队列。使用`array_unshift()`方法和`array_pop()`方法模拟入队和出队。用`array_push()`和`array_shift()`这组方法也可以。
 
 ```php
     /**
-     * 以层次遍历的顺序插入结点
-     * @param ErChaShuJieDian $jieDian
+     * 以层次遍历的顺序依次插入结点
+     * @param string $jieDianZhiZhen
+     * @throws \Exception
      */
-    protected function chaRuJieDianByNLR($jieDian)
+    protected function yiCiChaRuJieDian($jieDianZhiZhen)
     {
         // 初始化一个队列
         $duiLie = [];
         // 根结点入队
-        array_unshift($duiLie, $this->genJieDian);
+        array_unshift($duiLie, $this->genJieDianZhiZhen);
         while (!empty($duiLie)) {
-            // 持续遍历结点，直到队列为空
+            // 持续遍历，直到队列为空
             // 队列元素出队
-            $tempJieDian = array_pop($duiLie);
-            if ($tempJieDian->zuoZiShu === null) {
-                // 如果左结点为空就插入结点
-                $tempJieDian->zuoZiShu = $jieDian;
-
-                return;
-            } else {
-                // 左结点先入队
-                array_unshift($duiLie, $tempJieDian->zuoZiShu);
+            $tempJieDianZhiZhen = array_pop($duiLie);
+            if ($tempJieDianZhiZhen === null) {
+                throw new \Exception("指针：({$tempJieDianZhiZhen})为空");
             }
-            if ($tempJieDian->youZiShu === null) {
-                // 如果右结点为空就插入结点
-                $tempJieDian->youZiShu = $jieDian;
+            $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+            if ($tempJieDian === null) {
+                throw new \Exception("结点：({$tempJieDianZhiZhen})为空");
+            }
+            if ($tempJieDian->zuoZhiZhen === null) {
+                // 如果左指针为空就插入结点
+                $tempJieDian->zuoZhiZhen = $jieDianZhiZhen;
 
                 return;
             } else {
-                // 右结点后入队
-                array_unshift($duiLie, $tempJieDian->youZiShu);
+                // 如果左指针不为空，则左结点先入队
+                array_unshift($duiLie, $tempJieDian->zuoZhiZhen);
+            }
+            if ($tempJieDian->youZhiZhen === null) {
+                // 如果右指针为空就插入结点
+                $tempJieDian->youZhiZhen = $jieDianZhiZhen;
+
+                return;
+            } else {
+                // 如果右指针不为空，则右结点后入队
+                array_unshift($duiLie, $tempJieDian->youZhiZhen);
             }
         }
     }
 ```
 
-在构造完二叉树之后，我们要把填充的空叶子结点剪了。
+在构造完二叉树之后，我们要把填充的空结点剪了，还需要处理虚拟内存空间中无效的元素。
 
 ```php
     /**
-     * 使用前序遍历移除多余的空结点
+     * 使用前序遍历修剪多余的空结点
      */
     protected function qianXuBianLiXiuJian()
     {
-        $this->qianXuBianLiXiuJianDiGui($this->genJieDian);
+        $this->qianXuBianLiXiuJianDiGui($this->genJieDianZhiZhen);
     }
 
     /**
-     * @param ErChaShuJieDian $genJieDian
+     * @param string $genJieDianZhiZhen
      */
-    protected function qianXuBianLiXiuJianDiGui($genJieDian)
+    protected function qianXuBianLiXiuJianDiGui($genJieDianZhiZhen)
     {
-        if ($genJieDian === null) return;
-        if ($genJieDian->jieDianZhi === null) return;
-        if ($genJieDian->zuoZhiZhen !== null && $genJieDian->zuoZhiZhen->jieDianZhi === null)
-            $genJieDian->zuoZhiZhen = null;
-        else $this->qianXuBianLiXiuJianDiGui($genJieDian->zuoZhiZhen);
-        if ($genJieDian->youZhiZhen !== null && $genJieDian->youZhiZhen->jieDianZhi === null)
-            $genJieDian->youZhiZhen = null;
-        else $this->qianXuBianLiXiuJianDiGui($genJieDian->youZhiZhen);
+        if ($genJieDianZhiZhen === null) {
+            return;
+        }
+        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
+            return;
+        }
+        if ($genJieDian->zuoZhiZhen !== null) {
+            $zuoJieDian = $this->xuNiNeiCunKongJian[$genJieDian->zuoZhiZhen];
+            if ($zuoJieDian->jieDianZhi === '') {
+                $genJieDian->zuoZhiZhen = null;
+            } else {
+                $this->qianXuBianLiXiuJianDiGui($genJieDian->zuoZhiZhen);
+            }
+        }
+        if ($genJieDian->youZhiZhen !== null) {
+            $youJieDian = $this->xuNiNeiCunKongJian[$genJieDian->youZhiZhen];
+            if ($youJieDian->jieDianZhi === '') {
+                $genJieDian->youZhiZhen = null;
+            } else {
+                $this->qianXuBianLiXiuJianDiGui($genJieDian->youZhiZhen);
+            }
+        }
+    }
+
+    /**
+     * 整理虚拟内存空间，移除不需要的元素
+     */
+    protected function zhenLiXuNiNeiCunKongJian()
+    {
+        foreach ($this->xuNiNeiCunKongJian as $key => $value) {
+            if ($value->jieDianZhi === '') {
+                unset($this->xuNiNeiCunKongJian[$key]);
+            }
+        }
     }
 ```
 
@@ -254,22 +323,27 @@ class ErChaShu
      */
     public function qianXuBianLi()
     {
-        return $this->qianXuBianLiDiGui($this->genJieDian);
+        return $this->qianXuBianLiDiGui($this->genJieDianZhiZhen);
     }
 
     /**
-     * @param ErChaShuJieDian $genJieDian
+     * @param string $genJieDianZhiZhen
      * @return string
      */
-    protected function qianXuBianLiDiGui($genJieDian)
+    protected function qianXuBianLiDiGui($genJieDianZhiZhen)
     {
-        if ($genJieDian === null) return '';
-        if ($genJieDian->jieDianZhi === null) return '';
+        if ($genJieDianZhiZhen === null) {
+            return '';
+        }
+        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
+            return '';
+        }
         $xuLie = '';
         $xuLie .= $genJieDian->jieDianZhi . ';';
         $xuLie .= $this->qianXuBianLiDiGui($genJieDian->zuoZhiZhen);
         $xuLie .= $this->qianXuBianLiDiGui($genJieDian->youZhiZhen);
-        
+
         return $xuLie;
     }
 
@@ -279,17 +353,22 @@ class ErChaShu
      */
     public function zhongXuBianLi()
     {
-        return $this->zhongXuBianLiDiGui($this->genJieDian);
+        return $this->zhongXuBianLiDiGui($this->genJieDianZhiZhen);
     }
 
     /**
-     * @param ErChaShuJieDian $genJieDian
+     * @param string $genJieDianZhiZhen
      * @return string
      */
-    protected function zhongXuBianLiDiGui($genJieDian)
+    protected function zhongXuBianLiDiGui($genJieDianZhiZhen)
     {
-        if ($genJieDian === null) return '';
-        if ($genJieDian->jieDianZhi === null) return '';
+        if ($genJieDianZhiZhen === null) {
+            return '';
+        }
+        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
+            return '';
+        }
         $xuLie = '';
         $xuLie .= $this->zhongXuBianLiDiGui($genJieDian->zuoZhiZhen);
         $xuLie .= $genJieDian->jieDianZhi . ';';
@@ -303,17 +382,22 @@ class ErChaShu
      */
     public function houXuBianLi()
     {
-        return $this->houXuBianLiDiGui($this->genJieDian);
+        return $this->houXuBianLiDiGui($this->genJieDianZhiZhen);
     }
 
     /**
-     * @param ErChaShuJieDian $genJieDian
+     * @param string $genJieDianZhiZhen
      * @return string
      */
-    protected function houXuBianLiDiGui($genJieDian)
+    protected function houXuBianLiDiGui($genJieDianZhiZhen)
     {
-        if ($genJieDian === null) return '';
-        if ($genJieDian->jieDianZhi === null) return '';
+        if ($genJieDianZhiZhen === null) {
+            return '';
+        }
+        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
+            return '';
+        }
         $xuLie = '';
         $xuLie .= $this->houXuBianLiDiGui($genJieDian->zuoZhiZhen);
         $xuLie .= $this->houXuBianLiDiGui($genJieDian->youZhiZhen);
@@ -330,89 +414,32 @@ class ErChaShu
      * 计算二叉树的最大深度
      * @return int
      */
-    public function zuiDaShenDu()
+    public function jiSuanZuiDaShenDu()
     {
-        return $this->zuiDaShenDuDiGui($this->genJieDian);
+        return $this->jiSuanZuiDaShenDuDiGui($this->genJieDianZhiZhen);
     }
 
     /**
-     * @param ErChaShuJieDian $genJieDian
+     * @param string $genJieDianZhiZhen
      * @return int
      */
-    protected function zuiDaShenDuDiGui($genJieDian)
+    protected function jiSuanZuiDaShenDuDiGui($genJieDianZhiZhen)
     {
-        if ($genJieDian === null) return 0;
-        if ($genJieDian->jieDianZhi === null) return 0;
-        $zuoZhiZhen = $this->zuiDaShenDuDiGui($genJieDian->zuoZhiZhen);
-        $youZhiZhen = $this->zuiDaShenDuDiGui($genJieDian->youZhiZhen);
-
-        return max($zuoZhiZhen, $youZhiZhen) + 1;
-    }
-```
-
-二叉树的广度优先算法，使用队列实现。
-
-```php
-    /**
-     * 广度优先遍历
-     * @return array
-     */
-    public function guangDuYouXianBianLi()
-    {
-        $xuLie = [];
-        $duiLie = [];
-        // 根结点入队
-        array_unshift($duiLie, $this->genJieDian);
-        while (!empty($duiLie)) {
-            // 持续输出结点，直到队列为空
-            // 队列元素出队
-            $tempJieDian = array_pop($duiLie);
-            // 存放结点数据
-            if ($tempJieDian->jieDianZhi !== null) $xuLie[] = $tempJieDian->jieDianZhi;
-            // 左结点先入队，先遍历
-            if ($tempJieDian->zuoZhiZhen !== null) array_unshift($duiLie, $tempJieDian->zuoZhiZhen);
-            // 右结点后入队，后遍历
-            if ($tempJieDian->youZhiZhen !== null) array_unshift($duiLie, $tempJieDian->youZhiZhen);
+        if ($genJieDianZhiZhen === null) {
+            return 0;
         }
-
-        return $xuLie;
-    }
-```
-
-广度优先算法分层输出，还是使用队列实现，每一次while循环计算当前层要遍历几个结点，然后for循环会把当前层要遍历的结点全部遍历然后把下一层的结点全部放入队列。这也可以用来计算二叉树的最大深度。
-
-```php
-    /**
-     * 广度优先遍历，可分层输出结果
-     * @return array
-     */
-    public function guangDuYouXianBianLiFenCeng()
-    {
-        $xuLie = [];
-        $cengShu = 1;
-        $duiLie = [];
-        // 根结点入队
-        array_push($duiLie, $this->genJieDian);
-        while ($length = count($duiLie)) {
-            // 持续输出结点，直到队列为空
-            for ($i = 0; $i < $length; $i++) {
-                // 队列元素出队
-                $tempJieDian = array_shift($duiLie);
-                if ($tempJieDian->jieDianZhi !== null) $xuLie[$cengShu][] = $tempJieDian->jieDianZhi;
-                // 左结点先入队，先遍历
-                if ($tempJieDian->zuoZhiZhen !== null) array_push($duiLie, $tempJieDian->zuoZhiZhen);
-                // 右结点后入队，后遍历
-                if ($tempJieDian->youZhiZhen !== null) array_push($duiLie, $tempJieDian->youZhiZhen);
-            }
-            // 一层遍历结束，层数+1
-            $cengShu++;
+        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
+            return 0;
         }
+        $zuoZiShuShenDu = $this->jiSuanZuiDaShenDuDiGui($genJieDian->zuoZhiZhen);
+        $youZiShuShenDu = $this->jiSuanZuiDaShenDuDiGui($genJieDian->youZhiZhen);
 
-        return $xuLie;
+        return max($zuoZiShuShenDu, $youZiShuShenDu) + 1;
     }
 ```
 
-除了广度优先遍历还可以使用深度优先遍历，与广度优先遍历使用队列不同的是，深度优先遍历要用到栈结构。在PHP中栈结构也可以用数组构造一个简单的，使用`array_push()`和`array_pop()`模拟入栈和出栈
+二叉树的深度优先遍历算法需要用到栈结构。和队列结构类似，在PHP中栈结构也可以用数组构造一个简单的。使用`array_push()`和`array_pop()`模拟入栈和出栈
 
 ```php
     /**
@@ -424,34 +451,127 @@ class ErChaShu
         $xuLie = [];
         $zhan = [];
         // 根结点入栈
-        array_push($zhan, $this->genJieDian);
+        array_push($zhan, $this->genJieDianZhiZhen);
         while (!empty($zhan)) {
-            // 持续输出结点，直到栈为空
+            // 持续遍历，直到栈为空
             // 栈顶元素出栈
-            $tempJieDian = array_pop($zhan);
-            // 存放结点数据
-            if ($tempJieDian->jieDianZhi !== null) $xuLie[] = $tempJieDian->jieDianZhi;
-            // 右结点先入栈，后遍历
-            if ($tempJieDian->youZhiZhen !== null) array_push($zhan, $tempJieDian->youZhiZhen);
-            // 左结点后入栈，先遍历
-            if ($tempJieDian->zuoZhiZhen !== null) array_push($zhan, $tempJieDian->zuoZhiZhen);
+            $tempJieDianZhiZhen = array_pop($zhan);
+            if ($tempJieDianZhiZhen === null) {
+                continue;
+            }
+            $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+            if ($tempJieDian === null) {
+                continue;
+            }
+            if ($tempJieDian->jieDianZhi !== null) {
+                // 存放结点数据
+                $xuLie[] = $tempJieDian->jieDianZhi;
+            }
+            if ($tempJieDian->youZhiZhen !== null) {
+                // 右结点先入栈，后遍历
+                array_push($zhan, $tempJieDian->youZhiZhen);
+            }
+            if ($tempJieDian->zuoZhiZhen !== null) {
+                // 左结点后入栈，先遍历
+                array_push($zhan, $tempJieDian->zuoZhiZhen);
+            }
         }
 
         return $xuLie;
     }
 ```
 
-测试代码。
+二叉树的广度优先遍历算法，需要使用队列实现。
 
 ```php
-$numList = ['A', 'B', 'C', null, 'D', null, 'E', null, null, 'F', 'I', null, null, 'J', null];
-$erChaShu = new ErChaShu();
-$erChaShu->setYuanSuList($numList);
-echo json_encode($erChaShu->getErChaShu());
+    /**
+     * 广度优先遍历
+     * @return array
+     */
+    public function guangDuYouXianBianLi()
+    {
+        $xuLie = [];
+        $duiLie = [];
+        array_unshift($duiLie, $this->genJieDianZhiZhen);
+        while (!empty($duiLie)) {
+            $tempJieDianZhiZhen = array_pop($duiLie);
+            if ($tempJieDianZhiZhen === null) {
+                continue;
+            }
+            $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+            if ($tempJieDian === null) {
+                continue;
+            }
+            if ($tempJieDian->jieDianZhi !== null) {
+                // 存放结点数据
+                $xuLie[] = $tempJieDian->jieDianZhi;
+            }
+            if ($tempJieDian->zuoZhiZhen !== null) {
+                // 左结点先入队，先遍历
+                array_unshift($duiLie, $tempJieDian->zuoZhiZhen);
+            }
+            if ($tempJieDian->youZhiZhen !== null) {
+                // 右结点后入队，后遍历
+                array_unshift($duiLie, $tempJieDian->youZhiZhen);
+            }
+        }
+
+        return $xuLie;
+    }
+```
+
+广度优先遍历算法还可以分层输出结果，我们这里复用上面的代码。如果需要分层输出，则在每一次while循环中，需要计算当前层次要遍历几个结点。然后for循环会把当前层要遍历的结点全部遍历，然后把下一层的结点全部放入队列。同时这个方法这也可以用来计算二叉树的最大深度。
+
+```php
+    /**
+     * 广度优先遍历，可分层输出结果
+     * @return array
+     */
+    public function guangDuYouXianBianLiFenCeng()
+    {
+        $xuLie = [];
+        $cengShu = 1;
+        $duiLie = [];
+        array_unshift($duiLie, $this->genJieDianZhiZhen);
+        while (!empty($duiLie)) {
+            $length = count($duiLie);
+            for ($i = 0; $i < $length; $i++) {
+                $tempJieDianZhiZhen = array_pop($duiLie);
+                if ($tempJieDianZhiZhen === null) {
+                    continue;
+                }
+                $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+                if ($tempJieDian === null) {
+                    continue;
+                }
+                if ($tempJieDian->jieDianZhi !== null) {
+                    $xuLie[$cengShu][] = $tempJieDian->jieDianZhi;
+                }
+                if ($tempJieDian->zuoZhiZhen !== null) {
+                    array_unshift($duiLie, $tempJieDian->zuoZhiZhen);
+                }
+                if ($tempJieDian->youZhiZhen !== null) {
+                    array_unshift($duiLie, $tempJieDian->youZhiZhen);
+                }
+            }
+            // 一层遍历结束，层数+1
+            $cengShu++;
+        }
+
+        return $xuLie;
+    }
+```
+
+测试代码：
+
+```php
+// $yuanSuBiao = ['V0', 'V1', 'V2', null, 'V4', null, 'V6', null, null, 'V9', 'V10', null, null, 'V13', null];
+// $erChaShu = new ErChaShu($yuanSuBiao);
+// echo json_encode($erChaShu->getErChaShu());
 // echo json_encode($erChaShu->qianXuBianLi());
 // echo json_encode($erChaShu->zhongXuBianLi());
 // echo json_encode($erChaShu->houXuBianLi());
-// echo json_encode($erChaShu->zuiDaShenDu());
+// echo json_encode($erChaShu->jiSuanZuiDaShenDu());
 // echo json_encode($erChaShu->guangDuYouXianBianLi());
 // echo json_encode($erChaShu->guangDuYouXianBianLiFenCeng());
 // echo json_encode($erChaShu->shenDuYouXianBianLi());
