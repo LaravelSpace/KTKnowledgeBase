@@ -8,13 +8,13 @@
 
 ---
 
-## 二叉树
+## 二叉树（Binary Tree）
 
-二叉树（Binary Tree）是树形结构的一个重要类型。
+二叉树是树形结构的一个重要类型。在二叉树中，一个元素也称作一个结点。
 
-### 定义
+二叉树是n个有限元素的集合，该集合或者为空、或者由一个称为根（root）的元素及两个不相交的、被分别称为左子树和右子树的二叉树组成，是有序树。当集合为空时，称该二叉树为空二叉树。
 
-二叉树是n个有限元素的集合，该集合或者为空、或者由一个称为根（root）的元素及两个不相交的、被分别称为左子树和右子树的二叉树组成，是有序树。当集合为空时，称该二叉树为空二叉树。在二叉树中，一个元素也称作一个结点。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。
+二叉树特点是每个结点最多只能有两棵子树，且有左右之分。
 
 ### 特殊类型
 
@@ -117,20 +117,13 @@ class ErChaShuJieDian
 
 同时由于PHP里没有C语言的指针这样的东西，所以我们用一个key-value数组，模拟内存中指针和指针指向的内存空间的关系。在这里指针映射成了数组的下标，指针指向的内存空间就是数组的值。
 
-将数组转换成二叉树的代码如下：
-
 ```php
 /**
- * Class ErChaShu [二叉树]
+ * Trait XuNiNeiCunTrait [虚拟内存]
  * @package App\ShuJuJieGou
  */
-class ErChaShu
+trait XuNiNeiCunTrait
 {
-    /**
-     * @var array [二叉树元素表]
-     */
-    protected $yuanSuBiao;
-
     /**
      * @var array [虚拟内存空间]
      * 用于模拟C语言中的指针
@@ -144,6 +137,66 @@ class ErChaShu
     protected $xuNiNeiCunDaXiao;
 
     /**
+     * 虚拟内存初始化
+     */
+    protected function xuNiNeiCunChuShiHua()
+    {
+        $this->xuNiNeiCunKongJian = [];
+        $this->xuNiNeiCunDaXiao = 0;
+    }
+
+    /**
+     * 分配虚拟内存
+     * 这个方法需要各个调用的类自行编码
+     */
+    protected function fenPeiXuNiNeiCun()
+    {
+    }
+
+    /**
+     * 获取虚拟内存数据
+     * @param string $zhiZhen
+     * @return mixed|null
+     */
+    protected function huoQuNeiCunShuJu($zhiZhen)
+    {
+        if (!is_string($zhiZhen) || strlen($zhiZhen) < 1) {
+            return null;
+        }
+        if (isset($this->xuNiNeiCunKongJian[$zhiZhen])) {
+            return $this->xuNiNeiCunKongJian[$zhiZhen];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 整理虚拟内存空间，移除不需要的元素
+     * 这个方法需要各个调用的类自行编码
+     */
+    protected function zhenLiXuNiNeiCunKongJian()
+    {
+    }
+}
+```
+
+将数组转换成二叉树的代码如下：
+
+```php
+/**
+ * Class ErChaShu [二叉树]
+ * @package App\ShuJuJieGou
+ */
+class ErChaShu
+{
+    use XuNiNeiCunTrait;
+    
+    /**
+     * @var array [二叉树元素表]
+     */
+    protected $yuanSuBiao;
+
+    /**
      * @var string [根结点指针]
      */
     protected $genJieDianZhiZhen;
@@ -155,15 +208,40 @@ class ErChaShu
      */
     public function __construct($yuanSuBiao)
     {
+        $this->xuNiNeiCunChuShiHua();
         $this->yuanSuBiao = [];
-        $this->xuNiNeiCunKongJian = [];
-        $this->xuNiNeiCunDaXiao = 0;
         $this->genJieDianZhiZhen = null;
         if (is_array($yuanSuBiao) && count($yuanSuBiao) > 0) {
             $this->yuanSuBiao = $yuanSuBiao;
             $this->gouZaoErChaShu();
             $this->qianXuBianLiXiuJian();
             $this->zhenLiXuNiNeiCunKongJian();
+        }
+    }
+    
+    /**
+     * 分配虚拟内存
+     * @param string $jieDianZhi
+     * @return string
+     */
+    protected function fenPeiXuNiNeiCun($jieDianZhi)
+    {
+        $zhiZhen = 'zhi_zhen_' . $this->xuNiNeiCunDaXiao;
+        ++$this->xuNiNeiCunDaXiao;
+        $this->xuNiNeiCunKongJian[$zhiZhen] = new ErChaShuJieDian($jieDianZhi);
+
+        return $zhiZhen;
+    }
+
+    /**
+     * 整理虚拟内存空间，移除不需要的元素
+     */
+    protected function zhenLiXuNiNeiCunKongJian()
+    {
+        foreach ($this->xuNiNeiCunKongJian as $key => $value) {
+            if ($value->jieDianZhi === '') {
+                unset($this->xuNiNeiCunKongJian[$key]);
+            }
         }
     }
 
@@ -197,20 +275,6 @@ class ErChaShu
             $this->yiCiChaRuJieDian($jieDianZhiZhen);
         }
     }
-
-    /**
-     * 分配虚拟内存
-     * @param string $jieDianZhi
-     * @return string
-     */
-    protected function fenPeiXuNiNeiCun($jieDianZhi)
-    {
-        $zhiZhen = 'zhi_zhen_' . $this->xuNiNeiCunDaXiao;
-        ++$this->xuNiNeiCunDaXiao;
-        $this->xuNiNeiCunKongJian[$zhiZhen] = new ErChaShuJieDian($jieDianZhi);
-
-        return $zhiZhen;
-    }
 }
 ```
 
@@ -235,7 +299,7 @@ class ErChaShu
             if ($tempJieDianZhiZhen === null) {
                 throw new \Exception("指针：({$tempJieDianZhiZhen})为空");
             }
-            $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+            $tempJieDian = $this->huoQuNeiCunShuJu($tempJieDianZhiZhen);
             if ($tempJieDian === null) {
                 throw new \Exception("结点：({$tempJieDianZhiZhen})为空");
             }
@@ -280,12 +344,12 @@ class ErChaShu
         if ($genJieDianZhiZhen === null) {
             return;
         }
-        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        $genJieDian = $this->huoQuNeiCunShuJu($genJieDianZhiZhen);
         if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
             return;
         }
         if ($genJieDian->zuoZhiZhen !== null) {
-            $zuoJieDian = $this->xuNiNeiCunKongJian[$genJieDian->zuoZhiZhen];
+            $zuoJieDian = $this->huoQuNeiCunShuJu($genJieDian->zuoZhiZhen);
             if ($zuoJieDian->jieDianZhi === '') {
                 $genJieDian->zuoZhiZhen = null;
             } else {
@@ -293,23 +357,11 @@ class ErChaShu
             }
         }
         if ($genJieDian->youZhiZhen !== null) {
-            $youJieDian = $this->xuNiNeiCunKongJian[$genJieDian->youZhiZhen];
+            $youJieDian = $this->huoQuNeiCunShuJu($genJieDian->youZhiZhen);
             if ($youJieDian->jieDianZhi === '') {
                 $genJieDian->youZhiZhen = null;
             } else {
                 $this->qianXuBianLiXiuJianDiGui($genJieDian->youZhiZhen);
-            }
-        }
-    }
-
-    /**
-     * 整理虚拟内存空间，移除不需要的元素
-     */
-    protected function zhenLiXuNiNeiCunKongJian()
-    {
-        foreach ($this->xuNiNeiCunKongJian as $key => $value) {
-            if ($value->jieDianZhi === '') {
-                unset($this->xuNiNeiCunKongJian[$key]);
             }
         }
     }
@@ -335,7 +387,7 @@ class ErChaShu
         if ($genJieDianZhiZhen === null) {
             return '';
         }
-        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        $genJieDian = $this->huoQuNeiCunShuJu($genJieDianZhiZhen);
         if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
             return '';
         }
@@ -365,7 +417,7 @@ class ErChaShu
         if ($genJieDianZhiZhen === null) {
             return '';
         }
-        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        $genJieDian = $this->huoQuNeiCunShuJu($genJieDianZhiZhen);
         if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
             return '';
         }
@@ -394,7 +446,7 @@ class ErChaShu
         if ($genJieDianZhiZhen === null) {
             return '';
         }
-        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        $genJieDian = $this->huoQuNeiCunShuJu($genJieDianZhiZhen);
         if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
             return '';
         }
@@ -428,7 +480,7 @@ class ErChaShu
         if ($genJieDianZhiZhen === null) {
             return 0;
         }
-        $genJieDian = $this->xuNiNeiCunKongJian[$genJieDianZhiZhen];
+        $genJieDian = $this->huoQuNeiCunShuJu($genJieDianZhiZhen);
         if ($genJieDian === null || $genJieDian->jieDianZhi === null) {
             return 0;
         }
@@ -459,7 +511,7 @@ class ErChaShu
             if ($tempJieDianZhiZhen === null) {
                 continue;
             }
-            $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+            $tempJieDian = $this->huoQuNeiCunShuJu($tempJieDianZhiZhen);
             if ($tempJieDian === null) {
                 continue;
             }
@@ -498,7 +550,7 @@ class ErChaShu
             if ($tempJieDianZhiZhen === null) {
                 continue;
             }
-            $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+            $tempJieDian = $this->huoQuNeiCunShuJu($tempJieDianZhiZhen);
             if ($tempJieDian === null) {
                 continue;
             }
@@ -540,7 +592,7 @@ class ErChaShu
                 if ($tempJieDianZhiZhen === null) {
                     continue;
                 }
-                $tempJieDian = $this->xuNiNeiCunKongJian[$tempJieDianZhiZhen];
+                $tempJieDian = $this->huoQuNeiCunShuJu($tempJieDianZhiZhen);
                 if ($tempJieDian === null) {
                     continue;
                 }
