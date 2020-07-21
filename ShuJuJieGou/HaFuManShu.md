@@ -81,7 +81,7 @@ class ErChaShuJieDian
         $this->jieDianZhi = $jieDianZhi;
         $this->zuoZhiZhen = null;
         $this->youZhiZhen = null;
-        if (is_string($jieDianZhi) && strlen($jieDianZhi) > 0) {
+        if (is_string($jieDianZhi) && $jieDianZhi !== '') {
             $this->jieDianZhi = $jieDianZhi;
         }
     }
@@ -165,7 +165,7 @@ class HaFuManShu
         $this->ziFuQuanZhongBiao = [];
         $this->haFuManBianMaBiao = [];
         $this->genJieDianZhiZhen = null;
-        if (is_string($muBiaoZiFuZhuan) && strlen($muBiaoZiFuZhuan) > 0) {
+        if (is_string($muBiaoZiFuZhuan) && $muBiaoZiFuZhuan !== '') {
             $this->muBiaoZiFuChuan = $muBiaoZiFuZhuan;
             $this->jiSuanZiFuQuanZhong();
             $this->gouZaoHaFuManShu();

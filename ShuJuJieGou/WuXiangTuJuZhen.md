@@ -103,7 +103,7 @@ class WuXiangTuJuZhen
      * WuXiangTuJuZhen constructor.
      * @param array $luJingLieBiao
      */
-    public function __construct($luJingLieBiao = [])
+    public function __construct($luJingLieBiao)
     {
         $this->luJingLieBiao = [];
         $this->dingDianShu = 0;
@@ -112,26 +112,19 @@ class WuXiangTuJuZhen
         $this->linJieJuZhen = [];
         $this->dingDianFangWenLieBiao = [];
         $this->bianLiJieGuo = '';
-
         if (is_array($luJingLieBiao) && count($luJingLieBiao) > 0) {
             $this->luJingLieBiao = $luJingLieBiao;
             $this->gouZaoLinJieJuZhen();
         }
     }
-    
-    public function getDingDianLieBiao()
-    {
-        return $this->dingDianLieBiao;
-    }
-
-    public function getZuoBiaoLieBiao()
-    {
-        return $this->zuoBiaoLieBiao;
-    }
 
     public function getLinJieJuZhen()
     {
-        return $this->linJieJuZhen;
+        return [
+            'dingDianLieBiao' => $this->dingDianLieBiao,
+            'zuoBiaoLieBiao' => $this->zuoBiaoLieBiao,
+            'linJieJuZhen' => $this->linJieJuZhen,
+        ];
     }
 
     /**
@@ -180,13 +173,9 @@ class WuXiangTuJuZhen
 **深度优先遍历**：是指在遍历过程中，一旦发现连通的新的顶点，就移动到新的顶点。并从新的顶点出发继续遍历。新的顶点遍历完了再返回老的顶点继续遍历，直到所有的顶点都被访问到。
 
 ```php
-    public function getBianLiJieGuo()
-    {
-        return $this->bianLiJieGuo;
-    }
-
     /**
      * 深度优先遍历
+     * @return string
      */
     public function shenDuYouXianBianLi()
     {
@@ -211,13 +200,16 @@ class WuXiangTuJuZhen
         $this->dingDianFangWenLieBiao[$i] = 1;
         for ($j = 0; $j < $this->dingDianShu; ++$j) {
             if ($this->linJieJuZhen[$i][$j] === 1 && $this->dingDianFangWenLieBiao[$j] === 0)
-      
+                // 如果发现连通的顶点而且顶点没有访问过，就访问该顶点
+                $this->shenDuYouXianBianLiDiGui($j);
+        }
+    }
 ```
 
 **广度优先遍历**：是指在遍历过程中，先把一个顶点遍历结束，找到所有连通的新的顶点。然后依次遍历这些新的顶点，再找到和这些顶点连通的新的顶点。这里可以借助队列处理顶点先后遍历的顺序。
 
 ```php
-    /**
+   /**
      * 广度优先遍历
      * @return string
      */
@@ -258,19 +250,17 @@ class WuXiangTuJuZhen
 ### 测试代码
 
 ```php
-$luJingLieBiao = [
-    ['V0', 'V1'], ['V0', 'V5'],
-    ['V1', 'V2'], ['V1', 'V8'], ['V1', 'V6'],
-    ['V2', 'V3'], ['V2', 'V8'],
-    ['V3', 'V4'], ['V3', 'V6'], ['V3', 'V7'], ['V3', 'V8'],
-    ['V4', 'V5'], ['V4', 'V7'],
-    ['V5', 'V6'],
-    ['V6', 'V7'],
-];
-$wuXiangTu = new WuXiangTuJuZhen($luJingLieBiao);
-// echo json_encode($wuXiangTu->getDingDianLieBiao());
-// echo json_encode($wuXiangTu->getZuoBiaoLieBiao());
-echo json_encode($wuXiangTu->getLinJieJuZhen());
+// $luJingLieBiao = [
+//     ['V0', 'V1'], ['V0', 'V5'],
+//     ['V1', 'V2'], ['V1', 'V8'], ['V1', 'V6'],
+//     ['V2', 'V3'], ['V2', 'V8'],
+//     ['V3', 'V4'], ['V3', 'V6'], ['V3', 'V7'], ['V3', 'V8'],
+//     ['V4', 'V5'], ['V4', 'V7'],
+//     ['V5', 'V6'],
+//     ['V6', 'V7'],
+// ];
+// $wuXiangTu = new WuXiangTuJuZhen($luJingLieBiao);
+// echo json_encode($wuXiangTu->getLinJieJuZhen());
 // echo json_encode($wuXiangTu->shenDuYouXianBianLi());
 // echo json_encode($wuXiangTu->guangDuYouXianBianLi());
 ```
