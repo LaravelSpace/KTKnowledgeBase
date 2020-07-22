@@ -2,7 +2,7 @@
 {
   "updated_at": "2020-07-13",
   "updated_by": "KelipuTe",
-  "tags": "数据结构,Data Structure,树,Tree,二叉树,Binary Tree"
+  "tags": "数据结构,Data Structure,树,Tree"
 }
 ```
 

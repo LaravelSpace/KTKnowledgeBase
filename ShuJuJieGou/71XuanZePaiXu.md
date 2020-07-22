@@ -2,13 +2,13 @@
 {
   "updated_at": "2020-07-17",
   "updated_by": "KelipuTe",
-  "tags": "算法,Algorithm,选择排序,Selection Sort"
+  "tags": "数据结构,Data Structure,算法,Algorithm,排序,Sort"
 }
 ```
 
 ---
 
-## 选择排序（Selection Sort）
+## 选择排序
 
 选择排序（Selection Sort）是一种简单直观的排序算法。
 
@@ -26,88 +26,17 @@ n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结�
 
 ### 动图演示
 
-<img src="E:\Workspace\KTKnowledgeBase\Image\SuanFa\XuanZePaiXu_img01.gif" style="zoom:67%;" />
+<img src="E:\Workspace\KTKnowledgeBase\Image\ShuJuJieGou\XuanZePaiXu_img01.gif" style="zoom:67%;" />
 
-### PHP 代码
+### 选择排序算法
 
 ```php
-namespace App\SuanFa;
-
 /**
- * 选择排序
- * Class XuanZePaiXu
+ * Class XuanZePaiXu [选择排序]
  */
-class XuanZePaiXu
+class XuanZePaiXu extends PaiXuAbstract
 {
-    /**
-     * @var array [待排序序列]
-     */
-    protected $beforeSortList;
-
-    /**
-     * @var array [排序结果序列]
-     */
-    protected $afterSortList;
-
-    /**
-     * @var int [排序次数]
-     */
-    protected $sortTimes;
-
-    /**
-     * @var array [排序步骤]
-     */
-    protected $sortSteps;
-
-    /**
-     * XuanZePaiXu constructor.
-     * @param array $beforeSortList
-     */
-    public function __construct($beforeSortList = [])
-    {
-        $this->beforeSortList = $beforeSortList;
-        $this->afterSortList = [];
-        $this->sortTimes = 0;
-        $this->sortSteps = [];
-        if (is_array($beforeSortList) && count($beforeSortList) > 0) $this->selectionSort();
-    }
-
-    /**
-     * 设置待排序序列
-     * @param array $beforeSortList
-     */
-    public function setBeforeSortList($beforeSortList = [])
-    {
-        $this->beforeSortList = $beforeSortList;
-        $this->afterSortList = [];
-        $this->sortTimes = 0;
-        $this->sortSteps = [];
-        if (is_array($beforeSortList) && count($beforeSortList) > 0) $this->selectionSort();
-    }
-
-    /**
-     * 获取排序结果序列和排序过程细节
-     * @return array
-     */
-    public function getSortResult()
-    {
-        return [
-            'before_sort_list' => $this->beforeSortList,
-            'after_sort_list' => $this->afterSortList,
-            'sort_times' => $this->sortTimes,
-            'sort_steps' => $this->sortSteps,
-        ];
-    }
-}
-```
-
-选择排序算法：
-
-```php
-    /**
-     * 选择排序
-     */
-    protected function selectionSort()
+    protected function doSort()
     {
         $afterSortList = $this->beforeSortList;
         $length = count($afterSortList);
@@ -130,6 +59,7 @@ class XuanZePaiXu
         }
         $this->afterSortList = $afterSortList;
     }
+}
 ```
 
 测试代码：
@@ -143,7 +73,3 @@ for ($i = 0; $i < $length; $i++) {
 $xuanZePaiXu = new XuanZePaiXu($beforeSortList);
 echo json_encode($xuanZePaiXu->getSortResult());
 ```
-
-## 参考来源
-
-[十大经典排序算法（动图演示）](https://www.cnblogs.com/onepixel/articles/7674659.html)

@@ -2,13 +2,13 @@
 {
   "updated_at": "2020-07-12",
   "updated_by": "KelipuTe",
-  "tags": "数据结构,Data Structure,线性表,List,栈,Stack"
+  "tags": "数据结构,Data Structure,线性表,List"
 }
 ```
 
 ---
 
-## 栈（Stack）
+## 栈
 
 栈（stack）是限定**仅在表尾进行插入和删除操作**的线性表。
 
