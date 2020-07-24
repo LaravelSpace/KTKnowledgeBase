@@ -1,6 +1,5 @@
 ```json
 {
-  "title": "神话 —— 希腊、罗马及北欧的神话故事和英雄传说",
   "updated_at": "2020-06-26",
   "updated_by": "KelipuTe",
   "tags": "书籍,神话"

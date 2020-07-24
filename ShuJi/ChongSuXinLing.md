@@ -1,6 +1,5 @@
 ```json
 {
-  "title": "重塑心灵 —— Neuro Linguistic Programming",
   "updated_at": "2020-06-25",
   "updated_by": "KelipuTe",
   "tags": "书籍,心理学"

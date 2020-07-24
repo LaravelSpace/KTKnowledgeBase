@@ -1,6 +1,5 @@
 ```json
 {
-  "title": "交际心理学",
   "updated_at": "2020-06-29",
   "updated_by": "KelipuTe",
   "tags": "书籍,心理学"
