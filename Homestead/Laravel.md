@@ -2,7 +2,7 @@
 {
   "updated_by": "KelipuTe",
   "updated_at": "2020-06-29",
-  "tags": "Homestead,Laravel"
+  "tags": "Homestead,Vagrant,Laravel"
 }
 ```
 
@@ -42,7 +42,16 @@ Download redirected to host: vagrantcloud-files-production.s3.amazonaws.com
 ==> box: Successfully added box 'laravel/homestead' (v9.5.1) for 'virtualbox'!
 ```
 
+我用的是 **Windows 10** 操作系统，下载下来的 box 默认放置在 **C:\Users\Administrator\.vagrant.d\boxes** 目录。
+
 如果下载失败可以尝试使用下载器下载，下载链接从命令行的输出中可以找到。下载完成后使用 `vagrant box add` 命令添加。
+
+可以使用 `$ vagrant box list` 命令查看已经添加的 box。
+
+```
+$ vagrant box list
+laravel/homestead (virtualbox, 9.5.1)
+```
 
 #### 下载 Homestead 项目代码
 
@@ -50,17 +59,18 @@ Download redirected to host: vagrantcloud-files-production.s3.amazonaws.com
 
 通过 `$ git clone https://github.com/laravel/homestead.git` 命令克隆最新的代码。克隆完成后，使用 git bash 命令行，先执行 `git checkout release` 切换到稳定版，克隆时默认是 master 分支。
 
-然后，在 Homestead 根目录中使用 `$ bash init.sh` 命令来进行初始化，创建 Homestead.yaml 等配置文件。在 Windows 操作系统里，可也以通过执行 **init.bat** 文件来进行初始化。
+然后，在 Homestead 根目录中使用 `$ bash init.sh` 命令来进行初始化，创建 Homestead.yaml 等配置文件。在 Windows 操作系统里，可也以通过执行目录下的 **init.bat** 文件来进行初始化。
 
 #### 配置 Homestead.yaml 文件
 
-```
+```yaml
 folders:
-    - map: ~/code/project ## 项目在电脑中的目录
-      to: /home/vagrant/project ## 项目在虚拟机中的目录
+    - map: ~/code/project # 项目在电脑中的目录
+      to: /home/vagrant/project # 项目在虚拟机中的目录
+
 sites:
-    - map: homestead.test ## 映射的域名
-      to: /home/vagrant/project1/public ## 映射的具体路径
+    - map: homestead.test # 映射的域名
+      to: /home/vagrant/code/public # 映射的具体路径
 ```
 
 Homestead 提供了很多常用的软件，在项目中可以根据需要进行合理配置。
@@ -104,7 +114,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-启动完成后，虚拟机内的 nginx 服务器就已经运行了，这是就可以通过配置的 IP 或者 域名 访问项目了。
+启动完成后，虚拟机内的Nginx服务器就已经运行了，这是就可以通过配置的IP或者域名访问项目了。
 
 #### Homestead 端口转发
 
@@ -154,7 +164,6 @@ Bringing machine 'homestead' up with 'virtualbox' provider...
     homestead: /home/vagrant/code => E:/WorkspacePHP/KTCommunity
 ==> homestead: Machine already provisioned. Run `vagrant provision` or use the `--provision`
 ==> homestead: flag to force provisioning. Provisioners marked to run always will still run.
-
 ```
 
 这里我们可以看到本来 mysql 的 3306 端口应该被转发到 33060 端口，但是这里应该是由于什么原因，被转发到 2200 端口了，所以从外部使用 Navicate 等工具连接虚拟机的 mysql 时，端口号就要填 2200 而不是默认配置的 33060。
@@ -280,9 +289,13 @@ Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 
 #### 虚拟机访问不通的问题
 
-如果出现启动虚拟机后访问不通 192.168.10.10 的问题，可以尝试使用 `$ vagrant provision && vagrant reload` 命令重新应用更改 vagrant 配置，并重启虚拟机。 
+如果出现启动虚拟机后访问不通 192.168.10.10 的问题，可以尝试使用 `$ vagrant provision` 命令重新应用更改 vagrant 配置，然后使用 `$ vagrant reload` 命令重启虚拟机。 
 
 如果修改了 Homestead 的配置，也需要使用上面的命令重新应用更改 vagrant 配置，并重启虚拟机。
+
+#### 关闭虚拟机
+
+使用 `$ vagrant halt` 命令关闭虚拟机。
 
 ---
 

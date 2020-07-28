@@ -2,7 +2,7 @@
 {
   "updated_by": "KelipuTe",
   "updated_at": "2020-06-29",
-  "tags": "Homestead,Swoole"
+  "tags": "Homestead,Vagrant,Swoole"
 }
 ```
 
