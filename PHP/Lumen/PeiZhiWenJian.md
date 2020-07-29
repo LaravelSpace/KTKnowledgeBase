@@ -1,6 +1,5 @@
 ```json
 {
-  "title": "在 Lumen 中使用配置文件",
   "updated_at": "2020-06-30",
   "updated_by": "KelipuTe",
   "tags": "PHP,Lumen"
@@ -74,5 +73,7 @@ $userModel->on('mysql2')->find(1); // on() 方法也是可以的
 原因：Lumen 框架下的服务都是按需加载的。
 例如：从源码中复制 database.php 文件到 app\config 目录下。
 如果没有调用过 DB(或者打开 `$app->withEloquent()`)，直接使用 config(database) 会返回 Null。调用过 DB(或者打开 `$app->withEloquent()`) 后，使用 config(database) 才会返回配置文件的内容。返回 Null 是因为不进行上述数据库相关的操作，程序里没有别的地方会加载 database.php。
+
+
 
 详细的信息可以参考 [Lumen 文档](https://learnku.com/docs/lumen/5.7/configuration/2403)。

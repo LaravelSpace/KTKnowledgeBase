@@ -32,7 +32,7 @@ composer config --unset repos.packagist
 
 这个时候可以使用 `composer self-update` 命令更新 composer。
 
-##### 报错处理
+##### 报错1
 
 ```
 > composer selfupdate
@@ -47,6 +47,8 @@ Downloading (100%)
 
 self-update [-r|--rollback] [--clean-backups] [--no-progress] [--update-keys] [--stable] [--preview] [--snapshot] [--set-channel-only] [--] [<version>]
 ```
+
+##### 报错1的解决方案
 
 这种格式的报错，比较玄学的解决方法是：把全局设置的镜像路由里 **https** 改成 **http**。
 

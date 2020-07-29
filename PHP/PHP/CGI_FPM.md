@@ -1,6 +1,5 @@
 ```json
 {
-  "title": "CGI,FastCGI,PHP-CGI,PHP-FPM 的关系",
   "updated_at": "2020-06-20",
   "updated_by": "KelipuTe",
   "tags": "PHP"
