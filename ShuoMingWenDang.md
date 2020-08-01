@@ -18,23 +18,26 @@
 
 目录和文件的排序使用英文字母正序排序。
 
-##### 项目根目录的目录结构
-
-- Apache
-- CaiPu -- 菜谱
-- GeekBang -- 极客时间（等待整理）
-- Homestead
-- LeetCode -- LeetCode 算法
-- Linux
-- Markdown
-- PHP
-- SheJiMoShi -- 设计模式
-- ShuJi -- 书籍
-- ShuJuJieGou -- 数据结构（施工中）
-- SuanFa -- 算法
-- Unity
-- WeiFenLei -- 未分类
-- YouXi -- 游戏
+| 项目根目录的目录结构 |                         |
+| -------------------- | ----------------------- |
+| Apache               | Apache服务器            |
+| CaiPu                | 菜谱                    |
+| GeekBang             | 极客时间（等待整理）    |
+| Homestead            | Homestead虚拟环境       |
+| LeetCode             | LeetCode算法题目        |
+| Linux                | Linux操作系统相关知识   |
+| Markdown             | Markdown语法样例        |
+| PHP                  | PHP相关知识             |
+| RuanJianGongCheng    | 软件工程相关知识        |
+| SheJiMoShi           | 设计模式                |
+| ShuJi                | 书籍                    |
+| ShuJuJieGou          | 数据结构                |
+| SuanFa               | 算法                    |
+| Unity                | Unity学习笔记           |
+| WangLuoGongCheng     | 网络工程相关知识        |
+| WeiFenLei            | 未分类的文件件          |
+| Windows              | Windows操作系统相关知识 |
+| YouXi                | 游戏                    |
 
 #### 文件头部
 
@@ -54,7 +57,7 @@
 
 文件头部和文件主体之间、文件主体和参考来源之间使用分割线（---）分开。
 
-文件标题建议使用二级标题（##），不建议使用一级标题（太大了）。
+文件标题建议使用二级标题（\#\#），不建议使用一级标题（太大了）。
 
 #### 参考来源
 

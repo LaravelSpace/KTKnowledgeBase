@@ -12,28 +12,28 @@
 
 **数据结构（Data Structure）是纯理论的知识，不要纠结于用哪种语言去实现，把关注重点放在数据结构的抽象层面。**
 
-这个目录下放置有关数据结构的相关内容。
+这个目录下放置有关数据结构的内容。
 
-##### 数据结构目录的目录结构
-
-- 21ShuJuJieGouXuLun -- 数据结构绪论
-- 22SuanFaXuLun -- 算法绪论
-- 30XianXinBiao -- 线性表
-- 31Zhan -- 栈
-- 32DuiLie -- 队列
-- 40Chuan -- 字符串
-- 50Shu -- 树
-- 51ErChaShu -- 二叉树
-- 52XianSuoErChaShu -- 线索二叉树
-- 53HaFuManShu -- 哈夫曼树
-- 60Tu -- 图
-- 61WuXiangTuJuZhen -- 无向图邻接矩阵
-- 62WuXiangTuJuZhen -- 无向图邻接表
-- 63PuLiMuSuanFa -- 普里姆算法
-- 64KeLuSiKaErSuanFa -- 克鲁斯卡尔算法
-- 70PaiXu -- 排序算法准备工作
-- 71XuanZePaiXu -- 选择排序
-- 72ChaRuPaiXu -- 插入排序
+| 数据结构目录的目录结构 |                  |
+| ---------------------- | ---------------- |
+| 21ShuJuJieGouXuLun.md  | 数据结构绪论     |
+| 22SuanFaXuLun.md       | 算法绪论         |
+| 30XianXinBiao.md       | 线性表           |
+| 31Zhan.md              | 栈               |
+| 32DuiLie.md            | 队列             |
+| 40Chuan.md             | 字符串           |
+| 50Shu.md               | 树               |
+| 51ErChaShu.md          | 二叉树           |
+| 52XianSuoErChaShu.md   | 线索二叉树       |
+| 53HaFuManShu.md        | 哈夫曼树         |
+| 60Tu.md                | 图               |
+| 61WuXiangTuJuZhen.md   | 无向图邻接矩阵   |
+| 62WuXiangTuJuZhen.md   | 无向图邻接表     |
+| 63PuLiMuSuanFa.md      | 普里姆算法       |
+| 64KeLuSiKaErSuanFa.md  | 克鲁斯卡尔算法   |
+| 70PaiXu.md             | 排序算法准备工作 |
+| 71XuanZePaiXu.md       | 选择排序         |
+| 72ChaRuPaiXu.md        | 插入排序         |
 
 ---
 

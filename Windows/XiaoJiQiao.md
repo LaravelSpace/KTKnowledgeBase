@@ -2,7 +2,7 @@
 {
   "updated_by": "KelipuTe",
   "updated_at": "2020-07-29",
-  "tags": "Windows,小技巧"
+  "tags": "Windows,小技巧,tips"
 }
 ```
 
