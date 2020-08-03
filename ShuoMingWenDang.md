@@ -23,7 +23,6 @@
 | Apache               | Apache服务器            |
 | CaiPu                | 菜谱                    |
 | GeekBang             | 极客时间（等待整理）    |
-| Homestead            | Homestead虚拟环境       |
 | LeetCode             | LeetCode算法题目        |
 | Linux                | Linux操作系统相关知识   |
 | Markdown             | Markdown语法样例        |

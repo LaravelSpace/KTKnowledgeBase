@@ -1,14 +1,29 @@
 ```json
 {
   "updated_by": "KelipuTe",
-  "updated_at": "2020-07-02",
-  "tags": "极客时间,后端存储实践课"
+  "updated_at": "2020-08-03",
+  "tags": "极客时间,GeekBang,后端存储实践课"
 }
 ```
 
 ---
 
-## 简介和目录
+## [后端存储实践课](https://time.geekbang.org/column/intro/287)
+
+有能力请去购买正版课程。
+
+| 目录结构     |          |
+| ------------ | -------- |
+| 11KeQianBiDu | 课前必读 |
+|              |          |
+|              |          |
+|              |          |
+|              |          |
+|              |          |
+|              |          |
+|              |          |
+|              |          |
+|              |          |
 
 #### 简介
 
@@ -74,6 +89,3 @@
 
 [结束语 | 把奋斗当习惯](https://time.geekbang.org/column/article/229464)
 
-## 参考
-
-[后端存储实践课](https://time.geekbang.org/column/intro/287)
