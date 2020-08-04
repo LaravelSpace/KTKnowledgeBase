@@ -12,18 +12,22 @@
 
 有能力请去购买正版课程。
 
-| 目录结构     |          |
-| ------------ | -------- |
-| 11KeQianBiDu | 课前必读 |
-|              |          |
-|              |          |
-|              |          |
-|              |          |
-|              |          |
-|              |          |
-|              |          |
-|              |          |
-|              |          |
+| 目录结构               |                           |
+| ---------------------- | ------------------------- |
+| 11KeQianBiDu           | 课前必读                  |
+| 21DingDanShuJu.md      | 如何保证订单数据准确      |
+| 22ShangPinXiangQing.md | 商品详情页系统该如何设计  |
+| 23GouWuChe.md          | 如何设计购物车系统        |
+| 24ShiWu.md             | 数据库事务                |
+| 25FenBuShiShiWu.md     | 分布式事务                |
+| 26SouSuoXiTong.md      | 构建商品搜索系统          |
+| 27ShanKuPaoLu.md       | 删库跑路怎么办            |
+| 31ShuJuKuChaoShi.md    | 访问数据库超时和慢SQL     |
+| 32SQLDeZhiXing.md      | SQL是如何在数据库中执行的 |
+| 33QianZhiHuanCun.md    | 使用缓存应对高并发        |
+| 34DuXieFenLi.md        | MySQL读写分离             |
+| 35ZhuCongTongBu.md     | MySQL主从同步             |
+| 36ShuJuYueLaiYueDuo.md | 数据越来越多该怎么办      |
 
 #### 简介
 
