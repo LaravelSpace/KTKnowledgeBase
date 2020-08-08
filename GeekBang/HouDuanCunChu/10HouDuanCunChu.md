@@ -28,15 +28,16 @@
 | 34DuXieFenLi.md          | MySQL读写分离                |
 | 35ZhuCongTongBu.md       | MySQL主从同步                |
 | 36ShuJuYueLaiYueDuo.md   | 数据越来越多该怎么办         |
-| 41FenKuFenBiao.md        |                              |
-| 42RedisJiQun.md          |                              |
-| 43MySQLToRedis.md        |                              |
-| 44FenBuShiCunChu.md      |                              |
-| 45KuaXiTongTongBu.md     |                              |
-| 46GengHuanShuJuKu.md     |                              |
-| 47HaiLiangShuJuCunChu.md |                              |
-| 48HaiLiangShuJuChaXun.md |                              |
-| 49RocksDB.md             |                              |
+| 41FenKuFenBiao.md        | MySQL分库分表                |
+| 42RedisJiQun.md          | 构建Redis缓存集群            |
+| 43MySQLToRedis.md        | MySQL to Redis同步           |
+| 44FenBuShiCunChu.md      | 分布式存储                   |
+| 45KuaXiTongTongBu.md     | 跨系统实时同步数据           |
+| 46GengHuanShuJuKu.md     | 在不停机的情况下更换数据库   |
+| 51HaiLiangShuJuCunChu.md | 存储海量的数据               |
+| 52HaiLiangShuJuChaXun.md | 海量数据的查询               |
+| 53NewSQL.md              | New SQL                      |
+| 54RocksDB.md             | RocksDB                      |
 
 #### 简介
 

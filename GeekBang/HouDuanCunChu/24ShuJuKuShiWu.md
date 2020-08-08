@@ -43,7 +43,12 @@
 
 ACID是一个非常严格的定义，或者说是理想的情况。如果要完全满足ACID，一个数据库的所有事务和SQL都只能串行执行，这个性能肯定是不能满足一般系统的要求的。对账户系统和其他大多数交易系统来说，事务的原子性和持久性是必须要保证的，否则就失去了使用事务的意义，而一致性和隔离性其实可以做适当牺牲，来换取性能。所以，MySQL提供了四种隔离级别，具体来看一下这个表：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\HouDuanCunChu\ShuJuKuShiWu_img01.jpg)
+| 隔离级别                                   | 脏读（DR，Dirty Read） | 不可重复读（NR，NonRepeatable Read） | 幻读（PR，Phantom Read） |
+| ------------------------------------------ | ---------------------- | ------------------------------------ | ------------------------ |
+| 能读到未提交的数据（RU，READ-UNCOMMITTED） | Y                      | Y                                    | Y                        |
+| 能读到已提交的数据（RC，READ-COMMITTED）   | N                      | Y                                    | Y                        |
+| 可重复度（RR，REPEATABLE-READ）            | N                      | N                                    | Y                        |
+| 串行执行（SERIALIZABLE）                   | N                      | N                                    | N                        |
 
 这个表里面自上到下，一共有四种隔离级别：RU、RC、RR和SERIALIZABLE，这四种级别的隔离性越来越严格，性能也越来越差，在MySQL中默认的隔离级别是RR，可重复读。
 
