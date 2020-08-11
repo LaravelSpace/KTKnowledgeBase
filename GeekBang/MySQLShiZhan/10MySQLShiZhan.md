@@ -135,4 +135,8 @@
 
 结课测试 (1讲)
 
-[结课测试｜这些MySQL知识你都掌握了吗？](https://time.geekbang.org/column/article/225554)   https://time.geekbang.org/column/article/229464)
+[结课测试｜这些MySQL知识你都掌握了吗？](https://time.geekbang.org/column/article/225554)   
+
+## 参考来源
+
+[Mysql online DDL特性（一）](https://blog.csdn.net/finalkof1983/java/article/details/88355314)
