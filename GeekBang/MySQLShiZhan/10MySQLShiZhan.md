@@ -8,7 +8,15 @@
 
 ---
 
-## 简介和目录
+## [MySQL实战45讲](https://time.geekbang.org/column/intro/139)
+
+**推荐有能力的朋友们去购买正版课程。**
+
+有一些代码块一行显示不下，复制出来放到行长度够长的编辑器里去。
+
+| 目录结构 |      |
+| -------- | ---- |
+|          |      |
 
 #### 简介
 
@@ -128,6 +136,3 @@
 结课测试 (1讲)
 
 [结课测试｜这些MySQL知识你都掌握了吗？](https://time.geekbang.org/column/article/225554)   https://time.geekbang.org/column/article/229464)
-
-## 参考来源
-
