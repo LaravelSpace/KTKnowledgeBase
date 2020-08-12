@@ -86,9 +86,16 @@ mysql> alter table t engine=innodb,ALGORITHM=copy;
 mysql> alter table t add FULLTEXT(field_name);
 ```
 
-这个过程是inplace的，但会阻塞增删改操作，是非Online的。如果说这两个逻辑之间的关系是什么的话，可以概括为：1、DDL过程如果是Online的，就一定是inplace的；2、反过来未必，也就是说inplace的DDL，有可能不是Online的。截止到MySQL8.0，添加全文索引（FULLTEXT index）和空间索引(SPATIAL index)就属于这种情况。
+这个过程是inplace的，但会阻塞增删改操作，是非Online的。如果说这两个逻辑之间的关系是什么的话，可以概括为：
 
-最后，我们再延伸一下。optimize table、analyze table和alter table这三种方式重建表的区别。这里，我顺便再简单和你解释一下。从MySQL5.6版本开始，1、alter table t engine=InnoDB（也就是recreate）默认的就是上面图4的流程了；2、analyze tablet其实不是重建表，只是对表的索引信息做重新统计，没有修改数据，这个过程中加了MDL读锁；3、optimize tablet等于recreate+analyze。
+- 1、DDL过程如果是Online的，就一定是inplace的；
+- 2、反过来未必，也就是说inplace的DDL，有可能不是Online的。截止到MySQL8.0，添加全文索引（FULLTEXT index）和空间索引(SPATIAL index)就属于这种情况。
+
+最后，再延伸一下。optimize table、analyze table和alter table这三种方式重建表的区别。
+
+- 1、从MySQL5.6版本开始，alter table t engine=InnoDB（也就是recreate）默认的就是上面图4的流程了；
+- 2、analyze tablet其实不是重建表，只是对表的索引信息做重新统计，没有修改数据，这个过程中加了MDL读锁；
+- 3、optimize tablet等于recreate+analyze。
 
 ### 思考题
 
