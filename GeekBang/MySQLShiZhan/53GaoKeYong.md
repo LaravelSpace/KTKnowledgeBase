@@ -1,20 +1,16 @@
 ```json
 {
- "updated_by": "KelipuTe",
- "updated_at": "2020-07-06",
- "tags": "极客时间,MySQL实战45讲"
+  "updated_by": "KelipuTe",
+  "updated_at": "2020-07-06",
+  "tags": "极客时间,MySQL实战45讲,MySQL"
 }
 ```
 
 ---
 
-## 25 | MySQL是怎么保证高可用的？
+## 高可用
 
-在上一篇文章中，我和你介绍了 binlog  的基本内容，在一个主备关系中，每个备库接收主库的 binlog 并执行。正常情况下，只要主库执行更新生成的所有  binlog，都可以传到备库并被正确地执行，备库就能达到跟主库一致的状态，这就是最终一致性。但是，MySQL  要提供高可用能力，只有最终一致性是不够的。为什么这么说呢？今天我就着重和你分析一下。
-
-这里，我再放一次上一篇文章中讲到的双 M 结构的主备切换流程图。
-
-<img src="E:\Workspace\KTKnowledgeBase\Image\25-MySQLSZ45J_img01.png" style="zoom:50%;" />
+在一个主备关系中，每个备库接收主库的 binlog 并执行。正常情况下，只要主库执行更新生成的所有  binlog，都可以传到备库并被正确地执行，备库就能达到跟主库一致的状态，这就是最终一致性。但是，MySQL  要提供高可用能力，只有最终一致性是不够的。
 
 ### 主备延迟
 
@@ -155,9 +151,3 @@ insert into t(c) values(5);
 一般现在的数据库运维系统都有备库延迟监控，其实就是在备库上执行 show slave status，采集 seconds_behind_master  的值。假设，现在你看到你维护的一个备库，它的延迟监控的图像类似图 6，是一个  45°斜向上的线段，你觉得可能是什么原因导致呢？你又会怎么去确认这个原因呢？
 
 <img src="E:\Workspace\KTKnowledgeBase\Image\25-MySQLSZ45J_img06.png" style="zoom:50%;" />
-
-## 参考来源
-
-[MySQL实战45讲](https://time.geekbang.org/column/intro/139)
-
-*

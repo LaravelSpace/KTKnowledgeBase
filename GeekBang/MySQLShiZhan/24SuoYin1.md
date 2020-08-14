@@ -1,8 +1,8 @@
 ```json
 {
- "updated_by": "KelipuTe",
- "updated_at": "2020-07-05",
- "tags": "极客时间,GeekBang,MySQL实战45讲,MySQL"
+  "updated_by": "KelipuTe",
+  "updated_at": "2020-07-05",
+  "tags": "极客时间,GeekBang,MySQL实战45讲,MySQL"
 }
 ```
 
