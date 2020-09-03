@@ -85,6 +85,15 @@
 | 星河奇迹（寰宇企业） | ap_galactic_wonders_megacorp            | 27               |
 | 星河奇迹（乌+寰）    | ap_galactic_wonders_utopia_and_megacorp | 28               |
 
+#### 事件
+
+| 事件ID     | 描述                         |
+| ---------- | ---------------------------- |
+| distar.170 | 神经共生体研究               |
+| wsg.3105   | 我认为列克星敦就是世界的主宰 |
+|            |                              |
+|            |                              |
+
 ### MOD
 
 #### 舰R MOD
