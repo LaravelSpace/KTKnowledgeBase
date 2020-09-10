@@ -76,7 +76,7 @@ mysql> show variables like 'transaction_isolation';
 
 理解了事务的隔离级别，我们再来看看事务隔离具体是怎么实现的。这里我们展开说明可重复读。在MySQL中，实际上每条记录在更新的时候都会同时记录一条回滚操作。记录上的最新值，通过回滚操作，都可以得到前一个状态的值。假设一个值从1被按顺序改成了2、3、4，在回滚日志里面就会有类似下面的记录。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi1_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi1_img01.png)
 
 当前值是4，但是在查询这条记录的时候，不同时刻启动的事务会有不同的read-view。如图中看到的，在视图A、B、C里面，这一个记录的值分别是1、2、4，同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。
 

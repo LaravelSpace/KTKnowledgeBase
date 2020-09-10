@@ -20,7 +20,7 @@
 
 不可避免地，多个key值经过哈希函数的换算，会出现同一个值的情况。处理这种情况的一种方法是，拉出一个链表。假设，你现在维护着一个身份证信息和姓名的表，需要根据身份证号查找对应的名字，这时对应的哈希索引的示意图如下所示：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin1_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin1_img01.png)
 
 图中，User2和User4根据身份证号算出来的值都是N，但没关系，后面还跟了一个链表。假设，这时候你要查ID_card_n2对应的名字是什么，处理步骤就是：首先，将ID_card_n2通过哈希函数算出N；然后，按顺序遍历，找到User2。
 
@@ -28,7 +28,7 @@
 
 而有序数组在等值查询和范围查询场景中的性能就都非常优秀。还是上面这个根据身份证号查名字的例子，如果我们使用有序数组来实现的话，示意图如下所示：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin1_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin1_img02.png)
 
 这里我们假设身份证号没有重复，这个数组就是按照身份证号递增的顺序保存的。这时候如果你要查ID_card_n2对应的名字，用二分法就可以快速得到，这个时间复杂度是O(log(N))。同时很显然，这个索引结构支持范围查询。你要查身份证号在[ID_card_X,ID_card_Y]区间的User，可以先用二分法找到ID_card_X（如果不存在ID_card_X，就找到大于ID_card_X的第一个User），然后向右遍历，直到查到第一个大于ID_card_Y的身份证号，退出循环。
 
@@ -36,7 +36,7 @@
 
 二叉搜索树也是课本里的经典数据结构了。还是上面根据身份证号查名字的例子，如果我们用二叉搜索树来实现的话，示意图如下所示：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin1_img03.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin1_img03.png)
 
 二叉搜索树的特点是：每个节点的左儿子小于父节点，父节点又小于右儿子。这样如果你要查ID_card_n2的话，按照图中的搜索顺序就是按照UserA->UserC->UserF->User2这个路径得到。这个时间复杂度是 $O(log{n})$。当然为了维持 $O(log{n})$ 的查询复杂度，你就需要保持这棵树是平衡二叉树。为了做这个保证，更新的时间复杂度也是 $O(log{n})$。
 
@@ -64,7 +64,7 @@ index (k))engine=InnoDB;
 
 表中R1~R5的(ID,k)值分别为(100,1)、(200,2)、(300,3)、(500,5)和(600,6)，两棵树的示例示意图如下。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin1_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin1_img04.png)
 
 从图中不难看出，根据叶子节点的内容，索引类型分为主键索引和非主键索引。主键索引的叶子节点存的是整行数据。在InnoDB里，主键索引也被称为聚簇索引（clustered index）。非主键索引的叶子节点内容是主键的值。在InnoDB里，非主键索引也被称为二级索引（secondary index）。
 

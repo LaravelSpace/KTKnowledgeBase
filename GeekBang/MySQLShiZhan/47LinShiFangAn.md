@@ -40,9 +40,9 @@ max_connections的计算，不是看谁在running，是只要连着就占用一�
 
 sessionC在T时刻之后的30秒执行show processlist，看到的结果是这样的。图中id=4和id=5的两个会话都是Sleep状态。而要看事务具体状态的话，你可以查information_schema库的innodb_trx表。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\LinShiFangAn_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\LinShiFangAn_img02.png)
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\LinShiFangAn_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\LinShiFangAn_img04.png)
 
 这个结果里，trx_mysql_thread_id=4，表示id=4的线程还处在事务中。因此，如果是连接数过多，可以优先断开事务外空闲太久的连接。如果这样还不够，再考虑断开事务内空闲太久的连接。
 
@@ -85,7 +85,7 @@ call query_rewrite.flush_rewrite_rules();
 
 这里，call query_rewrite.flush_rewrite_rules()这个存储过程，是让插入的新规则生效，也就是查询重写。你可以用图中的方法来确认改写规则是否生效。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\LinShiFangAn_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\LinShiFangAn_img06.png)
 
 ##### MySQL选错了索引
 

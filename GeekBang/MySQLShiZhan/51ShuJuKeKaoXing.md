@@ -18,7 +18,7 @@ binlog的写入逻辑比较简单：事务执行过程中，先把日志写到bi
 
 系统给binlog cache分配了一片内存，每个线程一个，参数binlog_cache_size用于控制单个线程内binlog cache所占内存的大小。如果超过了这个参数规定的大小，就要暂存到磁盘。事务提交的时候，执行器把binlog cache里的完整事务写入到binlog中，并清空binlog cache。状态如图所示。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img02.png)
 
 可以看到，每个线程有自己binlog cache，但是共用同一份binlog文件。
 
@@ -41,7 +41,7 @@ redo log的写入机制相对复杂。事务在执行过程中，生成的redo l
 
 事务还没提交的时候，redo log buffer中的部分日志会有可能被持久化到磁盘。这个问题，要从redo log可能存在的三种状态说起。这三种状态，对应的就是图中的三个颜色块。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img04.png)
 
 这三种状态分别是：
 
@@ -68,7 +68,7 @@ InnoDB有一个后台线程，每隔1秒，就会把redo log buffer中的日志�
 
 这里，需要先介绍日志逻辑序列号（log sequence number，LSN）的概念。LSN是单调递增的，用来对应redo log的一个个写入点。每次写入长度为length的redo log，LSN的值就会加上length。LSN也会写到InnoDB的数据页中，来确保数据页不会被多次执行重复的redo log。如图所示，是三个并发事务(trx1,trx2,trx3)在prepare阶段，都写完redo log buffer，持久化到磁盘的过程，对应的LSN分别是50、120和160。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img06.png)
 
 从图中可以看到，
 
@@ -79,11 +79,11 @@ InnoDB有一个后台线程，每隔1秒，就会把redo log buffer中的日志�
 
 所以，一次组提交里面，组员越多，节约磁盘IOPS的效果越好。但如果只有单线程压测，那就只能老老实实地一个事务对应一次持久化操作了。在并发更新场景下，第一个事务写完redo log buffer以后，接下来这个fsync越晚调用，组员可能越多，节约IOPS的效果就越好。为了让一次fsync带的组员更多，MySQL有一个很有趣的优化：拖时间。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img08.png)
 
 图中，把写binlog被当成一个动作。但实际上，写binlog是分成两步的：1、先把binlog从binlog cache中写到磁盘上的binlog文件。2、调用fsync持久化。MySQL为了让组提交的效果更好，把redo log做fsync的时间拖到了步骤1之后。也就是说，上面的图变成了这样：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img10.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShuJuKeKaoXing_img10.png)
 
 这么一来，binlog也可以组提交了。在执行图中第4步把binlog fsync到磁盘时，如果有多个事务的binlog已经写完了，也是一起持久化的，这样也可以减少IOPS的消耗。不过通常情况下第3步执行得会很快，所以binlog的write和fsync间的间隔时间短，导致能集合到一起持久化的binlog比较少，因此binlog的组提交的效果通常不如redo log的效果那么好。
 

@@ -62,7 +62,7 @@
 
 ### 可靠性优先策略
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GaoKeYong_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GaoKeYong_img02.png)
 
 在双M结构下，从状态1到状态2切换的详细过程是这样的：
 
@@ -74,7 +74,7 @@
 
 这个切换流程，一般是由专门的HA系统来完成的，我们暂时称之为可靠性优先流程。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GaoKeYong_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GaoKeYong_img04.png)
 
 备注：图中的SBM，是seconds_behind_master参数的简写。
 
@@ -107,7 +107,7 @@ insert into t(c) values(5);
 
 假设，现在主库上其他的数据表有大量的更新，导致主备延迟达到5秒。在插入一条c=4的语句后，发起了主备切换。图3是可用性优先策略，且binlog_format=mixed时的切换流程和数据结果。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GaoKeYong_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GaoKeYong_img06.png)
 
 现在，分析这个切换流程：
 
@@ -120,7 +120,7 @@ insert into t(c) values(5);
 
 还是用可用性优先策略，但设置binlog_format=row。因为row格式在记录binlog的时候，会记录新插入的行的所有字段值，所以最后只会有一行不一致。而且，两边的主备同步的应用线程会报错duplicate key error并停止。也就是说，这种情况下，备库B的(5,4)和主库A的(5,5)这两行数据，都不会被对方执行。图4中画出了详细过程。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GaoKeYong_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GaoKeYong_img08.png)
 
 从上面的分析中，可以看到一些结论：
 
@@ -136,7 +136,7 @@ insert into t(c) values(5);
 
 接下来再看看，按照可靠性优先的思路，异常切换会是什么效果。假设，主库A和备库B间的主备延迟是30分钟，这时候主库A掉电了，HA系统要切换B作为主库。我们在主动切换的时候，可以等到主备延迟小于5秒的时候再启动切换，但这时候已经别无选择了。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GaoKeYong_img10.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GaoKeYong_img10.png)
 
 采用可靠性优先策略的话，你就必须得等到备库B的seconds_behind_master=0之后，才能切换。但现在的情况比刚刚更严重，并不是系统只读、不可写的问题了，而是系统处于完全不可用的状态。因为，主库A掉电后，连接还没有切到备库B。
 
@@ -146,6 +146,6 @@ insert into t(c) values(5);
 
 一般现在的数据库运维系统都有备库延迟监控，其实就是在备库上执行show slave status，采集 seconds_behind_master的值。假设，现在看到维护的一个备库，它的延迟监控的图像类似图6，是一个45°斜向上的线段。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GaoKeYong_img12.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GaoKeYong_img12.png)
 
 这种现象的原因是备库的同步在这段时间完全被堵住了。产生这种现象典型的场景主要包括两种：一种是大事务（包括大表DDL、一个事务操作很多行）。还有一种情况比较隐蔽，就是备库起了一个长事务，比如，`begin; select * from t limit 1;`，然后就不动了。这时候主库对表t做了一个加字段操作，即使这个表很小，这个DDL在备库应用的时候也会被堵住，也能看到这个现象。

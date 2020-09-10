@@ -22,7 +22,7 @@ FTWRL前有读写的话，FTWRL都会等待读写执行完毕后才执行。FTWR
 
 看来加全局锁不太好。但是细想一下，备份为什么要加锁呢？我们来看一下不加锁会有什么问题。假设你现在要维护极客时间的购买系统，关注的是用户账户余额表和用户课程表。现在发起一个逻辑备份。假设备份期间，有一个用户，他购买了一门课程，业务逻辑里就要扣掉他的余额，然后往已购课程里面加上一门课。如果时间顺序上是先备份账户余额表(u_account)，然后用户购买，然后备份用户课程表(u_course)，会怎么样呢？你可以看一下这个图：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\QuanJuSuoHeBiaoSuo_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\QuanJuSuoHeBiaoSuo_img01.png)
 
 可以看到，这个备份结果里，用户A的数据状态是账户余额没扣，但是用户课程表里面已经多了一门课。如果后面用这个备份来恢复数据的话，用户A就发现，自己赚了。作为用户可别觉得这样可真好啊，你可以试想一下：如果备份表的顺序反过来，先备份用户课程表再备份账户余额表，又可能会出现什么结果？
 

@@ -48,7 +48,7 @@ mysql> select word from words order by rand() limit 3;
 
 这个语句的意思很直白，随机排序取前3个。虽然这个SQL语句写法很简单，但执行流程却有点复杂的。我们先用explain命令来看看这个语句的执行情况。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img02.png)
 
 Extra字段显示Using temporary，表示的是需要使用临时表。Using filesort，表示的是需要执行排序操作。因此这个Extra的意思就是，需要临时表，并且需要在临时表上排序。
 
@@ -76,7 +76,7 @@ select word from words order by rand() limit 3;
 
 现在，我来把完整的排序执行流程图画出来。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img04.png)
 
 图中的pos就是位置信息，你可能会觉得奇怪，这里的位置信息是个什么概念？这时候，我们就要回到一个基本概念：MySQL的表是用什么方法来定位一行数据的。
 
@@ -104,7 +104,7 @@ SELECT * FROM `information_schema`.`OPTIMIZER_TRACE`\G
 
 输出如下图 5。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img06.png)
 
 然后，我们来看一下这次OPTIMIZER_TRACE的结果。因为将max_length_for_sort_data设置成16，小于word字段的长度定义，所以我们看到sort_mode里面显示的是rowid排序，这个是符合预期的，参与排序的是随机值R字段和rowid字段组成的行。
 
@@ -122,7 +122,7 @@ SELECT * FROM `information_schema`.`OPTIMIZER_TRACE`\G
 
 这里简单画了一个优先队列排序过程的示意图6。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuiJiPaiXu_img08.png)
 
 图6是模拟6个(R,rowid)行，通过优先队列排序找到最小的三个R值的行的过程。整个排序过程中，为了最快地拿到当前堆的最大值，总是保持最大值在堆顶，因此这是一个最大堆。
 

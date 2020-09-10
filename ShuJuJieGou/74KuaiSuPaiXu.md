@@ -24,7 +24,7 @@
 
 ### 动图演示
 
-<img src="E:\Workspace\KTKnowledgeBase\Image\ShuJuJieGou\KuaiSuPaiXu_img01.gif" style="zoom:67%;" />
+<img src="E:\GongZuoQu\KTZhiShiKu\Image\ShuJuJieGou\KuaiSuPaiXu_img01.gif" style="zoom:67%;" />
 
 ### 快速排序算法
 

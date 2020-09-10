@@ -28,7 +28,7 @@
 
 慢启动的算法记住一个规则就行：**当发送方每收到一个ACK，拥塞窗口cwnd的大小就会加1**。注意，发包的个数是**指数性的增长**。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img24.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img24.png)
 
 慢启动会受到慢启动门限ssthresh（slow start threshold）状态变量的控制。当 $cwnd<ssthresh$ 时，使用慢启动算法。当 $cwnd \geq ssthresh$ 时，就会使用拥塞避免算法。
 
@@ -36,7 +36,7 @@
 
 一般来说ssthresh的大小是65535字节。进入拥塞避免算法后，它的规则是：**当发送方每收到一个ACK，拥塞窗口cwnd的大小就会增加1/cwnd**。拥塞避免算法就是将原本慢启动算法的指数增长变成了线性增长，还是增长阶段，但是增长速度缓慢了一些。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img25.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img25.png)
 
 网络慢慢进入了拥塞的状况了，于是就会出现丢包现象，这时就需要对丢失的数据包进行重传。当触发了重传机制，也就进入了拥塞发生算法。重传机制主要有两种：超时重传；快速重传。这两种使用的拥塞发送算法是不同的。
 
@@ -44,7 +44,7 @@
 
 当发生了超时重传，则就会使用拥塞发生算法。这个时候，ssthresh设为cwnd/2；cwnd重置为1。接着，就重新开始慢启动，慢启动是会突然减少数据流的。这种方式反应很强烈，会造成网络卡顿。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img26.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img26.png)
 
 
 

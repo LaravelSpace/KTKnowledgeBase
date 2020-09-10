@@ -23,7 +23,7 @@ FROM users u INNER JOIN orders o ON u.id = o.user_id WHERE u.id > 50
 
 数据库收到查询请求后，需要先解析SQL语句，把这一串文本解析成便于程序处理的结构化数据，这就是一个通用的语法解析过程。跟编程语言的编译器编译时，解析源代码的过程是完全一样的。转换后的结构化数据，就是一棵树，这个树的名字叫抽象语法树（AST，Abstract Syntax Tree）。上面这个SQL，它的AST大概是这样的，只画了主要的部分：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\HouDuanCunChu\SQLDeZhiXing_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\HouDuanCunChu\SQLDeZhiXing_img01.png)
 
 执行器解析这个AST之后，会生成一个逻辑执行计划。所谓的执行计划，可以简单理解为如何一步一步地执行查询和计算，最终得到执行结果的一个分步骤的计划。这个逻辑执行计划是这样的：
 
@@ -66,7 +66,7 @@ LogicalProject(user_id=[$0], user_name=[$1], order_id=[$5])
 
 我们还是以MySQL为例来说一下它的物理存储结构。MySQL非常牛的一点是，它在设计层面对存储引擎做了抽象，它的存储引擎是可以替换的。它默认的存储引擎是InnoDB，在InnoDB中，数据表的物理存储结构是以主键为关键字的B+树，每一行数据直接就保存在B+树的叶子节点上。比如，上面的订单表组织成B+树，是这个样的：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\HouDuanCunChu\SQLDeZhiXing_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\HouDuanCunChu\SQLDeZhiXing_img02.png)
 
 这个树以订单表的主键orders.id为关键字组织，其中62:[row data]，表示的是订单号为62的一行订单数据。在InnoDB中，表的索引也是以B+树的方式来存储的，和存储数据的B+树的区别是，在索引树中，叶子节点保存的不是行数据，而是行的主键值。如果通过索引来检索一条记录，需要先后查询索引树和数据树这两棵树：先在索引树中检索到行记录的主键值，然后再用主键值去数据树中去查找这一行数据。
 

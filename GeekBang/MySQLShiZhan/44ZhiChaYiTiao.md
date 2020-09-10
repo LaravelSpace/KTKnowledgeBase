@@ -44,7 +44,7 @@ call idata();
 
 如图2所示，就是使用show processlist命令查看Waiting for table metadata lock的示意图。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img02.png)
 
 出现这个状态表示的是，现在有一个线程正在表t上请求或者持有MDL写锁，把select语句堵住了。这类问题的处理方式，就是找到谁持有MDL写锁，然后把它kill掉。但是，由于在show processlist的结果里面，sessionA的Command列是Sleep，导致查找起来很不方便。不过有了performance_schema 和sys系统库以后，就方便多了。
 
@@ -60,7 +60,7 @@ mysql> select * from information_schema.processlist where id=1;
 
 你可以看一下图5。查出来这个线程的状态是Waiting for table flush，你可以设想一下这是什么原因。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img04.png)
 
 这个状态表示的是，现在有一个线程正要对表t做flush操作。MySQL里面对表做flush操作的用法，一般有以下两个：
 
@@ -83,7 +83,7 @@ flush tables with read lock;
 
 图 7 是这个复现步骤的 show processlist 结果。这个例子的排查也很简单，你看到这个 show processlist 的结果，肯定就知道应该怎么做了。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img06.png)
 
 ### 等行锁
 
@@ -101,7 +101,7 @@ mysql> select * from t where id=1 lock in share mode;
 | update t set c=c+1 where id=1; |                                                |
 |                                | select * from t where id=1 lock in share mode; |
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img08.png)
 
 显然，sessionA启动了事务，占有写锁，还不提交，是导致sessionB被堵住的原因。这个问题并不难分析，但问题是怎么查出是谁占着这个写锁。如果你用的是MySQL5.7版本，可以通过sys.innodb_lock_waits表查到。查询方法是：
 
@@ -109,7 +109,7 @@ mysql> select * from t where id=1 lock in share mode;
 mysql> select * from t sys.innodb_lock_waits where locked_table='`test`.`t`'\G
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img10.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img10.png)
 
 可以看到，这个信息很全，4号线程是造成堵塞的罪魁祸首。而干掉这个罪魁祸首的方式，就是KILL QUERY 4或KILL 4。不过，这里不应该显示KILL QUERY 4。这个命令表示停止4号线程当前正在执行的语句，而这个方法其实是没有用的。
 
@@ -125,21 +125,21 @@ mysql> select * from t where c=50000 limit 1;
 
 由于字段c上没有索引，这个语句只能走id主键顺序扫描，因此需要扫描5万行。作为确认，你可以看一下慢查询日志。注意，这里为了把所有语句记录到slow log里，我在连接后先执行了set long_query_time=0，将慢查询日志的时间阈值设置为0。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img12.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img12.png)
 
 Rows_examined显示扫描了50000行。你可能会说，不是很慢呀，11.5毫秒就返回了，我们线上一般都配置超过1秒才算慢查询。但你要记住：坏查询不一定是慢查询。我们这个例子里面只有10万行记录，数据量大起来的话，执行时间就线性涨上去了。扫描行数多，所以执行慢，这个很好理解。
 
 但是接下来，我们再看一个只扫描一行，但是执行很慢的语句。如图12所示，是这个例子的slow log。可以看到，执行的语句是：`select * from t where id=1;`。虽然扫描行数是 1，但执行时间却长达 800 毫秒。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img14.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img14.png)
 
 是不是有点奇怪呢，这些时间都花在哪里了？如果我把这个slow log的截图再往下拉一点，你可以看到下一个语句，`select * from t where id=1 lock in share mode`，执行时扫描行数也是1行，执行时间是0.2毫秒。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img16.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img16.png)
 
 看上去是不是更奇怪了？按理说lock in share mode还要加锁，时间应该更长才对啊。可能有的同学已经有答案了。如果你还没有答案的话，我再给你一个提示信息，图14是这两个语句的执行输出结果。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img18.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img18.png)
 
 第一个语句的查询结果里c=1，带lock in share mode的语句返回的是c=1000001。看到这里应该有更多的同学知道原因了。如果你还是没有头绪的话，也别着急。我先跟你说明一下复现步骤，再分析原因。
 
@@ -152,7 +152,7 @@ Rows_examined显示扫描了50000行。你可能会说，不是很慢呀，11.5�
 
 你看到了，sessionA先用start transaction with consistent snapshot命令启动了一个事务，之后sessionB才开始执行update语句。sessionB执行完100万次update语句后，id=1这一行处于什么状态呢？你可以从图16中找到答案。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img20.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhiChaYiTiao_img20.png)
 
 sessionB更新完100万次，生成了100万个回滚日志 (undo log)。带lock in share mode的SQL语句，是当前读，因此会直接读到1000001这个结果，所以速度很快；而select * from t where id=1这个语句，是一致性读，因此需要从1000001开始，依次执行undo log，执行了100万次以后，才将1这个结果返回。注意，undo log里记录的其实是把2改成1，把3改成2这样的操作逻辑，画成减1的目的是方便看图。
 

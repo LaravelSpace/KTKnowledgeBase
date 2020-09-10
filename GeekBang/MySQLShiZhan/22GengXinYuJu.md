@@ -24,7 +24,7 @@
 
 如果今天赊账的不多，掌柜可以等打烊后再整理。但如果某天赊账的特别多，粉板写满了，又怎么办呢？这个时候掌柜只好放下手中的活儿，把粉板中的一部分赊账记录更新到账本中，然后把这些记录从粉板上擦掉，为记新账腾出空间。与此类似，InnoDB的redo log是固定大小的，比如可以配置为一组4个文件，每个文件的大小是1GB，那么这块粉板总共就可以记录4GB的操作。从头开始写，写到末尾就又回到开头循环写，如下面这个图所示。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GengXinYuJu_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GengXinYuJu_img01.png)
 
 write pos是当前记录的位置，一边写一边后移，写到第3号文件末尾后就回到0号文件开头。check point是当前要擦除的位置，也是往后推移并且循环的，擦除记录前要把记录更新到数据文件。write pos和check point之间的是粉板上还空着的部分，可以用来记录新的操作。如果write pos追上check point，表示粉板满了，这时候不能再执行新的更新，得停下来先擦掉一些记录，把check point推进一下。
 
@@ -52,7 +52,7 @@ redo log不是记录数据页更新之后的状态，而是记录这个页做了
 - 4、执行器生成这个操作的binlog，并把binlog写入磁盘。
 - 5、执行器调用引擎的提交事务接口，引擎把刚刚写入的redo log改成提交（commit）状态，更新完成。这里给出这个update语句的执行流程图，图中浅色框表示是在InnoDB内部执行的，深色框表示是在执行器中执行的。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\GengXinYuJu_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\GengXinYuJu_img02.png)
 
 最后三步看上去有点绕，将redo log的写入拆成了两个步骤：prepare和commit，这就是两阶段提交。
 

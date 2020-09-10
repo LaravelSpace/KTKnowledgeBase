@@ -12,11 +12,11 @@
 
 前面介绍过MySQL的主备复制，但都是一主一备的结构。大多数的互联网应用场景都是读多写少，因此负责的业务，在发展过程中很可能先会遇到读性能的问题。而在数据库层解决读性能问题，就要涉及到一主多从的架构。如图1所示，就是一个基本的一主多从结构。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img02.png)
 
 图中，虚线箭头表示的是主备关系，也就是A和A'互为主备，从库B、C、D指向的是主库A。一主多从的设置，一般用于读写分离，主库负责所有的写入和一部分读，其他的读请求则由从库分担。在一主多从架构下，主库发生故障，主备切换后的结果，如图2所示。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img04.png)
 
 相比于一主一备的切换流程，一主多从结构在切换完成后，A'会成为新的主库，从库B、C、D也要改接到A'。正是由于多了从库B、C、D重新指向的这个过程，所以主备切换的复杂性也相应增加了。
 
@@ -52,7 +52,7 @@ MASTER_LOG_POS=$master_log_pos
 mysqlbinlog File --stop-datetime=T --start-datetime=T
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img06.png)
 
 图中，end_log_pos后面的值123，表示的就是A'这个实例，在T时刻写入新的binlog的位置。然后，我们就可以把123这个值作为$master_log_pos，用在节点B的change master命令里。
 
@@ -107,7 +107,7 @@ CREATE TABLE `t` (
 insert into t values(1,1);
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img08.png)
 
 可以看到，事务的BEGIN之前有一条`SET @@SESSION.GTID_NEXT`命令。这时，如果实例X有从库，那么将CREATETABLE和insert语句的binlog同步过去执行的话，执行事务之前就会先执行这两个SET命令，这样被加入从库的GTID集合的，就是图中的这两个GTID。
 
@@ -125,7 +125,7 @@ start slave;
 
 其中，前三条语句的作用，是通过提交一个空事务，把这个GTID加到实例X的GTID集合中。如图5所示，就是执行完这个空事务之后的show master status的结果。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img10.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiQieHuan_img10.png)
 
 可以看到实例X的Executed_Gtid_set里面，已经加入了这个GTID。这样，我再执行start slave命令让同步线程执行起来的时候，虽然实例X上还是会继续执行实例Y传过来的事务，但是由于"aaaaaaaa-cccc-dddd-eeee-ffffffffffff:10"已经存在于实例X的GTID集合中了，所以实例X就会直接跳过这个事务，也就不会再出现主键冲突的错误。
 

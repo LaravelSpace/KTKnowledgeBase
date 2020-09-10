@@ -16,7 +16,7 @@ MySQL能够成为现下最流行的开源数据库，binlog功不可没。binlog
 
 如图1所示就是基本的主备切换流程。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img02.png)
 
 在状态1中，客户端的读写都直接访问节点A，而节点B是A的备库，只是将A的更新都同步过来，到本地执行。这样可以保持节点B和A的数据是相同的。当需要切换的时候，就切成状态2。这时候客户端读写访问的都是节点B，而节点A是B的备库。
 
@@ -30,7 +30,7 @@ MySQL能够成为现下最流行的开源数据库，binlog功不可没。binlog
 
 接下来，我们再看看节点A到B这条线的内部流程是什么样的。图2中画出的就是一个update语句在节点A执行，然后同步到节点B的完整流程图。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img04.png)
 
 图中，包含了binlog和redo log的写入机制相关的内容，可以看到：主库接收到客户端的更新请求后，执行内部事务的更新逻辑，同时写binlog。备库B跟主库A之间维持了一个长连接。主库A内部有一个线程，专门用于服务备库B的这个长连接。一个事务日志同步的完整过程是这样的：
 
@@ -71,7 +71,7 @@ delete from t /*comment*/ where a>=4 and t_modified<='2018-11-10' limit 1;
 
 当binlog_format=statement时，binlog里面记录的就是SQL语句的原文。你可以用`show binlog events in 'master.000001';`命令看binlog中的内容。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img06.png)
 
 现在，我们来看一下图输出结果。
 
@@ -82,7 +82,7 @@ delete from t /*comment*/ where a>=4 and t_modified<='2018-11-10' limit 1;
 
 为了说明statement和row格式的区别，我们来看一下这条delete命令的执行效果图：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img08.png)
 
 可以看到，运行这条delete命令产生了一个warning，原因是当前binlog设置的是statement格式，并且语句中有limit，所以这个命令可能是unsafe的。这是因为delete带limit，很可能会出现主备数据不一致的情况。比如上面这个例子：
 
@@ -91,7 +91,7 @@ delete from t /*comment*/ where a>=4 and t_modified<='2018-11-10' limit 1;
 
 由于statement格式下，记录到binlog里的是语句原文，因此可能会出现这样一种情况：在主库执行这条SQL语句的时候，用的是索引a，而在备库执行这条SQL语句的时候，却使用了索引t_modified。因此，MySQL认为这样写是有风险的。那么，我们把binlog的格式改为binlog_format='row'，再看看这时候binog中的内容。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img10.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img10.png)
 
 可以看到，与statement格式的binlog相比，前后的BEGIN和COMMIT是一样的。但是，row格式的binlog里没有了SQL语句的原文，而是替换成了两个event：Table_map和Delete_rows。
 
@@ -104,7 +104,7 @@ delete from t /*comment*/ where a>=4 and t_modified<='2018-11-10' limit 1;
 mysqlbinlog -vv data/master.000001 --start-position=8900;
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img12.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img12.png)
 
 从这个图6中，我们可以看到以下几个信息：
 
@@ -139,9 +139,9 @@ mysqlbinlog -vv data/master.000001 --start-position=8900;
 
 如果我们把binlog格式设置为mixed，来看一下这条语句执行的效果。可以看到，MySQL 用的居然是statement格式。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img14.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img14.png)
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img16.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img16.png)
 
 我们再用mysqlbinlog工具来看看。从图中的结果可以看到，原来binlog在记录event的时候，多记了一条命令：SETTIMESTAMP=1546103491。它用SET TIMESTAMP命令约定了接下来的now()函数的返回时间。因此，不论这个binlog是1分钟之后被备库执行，还是3天后用来恢复这个库的备份，这个insert语句插入的行，值都是固定的。也就是说，通过这条SET TIMESTAMP命令，MySQL就确保了主备数据的一致性。
 
@@ -157,7 +157,7 @@ mysqlbinlog master.000001 --start-position=2738 --stop-position=2973 | mysql -h1
 
 binlog的特性确保了在备库执行相同的binlog，可以得到与主库相同的状态。因此，可以认为正常情况下主备的数据是一致的。也就是说，图1中A、B两个节点的内容是一致的。其实，图1中的是M-S结构，但实际生产上使用比较多的是双M结构，也就是图9所示的主备切换流程。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img18.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img18.png)
 
 对比图9和图1，你可以发现，双M结构和M-S结构，其实区别只是多了一条线，即：节点A和B之间总是互为主备关系。这样在切换的时候就不用再修改主备关系。
 
@@ -180,7 +180,7 @@ binlog的特性确保了在备库执行相同的binlog，可以得到与主库�
 - 一种场景是，在一个主库更新事务后，用命令set global server_id=x修改了server_id。等日志再传回来的时候，发现server_id跟自己的server_id不同，就只能执行了。
 - 另一种场景是，有三个节点的时候，如图所示，trx1是在节点B执行的，因此binlog上的server_id 就是B，binlog传给节点A，然后A和A'搭建了双M结构，就会出现循环复制。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img20.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ZhuBeiYiZhi_img20.png)
 
 这种三节点复制的场景，做数据库迁移的时候会出现。如果出现了循环复制，可以在A或者A'上，执行如下命令：
 

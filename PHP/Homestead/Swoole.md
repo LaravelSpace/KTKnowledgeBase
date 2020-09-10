@@ -89,6 +89,13 @@ vagrant@homestead:/etc/php/7.2/cli$ php -m | grep swoole
 swoole
 ```
 
+```
+[ErrorException]
+file_put_contents(./composer.json): failed to open stream: Permission denied
+```
+
+
+
 ---
 
 ## 参考

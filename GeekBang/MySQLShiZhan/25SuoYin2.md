@@ -23,7 +23,7 @@ index k(k)
 insert into T values(100,1, 'aa'),(200,2,'bb'),(300,3,'cc'),(500,5,'ee'),(600,6,'ff'),(700,7,'gg');
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin1_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin1_img04.png)
 
 现在，我们一起来看看这条SQL查询语句的执行流程：1、在k索引树上找到k=3的记录，取得ID=300；2、再到ID索引树查到ID=300对应的R3；3、在k索引树取下一个值k=5，取得ID=500；4、再回到ID索引树查到ID=500对应的R4；5、在k索引树取下一个值k=6，不满足条件，循环结束。
 
@@ -60,7 +60,7 @@ CREATE TABLE `tuser` (
 
 反过来说，单独为一个不频繁的请求创建一个（身份证号，地址）的索引又感觉有点浪费。应该怎么做呢？这里，我先和你说结论吧。B+树这种索引结构，可以利用索引的“最左前缀”，来定位记录。为了直观地说明这个概念，我们用（name，age）这个联合索引来分析。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin2_img02.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin2_img02.jpg)
 
 可以看到，索引项是按照索引定义里面出现的字段顺序排序的。当你的逻辑需求是查到所有名字是张三的人时，可以快速定位到ID4，然后向后遍历得到所有需要的结果。如果你要查的是所有名字第一个字是张的人，你的SQL语句的条件是 `where name like '张%'`。
 
@@ -78,9 +78,9 @@ CREATE TABLE `tuser` (
 
 在MySQL5.6之前，只能从ID3开始一个个回表。到主键索引上找出数据行，再对比字段值。而MySQL5.6引入的索引下推优化（index condition pushdown)，可以在索引遍历过程中，对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数。下面是这两个过程的执行流程图，每一个虚线箭头表示回表一次。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin2_img03.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin2_img03.jpg)
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin2_img04.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin2_img04.jpg)
 
 在MySQL5.6之前，这个过程InnoDB并不会去看age的值，只是按顺序把name第一个字是张的记录一条条取出来回表。因此，需要回表4次。而MySQL5.6，InnoDB在(name,age)索引内部就判断了age是否等于10，对于不等于10的记录，直接判断并跳过。在我们的这个例子中，只需要对ID4、ID5这两条记录回表取数据判断，就只需要回表2次。
 

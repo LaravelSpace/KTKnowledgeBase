@@ -38,13 +38,13 @@ mysql> select count(*) from tradelog where month(t_modified)=7;
 
 现在你已经学过了InnoDB的索引结构了，可以再追问一句为什么？为什么条件是 `where t_modified='2018-7-1'` 的时候可以用上索引，而改成 `where month(t_modified)=7` 的时候就不行了？下面是这个t_modified索引的示意图。方框上面的数字就是month()函数对应的值。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img02.png)
 
 如果你的SQL语句条件用的是where t_modified='2018-7-1'的话，引擎就会按照上面绿色箭头的路线，快速定位到t_modified='2018-7-1'需要的结果。实际上，B+树提供的这个快速定位能力，来源于同一层兄弟节点的有序性。但是，如果计算month()函数的话，你会看到传入7的时候，在树的第一层就不知道该怎么办了。也就是说，对索引字段做函数操作，可能会破坏索引值的有序性，因此优化器就决定放弃走树搜索功能。
 
 需要注意的是，优化器并不是要放弃使用这个索引。在这个例子里，放弃了树搜索功能，优化器可以选择遍历主键索引，也可以选择遍历索引t_modified，优化器对比索引大小后发现，索引t_modified更小，遍历这个索引比遍历主键索引来得更快。因此最终还是会选择索引t_modified。接下来，我们使用explain命令，查看一下这条SQL语句的执行结果。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img04.png)
 
 也就是说，由于在t_modified字段加了month()函数操作，导致了全索引扫描。为了能够用上索引的快速定位能力，我们就要把SQL语句改成基于字段本身的范围查询。按照下面这个写法，优化器就能按照我们预期的，用上t_modified索引的快速定位能力了。当然，如果你的系统上线时间更早，或者后面又插入了之后年份的数据的话，你就需要再把其他年份补齐。
 
@@ -79,7 +79,7 @@ mysql> select * from tradelog where tradeid=110717;
 
 验证结果如图3所示。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img06.png)
 
 select '10'>9 返回的是1，所以你就能确认MySQL里的转换规则了：在MySQL中，字符串和数字做比较的话，是将字符串转换成数字。这时，你再看这个全表扫描的语句：
 
@@ -138,7 +138,7 @@ insert into trade_detail values(11, 'aaaaaaac', 4, 'commit');
 mysql> select d.* from tradelog l, trade_detail d where d.tradeid=l.tradeid and l.id=2; /*语句Q1*/
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img08.png)
 
 我们一起来看下这个结果：
 
@@ -147,7 +147,7 @@ mysql> select d.* from tradelog l, trade_detail d where d.tradeid=l.tradeid and 
 
 在这个执行计划里，是从tradelog表中取tradeid字段，再去trade_detail表里查询匹配字段。因此，我们把tradelog称为驱动表，把trade_detail称为被驱动表，把tradeid称为关联字段。接下来，我们看下这个explain结果表示的执行流程：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img10.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img10.png)
 
 图中：
 
@@ -179,7 +179,7 @@ CONVERT()函数，在这里的意思是把输入的字符串转成utf8mb4字符�
 mysql>select l.operator from tradelog l , trade_detail d where d.tradeid=l.tradeid and d.id=4;
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img12.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img12.png)
 
 这个语句里trade_detail表成了驱动表，但是explain结果的第二行显示，这次的查询操作用上了被驱动表tradelog里的索引(tradeid)，扫描行数是1。这也是两个tradeid字段的join操作，为什么这次能用上被驱动表的tradeid索引呢？我们来分析一下。
 
@@ -213,7 +213,7 @@ alter table trade_detail modify tradeid varchar(32) CHARACTER SET utf8mb4 defaul
 mysql> select d.* from tradelog l , trade_detail d where d.tradeid=CONVERT(l.tradeid USING utf8) and l.id=2; 
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img14.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SQLXingNengChaYi_img14.png)
 
 这里，我主动把l.tradeid转成utf8，就避免了被驱动表上的字符编码转换，从explain结果可以看到，这次索引走对了。
 

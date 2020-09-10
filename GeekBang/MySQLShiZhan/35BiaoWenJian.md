@@ -26,7 +26,7 @@
 
 我们先再来看一下InnoDB中一个索引的示意图。InnoDB里的数据都是用B+树的结构组织的。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img02.png)
 
 假设，我们要删掉R4这个记录，InnoDB引擎只会把R4这个记录标记为删除。如果之后要再插入一个ID在300和600之间的记录时，可能会复用这个位置。但是，磁盘文件的大小并不会缩小。现在，你已经知道了InnoDB的数据是按页存储的，那么如果我们删掉了一个数据页上的所有记录，会怎么样？答案是，整个数据页就可以被复用了。
 
@@ -36,7 +36,7 @@
 
 实际上，不止是删除数据会造成空洞，插入数据也会。如果数据是按照索引递增顺序插入的，那么索引是紧凑的。但如果数据是随机插入的，就可能造成索引的数据页分裂。假设图1中pageA已经满了，这时我要再插入一行数据，会怎样呢？
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img04.png)
 
 可以看到，由于pageA满了，再插入一个ID是550的数据时，就不得不再申请一个新的页面pageB来保存数据了。页分裂完成后，pageA的末尾就留下了空洞（注意：实际上，可能不止1个记录的位置是空洞）。
 
@@ -48,13 +48,13 @@
 
 这里，你可以使用alter table A engine=InnoDB命令来重建表。在MySQL5.5版本之前，这个命令的执行流程跟我们前面描述的差不多，区别只是这个临时表B不需要你自己创建，MySQL会自动完成转存数据、交换表名、删除旧表的操作。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img06.png)
 
 显然，花时间最多的步骤是往临时表插入数据的过程，如果在这个过程中，有新的数据要写入到表A的话，就会造成数据丢失。因此，在整个DDL过程中，表A中不能有更新。也就是说，这个DDL不是Online的。而在MySQL5.6版本开始引入的Online DDL，对这个操作流程做了优化。
 
 我给你简单描述一下引入了Online DDL之后，重建表的流程：1、建立一个临时文件，扫描表A主键的所有数据页；2、用数据页中表A的记录生成B+树，存储到临时文件中；3、生成临时文件的过程中，将所有对A的操作记录在一个日志文件（row log）中，对应的是图中state2的状态；4、临时文件生成后，将日志文件中的操作应用到临时文件，得到一个逻辑数据上与表A相同的数据文件，对应的就是图中state3的状态；5、用临时文件替换表A的数据文件。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\BiaoWenJian_img08.png)
 
 可以看到，与图3过程的不同之处在于，由于日志文件记录和重放操作这个功能的存在，这个方案在重建表的过程中，允许对表A做增删改操作。这也就是Online DDL名字的来源。DDL之前是要拿MDL写锁的，这样还能叫Online DDL吗？确实，图4的流程中，alter语句在启动的时候需要获取MDL写锁，但是这个写锁在真正拷贝数据之前就退化成读锁了。
 

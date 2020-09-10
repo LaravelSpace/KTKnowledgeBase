@@ -12,7 +12,7 @@
 
 下面是MySQL的基本架构示意图，从中可以清楚地看到SQL语句在MySQL的各个功能模块中的执行过程。大体来说，MySQL可以分为Server层和存储引擎层两部分。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ChaXunYuJu_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ChaXunYuJu_img01.png)
 
 Server层包括连接器、查询缓存、分析器、优化器、执行器等，涵盖MySQL的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。
 

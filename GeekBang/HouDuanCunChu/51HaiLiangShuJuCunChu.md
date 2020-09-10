@@ -32,7 +32,7 @@
 
 Kafka提供无限的消息堆积能力，具有超高的吞吐量，可以满足我们保存原始数据的大部分要求。写入点击流数据的时候，每个原始数据采集服务作为一个生产者，把数据发给Kafka就可以了。下游的计算任务，可以作为消费者订阅消息，也可以按照时间或者位点来读取数据。并且，Kafka作为事实标准，和大部分大数据生态圈的开源软件都有非常好的兼容性和集成度，像Flink、Spark等大多计算平台都提供了直接接入Kafka的组件。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\HouDuanCunChu\DianJiLiu_img01.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\HouDuanCunChu\DianJiLiu_img01.jpg)
 
 当然，Kafka也不是万能的，Kafka提供无限的消息堆积能力还是有一些限制需要注意的。Kafka也支持把数据分片，这个在Kafka中叫Partition，每个分片可以分布到不同的存储节点上。写入数据的时候，可以均匀地写到这些分片上，理论上只要分片足够多，存储容量就可以是无限的。但是，单个分片总要落到某一个节点上，而单节点的存储容量毕竟是有限的，随着时间推移，单个分片总有写满的时候。
 

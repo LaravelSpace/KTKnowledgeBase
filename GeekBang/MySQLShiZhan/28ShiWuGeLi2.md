@@ -53,7 +53,7 @@ InnoDB里面**每个事务有一个唯一的事务ID**，叫作transaction id。
 
 同时，旧的数据版本要保留，并且在新的数据版本中，能够有信息可以直接拿到它。也就是说，数据表中的一行记录，其实可能有多个版本(row)，每个版本有自己的row trx_id。如图所示，就是一个记录被多个事务连续更新后的状态。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi2_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi2_img01.png)
 
 图中虚线框里是同一行数据的4个版本，当前最新版本是V4，k的值是22，它是被transaction id为25的事务更新的，因此它的row trx_id也是25。你可能会问，前面的文章不是说，语句更新会生成undo log（回滚日志）吗？那么，undo log在哪呢？
 
@@ -67,7 +67,7 @@ InnoDB里面**每个事务有一个唯一的事务ID**，叫作transaction id。
 
 这个视图数组和高水位，就组成了当前事务的一致性视图（read-view）。而数据版本的可见性规则，就是基于数据的row trx_id和这个一致性视图的对比结果得到的。这个视图数组把所有的row trx_id分成了几种不同的情况。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img02.png)
 
 这样，对于当前事务的启动瞬间来说，一个数据版本的row trx_id，有以下几种可能：
 
@@ -87,7 +87,7 @@ InnoDB里面**每个事务有一个唯一的事务ID**，叫作transaction id。
 
 这样，事务A的视图数组就是[99,100],事务B的视图数组是[99,100,101],事务C的视图数组是[99,100,101,102]。为了简化分析，把其他干扰语句去掉，只画出跟事务A查询逻辑有关的操作：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img03.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img03.png)
 
 从图中可以看到，第一个有效更新是事务C，把数据从(1,1)改成了(1,2)。这时候，这个数据的最新版本的row trx_id是102，而90这个版本已经成为了历史版本。第二个有效更新是事务B，把数据从(1,2)改成了(1,3)。这时候，这个数据的最新版本（即row trx_id）是101，而102又成为了历史版本。你可能注意到了，在事务A查询的时候，其实事务B还没有提交，但是它生成的(1,3)这个版本已经变成当前版本了。但这个版本对事务A必须是不可见的，否则就变成脏读了。
 
@@ -113,7 +113,7 @@ InnoDB里面**每个事务有一个唯一的事务ID**，叫作transaction id。
 
 细心的同学可能有疑问了：事务B的update语句，如果按照一致性读，好像结果不对哦？下图中，事务B的视图数组是先生成的，之后事务C才提交，不是应该看不见(1,2)吗，怎么能算出(1,3)来？
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img04.png)
 
 是的，如果事务B在更新之前查询一次数据，这个查询返回的k的值确实是1。但是，当它要去更新数据的时候，就不能再在历史版本上更新了，否则事务C的更新就丢失了。因此，事务B此时的setk=k+1是在（1,2）的基础上进行的操作。所以，这里就用到了这样一条规则：更新数据都是先读后写的，而这个读，只能读当前的值，称为当前读（current read）。
 
@@ -142,7 +142,7 @@ mysql> select k from t where id=1 for update;
 
 事务C’的不同是，更新后并没有马上提交，在它提交前，事务B的更新语句先发起了。前面说过了，虽然事务C’还没提交，但是(1,2)这个版本也已经生成了，并且是当前的最新版本。这时候“两阶段锁协议”就要上场了。事务C’没提交，也就是说(1,2)这个版本上的写锁还没释放。而事务B是当前读，必须要读最新版本，而且必须加锁，因此就被锁住了，必须等到事务C’释放这个锁，才能继续它的当前读。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img05.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img05.png)
 
 到这里，一致性读、当前读和行锁就串起来了。现在，我们再回到文章开头的问题：事务的可重复读的能力是怎么实现的？可重复读的核心就是一致性读（consistent read）；而事务更新数据的时候，只能用当前读。如果当前的记录的行锁被其他事务占用的话，就需要进入锁等待。
 
@@ -152,7 +152,7 @@ mysql> select k from t where id=1 for update;
 
 下面是读提交时的状态图，可以看到这两个查询语句的创建视图数组的时机发生了变化，就是图中的read view框。（注意：这里，我们用的还是事务C的逻辑直接提交，而不是事务C’）
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img06.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img06.jpg)
 
 这时，事务A的查询语句的视图数组是在执行这个语句的时候创建的，时序上(1,2)、(1,3)的生成时间都在创建这个视图数组的时刻之前。但是，在这个时刻：(1,3)还没提交，属于情况1，不可见；(1,2)提交了，属于情况3，可见。所以，这时候事务A查询语句返回的是k=2。显然地，事务B查询结果k=3。
 
@@ -174,7 +174,7 @@ mysql> CREATE TABLE `t` (
 insert into t(id, c) values(1,1),(2,2),(3,3),(4,4);
 ```
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img07.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\ShiWuGeLi_img07.png)
 
 复现思路：
 

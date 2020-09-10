@@ -20,7 +20,7 @@ InnoDB在处理更新语句的时候，只做了写日志这一个磁盘操作�
 
 当内存数据页跟磁盘数据页内容不一致的时候，我们称这个内存页为脏页。内存数据写入到磁盘后，内存和磁盘上的数据页的内容就一致了，称为干净页。不论是脏页还是干净页，都在内存中。在这个例子里，内存对应的就是掌柜的记忆。接下来，我们用一个示意图来展示一下孔乙己赊账的整个操作过程。假设原来孔乙己欠账10文，这次又要赊9文。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\JianXieKaDun_img02.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\JianXieKaDun_img02.jpg)
 
 回到文章开头的问题，你不难想象，平时执行很快的更新操作，其实就是在写内存和日志，而MySQL偶尔卡顿的那个瞬间，可能就是在刷脏页（flush）。那么，什么情况会引发数据库的flush过程呢？我们还是继续用咸亨酒店掌柜的这个例子，想一想：掌柜在什么情况下会把粉板上的赊账记录改到账本上？
 
@@ -28,7 +28,7 @@ InnoDB在处理更新语句的时候，只做了写日志这一个磁盘操作�
 
 check point可不是随便往前修改一下位置就可以的。比如图中，把check point位置从CP推进到CP’，就需要将两个点之间的日志（浅绿色部分），对应的所有脏页都flush到磁盘上。之后，图中从write pos到CP’之间就是可以再写入的redo log的区域。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\JianXIeKaDun_img03.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\JianXIeKaDun_img03.jpg)
 
 第二种场景是，这一天生意太好，要记住的事情太多，掌柜发现自己快记不住了，赶紧找出账本把孔乙己这笔账先加进去。这种场景，对应的就是系统内存不足。当需要新的内存页，而内存不够用的时候，就要淘汰一些数据页，空出内存给别的数据页使用。
 
@@ -79,7 +79,7 @@ InnoDB每次写入的日志都有一个序号，当前写入的序号跟checkpoi
 
 然后，根据上述算得的F1(M)和F2(N)两个值，取其中较大的值记为R，之后引擎就可以按照innodb_io_capacity定义的能力乘以R%来控制刷脏页的速度。图中的F1、F2就是上面我们通过脏页比例和redo log写入速度算出来的两个值。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\JianXieKaDun_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\JianXieKaDun_img04.png)
 
 现在你知道了，InnoDB会在后台刷脏页，而刷脏页的过程是要将内存页写入磁盘。所以，无论是你的查询语句在需要内存的时候可能要求淘汰一个脏页，还是由于刷脏页的逻辑会占用IO资源并可能影响到了你的更新语句，都可能是造成你从业务端感知到MySQL卡了一下的原因。
 

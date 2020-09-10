@@ -26,7 +26,7 @@ n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结�
 
 ### 动图演示
 
-<img src="E:\Workspace\KTKnowledgeBase\Image\ShuJuJieGou\XuanZePaiXu_img01.gif" style="zoom:67%;" />
+<img src="E:\GongZuoQu\KTZhiShiKu\Image\ShuJuJieGou\XuanZePaiXu_img01.gif" style="zoom:67%;" />
 
 ### 选择排序算法
 

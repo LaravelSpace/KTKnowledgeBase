@@ -34,17 +34,17 @@ TCP不存在连接的概念，只存在请求和响应，请求和响应都是�
 
 ### TCP报文格式
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img01.png)
 
 首先我们先来看一下TCP报文的格式，整体上TCP报文属于IP报文的一部分。TCP数据包在IP数据包的负载里面。IP数据包又在以太网数据包里面。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img02.jpeg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img02.jpeg)
 
 
 
 详细的TCP报文格式看下面这张图。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img03.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img03.png)
 
 TCP报头中的源端口号和目的端口号同IP数据报中的源IP与目的IP唯一确定一条TCP连接。
 

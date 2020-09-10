@@ -22,7 +22,7 @@ No SQL本来希望能凭借高性能和集群的优势，替代掉Old SQL。但�
 
 首先，我们来简单看一下CockroachDB的架构，看一下它的架构图。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\HouDuanCunChu\NewSQL_img01.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\HouDuanCunChu\NewSQL_img01.jpg)
 
 这是一个非常典型的分层架构，我们从上往下看。最上层是SQL层，SQL层支持和关系型数据库类似的逻辑数据结构，比如说库、表、行和列这些逻辑概念。SQL层向下调用的是一个抽象的接口层Structured Data API，实际实现这个API的是下面一层：Distributed，Monolithic KV Store，这就是一个分布式的KV存储系统。
 

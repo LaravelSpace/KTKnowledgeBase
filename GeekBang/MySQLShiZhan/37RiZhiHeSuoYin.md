@@ -14,7 +14,7 @@
 
 在两阶段提交的不同瞬间，MySQL 如果发生异常重启，是怎么保证数据完整性的？
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\RiZhiHeSuoYin_img02.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\RiZhiHeSuoYin_img02.jpg)
 
 图中的这个commit步骤，指的是事务提交过程中的一个步骤，也是最后一步。当这个步骤执行完成后，这个事务就提交完成了。这里注意和commit语句区分，commit语句执行的时候，会包含commit步骤。这个更新数据的例子里面，没有显式地开启事务，因此这个update语句自己就是一个事务，在执行完成后提交事务时，就会用到这个commit步骤。
 
@@ -54,7 +54,7 @@
 
 而如果说实现上的原因的话，就有很多了。就按照问题中说的，只用binlog来实现崩溃恢复的流程，我画了一张示意图，这里就没有redo log了。这样的流程下，binlog还是不能支持崩溃恢复的。我说一个不支持的点吧：binlog没有能力恢复数据页。如果在图中标的位置，也就是binlog2写完了，但是整个事务还没有commit的时候，MySQL发生了crash。重启后，引擎内部事务2会回滚，然后应用binlog2可以补回来；但是对于事务1来说，系统已经认为提交完成了，不会再应用一次binlog1。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\RiZhiHeSuoYin_img04.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\RiZhiHeSuoYin_img04.jpg)
 
 InnoDB在作为MySQL的插件加入MySQL引擎家族之前，就已经是一个提供了崩溃恢复和事务支持的引擎了。InnoDB接入了MySQL后，发现既然binlog没有崩溃恢复的能力，那就用InnoDB原有的redo log好了。InnoDB引擎使用的是WAL技术，执行事务的时候，写完内存和日志，事务就算完成了。如果之后崩溃，要依赖于日志来恢复数据页。
 
@@ -193,7 +193,7 @@ mysql> update t set a=2 where id=1;
 
 你会看到这样的结果：
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\RiZhiHeSuoYin_img06.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\RiZhiHeSuoYin_img06.png)
 
 结果显示，匹配(rows matched)了一行，修改(Changed)了0行。仅从现象上看，MySQL内部在处理这个命令的时候，可以有以下三种选择：
 

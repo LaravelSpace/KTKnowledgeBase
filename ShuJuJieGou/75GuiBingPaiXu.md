@@ -26,7 +26,7 @@
 
 ### 动图演示
 
-<img src="E:\Workspace\KTKnowledgeBase\Image\ShuJuJieGou\GuiBingPaiXu_img01.gif" style="zoom:67%;" />
+<img src="E:\GongZuoQu\KTZhiShiKu\Image\ShuJuJieGou\GuiBingPaiXu_img01.gif" style="zoom:67%;" />
 
 ### 归并排序算法
 

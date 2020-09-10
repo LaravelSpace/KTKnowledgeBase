@@ -12,7 +12,7 @@
 
 TCP通过三次握手保证传输任务的可靠。TCP三次握手就好比客户端与服务器看见了对方，但是不能100%确认，所以要通过握手的方式相互确定对方。三次握手即TCP连接的建立。这个连接必须是一方主动打开，另一方被动打开的。以下为客户端主动发起连接的图解：
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img04.jpeg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img04.jpeg)
 
 握手之前主动打开连接的客户端结束CLOSED阶段，被动打开的服务器也结束CLOSED阶段，并进入LISTEN阶段。随后开始三次握手：
 
@@ -46,7 +46,7 @@ seq是序列号，这是为了连接以后传送数据用的，ack是对收到�
 
 所谓的四次挥手即TCP连接的释放(解除)。连接的释放必须是一方主动释放，另一方被动释放。中断连接端可以是客户端，也可以是服务器。以下为客户端主动发起释放连接的图解：
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img05.jpeg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img05.jpeg)
 
 挥手之前主动释放连接的客户端结束ESTABLISHED阶段。随后开始四次挥手：
 

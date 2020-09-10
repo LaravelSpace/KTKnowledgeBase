@@ -34,11 +34,11 @@ select city,name,age from t where city='杭州' order by name limit 1000;
 
 为避免全表扫描，我们需要在city字段加上索引。在city字段上创建索引之后，我们用explain命令来看看这个语句的执行情况。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img02.png)
 
 Extra这个字段中的Using filesort表示的就是需要排序，MySQL会给每个线程分配一块内存用于排序，称为sort_buffer。为了说明这个SQL查询语句的执行过程，我们先来看一下city这个索引的示意图。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img04.png)
 
 从图中可以看到，满足city='杭州’条件的行，是从ID_X到ID_(X+N)的这些记录。通常情况下，这个语句执行流程如下所示：
 
@@ -52,7 +52,7 @@ Extra这个字段中的Using filesort表示的就是需要排序，MySQL会给�
 
 我们暂且把这个排序过程，称为全字段排序，执行流程的示意图如下所示。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img06.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img06.jpg)
 
 图中按name排序这个动作，可能在内存中完成，也可能需要使用外部排序，这取决于排序所需的内存和参数sort_buffer_size。sort_buffer_size，就是MySQL为排序开辟的内存（sort_buffer）的大小。如果要排序的数据量小于sort_buffer_size，排序就在内存中完成。但如果排序数据量太大，内存放不下，则不得不利用磁盘临时文件辅助排序。
 
@@ -75,7 +75,7 @@ select @b-@a;
 
 这个方法是通过查看OPTIMIZER_TRACE的结果来确认的，你可以从number_of_tmp_files中看到是否使用了临时文件。如下图4。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img08.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img08.png)
 
 number_of_tmp_files表示的是，排序过程中使用的临时文件数。你一定奇怪，为什么需要12个文件？内存放不下时，就需要使用外部排序，外部排序一般使用归并排序算法。可以这么简单理解，MySQL将需要排序的数据分成12份，每一份单独排序后存在这些临时文件中。然后把这12个有序文件再合并成一个有序的大文件。
 
@@ -109,13 +109,13 @@ max_length_for_sort_data，是MySQL中专门控制用于排序的行数据的长
 
 这个执行流程的示意图如下，我们暂且把它称为rowid排序。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img10.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img10.jpg)
 
 对比全字段排序流程图你会发现，rowid排序多访问了一次表t的主键索引，就是步骤7。需要说明的是，最后的结果集是一个逻辑概念，实际上MySQL服务端从排序后的sort_buffer中依次取出id，然后到原表查到city、name和age这三个字段的结果，不需要在服务端再耗费内存存储结果，是直接返回给客户端的。
 
 根据这个说明过程和图示，你可以想一下，这个时候执行 `select @b-@a`，结果会是多少呢？现在，我们就来看看结果有什么不同。首先，图中的examined_rows的值还是4000，表示用于排序的数据是4000行。但是 `select @b-@a` 这个语句的值变成5000了。因为这时候除了排序过程外，在排序完成后，还要根据id去原表取值。由于语句是limit1000，因此会多读1000行。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img12.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img12.png)
 
 从OPTIMIZER_TRACE的结果中，你还能看到另外两个信息也变了。1、sort_mode变成了<sort_key,rowid>，表示参与排序的只有name和id这两个字段。2、number_of_tmp_files变成10了，是因为这时候参与排序的行数虽然仍然是4000行，但是每一行都变小了，因此需要排序的总数据量就变小了，需要的临时文件也相应地变少了。
 
@@ -135,7 +135,7 @@ alter table t add index city_user(city, name);
 
 作为与city索引的对比，我们来看看这个索引的示意图。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img14.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img14.png)
 
 在这个索引里面，我们依然可以用树搜索的方式定位到第一个满足city='杭州’的记录，并且额外确保了，接下来按顺序取下一条记录的遍历过程中，只要city的值是杭州，name的值就一定是有序的。这样整个查询过程的流程就变成了：
 
@@ -144,11 +144,11 @@ alter table t add index city_user(city, name);
 - 3、从索引(city,name)取下一个记录主键id；
 - 4、重复步骤2、3，直到查到第1000条记录，或者是不满足city='杭州’条件时循环结束。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img16.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img16.jpg)
 
 可以看到，这个查询过程不需要临时表，也不需要排序。接下来，我们用explain的结果来印证一下。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img18.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img18.png)
 
 从图中可以看到，Extra字段中没有Usingfilesort了，也就是不需要排序了。而且由于(city,name)这个联合索引本身有序，所以这个查询也不用把4000行全都读一遍，只要找到满足条件的前1000条记录就可以退出了。也就是说，在我们这个例子里，只需要扫描1000次。
 
@@ -164,11 +164,11 @@ alter table t add index city_user_age(city,name,age);
 - 2、从索引(city,name,age)取下一个记录，同样取出这三个字段的值，作为结果集的一部分直接返回；
 - 3、重复执行步骤2，直到查到第1000条记录，或者是不满足city='杭州’条件时循环结束。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img20.jpg)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img20.jpg)
 
 然后，我们再来看看explain的结果。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\OrderBy_img22.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\OrderBy_img22.png)
 
 可以看到，Extra字段里面多了Using index，表示的就是使用了覆盖索引，性能上会快很多。当然，这里并不是说要为了每个查询能用上覆盖索引，就要把语句中涉及的字段都建上联合索引，毕竟索引还是有维护代价的。这是一个需要权衡的决定。
 

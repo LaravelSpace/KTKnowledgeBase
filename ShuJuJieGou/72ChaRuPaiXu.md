@@ -29,7 +29,7 @@
 
 ### 动图演示
 
-<img src="E:\Workspace\KTKnowledgeBase\Image\ShuJuJieGou\ChaRuPaiXu_img01.gif" style="zoom:67%;" />
+<img src="E:\GongZuoQu\KTZhiShiKu\Image\ShuJuJieGou\ChaRuPaiXu_img01.gif" style="zoom:67%;" />
 
 ### 选择排序算法
 

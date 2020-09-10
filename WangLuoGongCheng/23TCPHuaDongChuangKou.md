@@ -16,7 +16,7 @@ TCP是每发送一个数据，都要进行一次确认应答，当上一个数�
 
 假设窗口大小为3个TCP段，那么发送方就可以连续发送3个TCP段，并且中途若有ACK丢失，可以通过下一个确认应答进行确认。如下图：
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img12.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img12.png)
 
 图中的ACK600确认应答报文丢失，也没关系，因为可以通话下一个确认应答进行确认，只要发送方收到了ACK700确认应答，就意味着700之前的所有数据接收方都收到了。这个模式就叫**累计确认**或者**累计应答**。
 
@@ -24,22 +24,22 @@ TCP头里有一个字段叫Window，也就是窗口大小。这个字段是接�
 
 #### 发送方的滑动窗口
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img13.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img13.png)
 
 - \#1是已发送并收到ACK确认的数据：1~31字节。
 - \#2是已发送但未收到ACK确认的数据：32~45字节。
 - \#3是未发送但总大小在接收方处理范围内（接收方还有空间）：46~51字节。
 - \#4是未发送但总大小超过接收方处理范围（接收方没有空间）：52字节以后。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img14.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img14.png)
 
 当发送方把数据全部都发送出去后，可用窗口的大小就为0了，表明可用窗口耗尽，在没收到ACK确认之前是无法继续发送数据了。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img15.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img15.png)
 
 当收到之前发送的数据32\~36字节的ACK确认应答后，如果发送窗口的大小没有变化，则滑动窗口往右边移动5个字节，因为有5个字节的数据被应答确认，接下来52\~56字节又变成了可用窗口，那么后续也就可以发送52\~56这5个字节的数据了。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img16.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img16.png)
 
 TCP滑动窗口方案使用三个指针来跟踪在四个传输类别中的每一个类别中的字节。其中两个指针是绝对指针（指特定的序列号），一个是相对指针（需要做偏移）。
 
@@ -52,7 +52,7 @@ TCP滑动窗口方案使用三个指针来跟踪在四个传输类别中的每�
 
 #### 接收方的滑动窗口
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img17.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img17.png)
 
 - \#1+\#2是已成功接收并确认的数据（等待应用进程读取）。
 - \#3是未收到数据但可以接收的数据。
@@ -72,7 +72,7 @@ TCP滑动窗口方案使用三个指针来跟踪在四个传输类别中的每�
 
 假设以下场景：客户端是接收方，服务端是发送方；假设接收窗口和发送窗口相同，都为200；假设两个设备在整个传输过程中都保持相同的窗口大小，不受外界影响。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img18.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img18.png)
 
 上图的过程：
 
@@ -93,7 +93,7 @@ TCP滑动窗口方案使用三个指针来跟踪在四个传输类别中的每�
 
 考虑以下场景：客户端作为发送方，服务端作为接收方，发送窗口和接收窗口初始大小为360；服务端非常的繁忙，当收到客户端的数据时，应用层不能及时读取数据。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img19.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img19.png)
 
 上图的过程：
 
@@ -113,7 +113,7 @@ TCP滑动窗口方案使用三个指针来跟踪在四个传输类别中的每�
 
 当服务端系统资源非常紧张的时候，操心系统可能会直接减少了接收缓冲区大小，这时应用程序又无法及时读取缓存数据，那么这时候就有严重的事情发生了，会出现数据包丢失的现象。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img20.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img20.png)
 
 上图的过程：
 
@@ -129,11 +129,11 @@ TCP滑动窗口方案使用三个指针来跟踪在四个传输类别中的每�
 
 上文介绍了流量控制会导致窗口大小为0的情况，这就是窗口关闭。如果窗口大小为0，就会阻止发送方给接收方传递数据，直到窗口变为非0为止。但是，接收方向发送方通告窗口大小时，是通过ACK报文来通告的。如果这个通告窗口的ACK报文在网络中丢失了，那麻烦就大了。这会导致发送方一直等待接收方的非 0 窗口通知，接收方也一直等待发送方的数据，如不不采取措施，这种相互等待的过程，会造成了死锁的现象。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img21.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img21.png)
 
 为了解决这个问题，TCP为每个连接设有一个持续定时器，只要TCP连接一方收到对方的0窗口通知，就启动持续计时器。如果持续计时器超时，就会发送窗口探测 ( Window probe ) 报文，而对方在确认这个探测报文时，给出自己现在的接收窗口大小。如果接收窗口仍然为0，那么收到这个报文的一方就会重新启动持续计时器。如果接收窗口不是0，那么死锁的局面就可以被打破了。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img22.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img22.png)
 
 窗口探查探测的次数一般为3此次，每次次大约30-60秒（不同的实现可能会不一样）。如果3次过后接收窗口还是0的话，有的TCP实现就会发RST报文来中断连接。
 
@@ -141,7 +141,7 @@ TCP滑动窗口方案使用三个指针来跟踪在四个传输类别中的每�
 
 如果接收方太忙了，来不及取走接收窗口里的数据，那么就会导致发送方的发送窗口越来越小。到最后，如果接收方腾出几个字节并告诉发送方现在有几个字节的窗口，而发送方会义无反顾地发送这几个字节，这就是糊涂窗口综合症。我们的TCP+IP头有40个字节，为了传输那几个字节的数据，要达上这么大的开销，这太不经济了。
 
-![](E:\Workspace\KTKnowledgeBase\Image\WangLuoGongCheng\TCPXieYi_img23.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\WangLuoGongCheng\TCPXieYi_img23.png)
 
 上面这个图，描述了一个糊涂窗口综合征产生的过程。可以看到，窗口不断在减小，发送的数据也在不断变小。因此糊涂窗口综合征产生的原因就是：接收方通告小窗口同时发送方可以发送小数据。所以解决方案也就有了：让接收方不通告小窗口给发送方或者不让发送方发送小数据。
 

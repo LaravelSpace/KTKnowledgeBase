@@ -27,7 +27,7 @@
 
 ### 动图演示
 
-<img src="E:\Workspace\KTKnowledgeBase\Image\ShuJuJieGou\MaoPaoPaiXu_img01.gif" style="zoom:67%;" />
+<img src="E:\GongZuoQu\KTZhiShiKu\Image\ShuJuJieGou\MaoPaoPaiXu_img01.gif" style="zoom:67%;" />
 
 ### 冒泡排序算法
 

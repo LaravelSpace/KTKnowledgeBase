@@ -20,7 +20,7 @@ select name from CUser where id_card='xxxxxxxyyyyyyzzzzz';
 
 我们用**24SuoYin1.md**中的例子来说明，假设字段k上的值都不重复。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYin1_img04.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYin1_img04.png)
 
 ### 查询过程
 
@@ -80,7 +80,7 @@ mysql> insert into t(id,k) values(id1,k1),(id2,k2);
 
 这里，我们假设当前k索引树的状态，查找到位置后，k1所在的数据页在内存 (InnoDB buffer pool) 中，k2所在的数据页不在内存中。如图所示是带change buffer的更新状态图。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYinDeXuanZe_img01.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYinDeXuanZe_img01.png)
 
 分析这条更新语句，会发现它涉及了四个部分：内存、redo log（ib_log_fileX）、数据表空间（t.ibd）、系统表空间（ibdata1）。这条更新语句做了如下的操作（按照图中的数字顺序）：1、Page1在内存中，直接更新内存；2、Page2没有在内存中，就在内存的change buffer区域，记录下我要往Page2插入一行这个信息；3、将上述两个动作记入redo log中（图中3和4）。
 
@@ -88,7 +88,7 @@ mysql> insert into t(id,k) values(id1,k1),(id2,k2);
 
 如果读语句发生在更新语句后不久，内存中的数据都还在，那么此时的这两个读操作就与系统表空间（ibdata1）和redo log（ib_log_fileX）无关了。所以，图中就没画出这两部分。
 
-![](E:\Workspace\KTKnowledgeBase\Image\GeekBang\MySQLShiZhan\SuoYinDeXuanZe_img02.png)
+![](E:\GongZuoQu\KTZhiShiKu\Image\GeekBang\MySQLShiZhan\SuoYinDeXuanZe_img02.png)
 
 从图中可以看到：1、读Page1的时候，直接从内存返回。WAL之后如果读数据，是不是一定要读盘，是不是一定要从redo log里面把数据更新以后才可以返回？其实是不用的。你可以看一下图3的这个状态，虽然磁盘上还是之前的数据，但是这里直接从内存返回结果，结果是正确的。2、要读Page2的时候，需要把Page2从磁盘读入内存中，然后应用change buffer里面的操作日志，生成一个正确的版本并返回结果。可以看到，直到需要读Page2的时候，这个数据页才会被读入内存。
 
