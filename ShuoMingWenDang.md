@@ -12,31 +12,41 @@
 
 ### 目录结构
 
-目录结构和文件一般都采用大驼峰命名法，可以是拼音或者外文。特殊情况，比如，需要描述专有名词的时候，可以使用蛇形命名法。
+目录结构和文件一般都采用大驼峰命名法，可以是拼音或者外文。特殊情况，比如，需要描述专有名词的时候，可以使用蛇形命名法。目录结构建议控制在3-4层，如果3-4个关键字还找不到目标，那么就需要改进改进了。
 
 对于目录，需要维护目录结构说明。对于文件，需要维护文件内容说明。目录结构说明文档统一使用**[10目录名]**的命名方式。如果要对文件分组，可以使用前缀，比如：**[21文件名]**、**[22文件名]**，前缀标记使用两位的10进制数，不够的话四位。
 
-目录和文件的排序使用英文字母正序排序。
+目录和文件的排序使用英文字母正序排序，下面是项目的目录结构。
 
-| 项目根目录的目录结构 |                         |
-| -------------------- | ----------------------- |
-| Apache               | Apache服务器            |
-| CaiPu                | 菜谱                    |
-| GeekBang             | 极客时间（等待整理）    |
-| LeetCode             | LeetCode算法题目        |
-| Linux                | Linux操作系统相关知识   |
-| Markdown             | Markdown语法样例        |
-| PHP                  | PHP相关知识             |
-| RuanJianGongCheng    | 软件工程相关知识        |
-| SheJiMoShi           | 设计模式                |
-| ShuJi                | 书籍                    |
-| ShuJuJieGou          | 数据结构                |
-| SuanFa               | 算法                    |
-| Unity                | Unity学习笔记           |
-| WangLuoGongCheng     | 网络工程相关知识        |
-| WeiFenLei            | 未分类的文件件          |
-| Windows              | Windows操作系统相关知识 |
-| YouXi                | 游戏                    |
+| 项目的目录结构    |                      |
+| ----------------- | -------------------- |
+| CaiPu             | 菜谱                 |
+| CaoZuoXiTong      | 操作系统和虚拟机     |
+| .\Homestead       | Homestead虚拟机      |
+| .\Linux           |                      |
+| .\Windows         |                      |
+| FuWuDuan          | 服务端               |
+| .\Apache          | Apache服务器         |
+| .\PHP             |                      |
+| .\ShuJuKu         | 数据库               |
+| GeekBang          | 极客时间（等待整理） |
+| Image             | 图片目录             |
+| LeetCode          | LeetCode算法题目     |
+| Markdown          | Markdown语法样例     |
+| QianDuan          | 前端                 |
+| .\CSS             |                      |
+| .\JavaScript      |                      |
+| RuanJianGongCheng | 软件工程相关知识     |
+| .\SheJiMoShi      | 设计模式             |
+| .\ShuJuJieGou     | 数据结构             |
+| .\SuanFa          | 算法                 |
+| ShuJi             | 书籍                 |
+| WangLuoGongCheng  | 网络工程相关知识     |
+| WeiFenLei         | 未分类的文件         |
+| YingYongKuangJia  | 应用程序框架         |
+| .\Electron        |                      |
+| .\Unity           |                      |
+| YouXi             | 游戏                 |
 
 ### 文件头部
 
