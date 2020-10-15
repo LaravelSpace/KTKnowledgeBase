@@ -33,15 +33,15 @@
 | Image             | 图片目录             |
 | LeetCode          | LeetCode算法题目     |
 | Markdown          | Markdown语法样例     |
-| QianDuan          | 前端                 |
-| .\CSS             |                      |
-| .\JavaScript      |                      |
 | RuanJianGongCheng | 软件工程相关知识     |
 | .\SheJiMoShi      | 设计模式             |
 | .\ShuJuJieGou     | 数据结构             |
 | .\SuanFa          | 算法                 |
 | ShuJi             | 书籍                 |
 | WangLuoGongCheng  | 网络工程相关知识     |
+| WebQianDuan       | Web前端              |
+| .\CSS             |                      |
+| .\JavaScript      |                      |
 | WeiFenLei         | 未分类的文件         |
 | YingYongKuangJia  | 应用程序框架         |
 | .\Electron        |                      |
