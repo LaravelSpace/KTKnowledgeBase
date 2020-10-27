@@ -1,11 +1,3 @@
-```json
-{
-  "updated_at": "2020-07-29",
-  "updated_by": "KelipuTe",
-  "tags": "网络工程,Network Engineering,TCP"
-}
-```
-
 ## TCP协议的三次握手和四次挥手
 
 ### 三次握手（Three-Way Handshake）

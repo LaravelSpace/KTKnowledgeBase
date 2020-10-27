@@ -1,13 +1,3 @@
-```json
-{
-  "updated_at": "2020-08-01",
-  "updated_by": "KelipuTe",
-  "tags": "网络工程,Network Engineering,HTTP"
-}
-```
-
----
-
 ## HTTP协议
 
 HTTP（超文本传输协议，HyperText Transfer Protocol)是互联网上应用最为广泛的一种网络协议，是互联网的基础协议。所有的WWW文件都必须遵守这个标准。

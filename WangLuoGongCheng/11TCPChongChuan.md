@@ -1,13 +1,3 @@
-```json
-{
-  "updated_at": "2020-07-30",
-  "updated_by": "KelipuTe",
-  "tags": "网络工程,Network Engineering,TCP"
-}
-```
-
----
-
 ## TCP重传
 
 ### 数据包的遗失处理

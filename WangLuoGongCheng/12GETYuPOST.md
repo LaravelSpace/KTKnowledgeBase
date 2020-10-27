@@ -1,9 +1,3 @@
-```json
-
-```
-
----
-
 ## GET与POST的区别
 
 首先给一个参考答案，来自w3school：[HTTP 方法：GET 对比 POST](https://www.w3school.com.cn/tags/html_ref_httpmethods.asp)。

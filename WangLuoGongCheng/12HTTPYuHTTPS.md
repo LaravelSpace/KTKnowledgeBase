@@ -1,13 +1,3 @@
-```json
-{
-  "updated_at": "2020-08-02",
-  "updated_by": "KelipuTe",
-  "tags": "网络工程,Network Engineering,HTTP"
-}
-```
-
----
-
 ## HTTP与HTTPS
 
 ### HTTP是怎么工作的

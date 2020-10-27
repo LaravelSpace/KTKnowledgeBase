@@ -1,13 +1,3 @@
-```json
-{
-  "updated_at": "2020-07-29",
-  "updated_by": "KelipuTe",
-  "tags": "网络工程,Network Engineering,TCP"
-}
-```
-
----
-
 ## TCP协议简介
 
 互联网由一整套协议构成。TCP只是其中的一层，有着自己的分工。TCP是以太网协议和IP协议的上层协议，也是应用层协议的下层协议。

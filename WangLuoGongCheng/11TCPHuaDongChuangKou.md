@@ -1,11 +1,3 @@
-```json
-{
-  "updated_at": "2020-07-31",
-  "updated_by": "KelipuTe",
-  "tags": "网络工程,Network Engineering,TCP"
-}
-```
-
 ## TCP滑动窗口
 
 ### 滑动窗口
