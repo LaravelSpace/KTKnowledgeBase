@@ -18,5 +18,7 @@ let c= []; c[2] = 'c';
 // JSON.stringify(c)=[null,null,"c"]
 ```
 
+### Json
 
+如果json数据是key-value形式的，而且key是数字形式的，使用JSON.parse()解析json字符串的时候会自动按数字大小进行排序。
 
