@@ -1,11 +1,11 @@
-## Git 配置
+## Git配置
 
 ### 全局配置用户名和邮箱
 
 全局配置用户名和邮箱：
 ```
-$git config --global user.name 'xxx'
-$git config --global user.email 'xxx@xxx.com'
+git config --global user.name 'xxx'
+git config --global user.email 'xxx@xxx.com'
 ```
 
 这条命令会在`C:\Users\用户名\`创建一个**.gitconfig**文件用于保存配置。
@@ -14,13 +14,13 @@ $git config --global user.email 'xxx@xxx.com'
 
 永久记住密码:
 ```
-$git config --global credential.helper store
+git config --global credential.helper store
 ```
 
 临时记住密码:
 ```
-$git config –global credential.helper cache
-$git config –global credential.helper 'cache –timeout=3600'
+git config –global credential.helper cache
+git config –global credential.helper 'cache –timeout=3600'
 ```
 
 这两条命令会在`C:\Users\用户名\`创建一个**.gitconfig**文件用于保存配置。
@@ -32,6 +32,6 @@ $git config –global credential.helper 'cache –timeout=3600'
 ### 修改提交地址
 
 ```
-$git remote set-url origin 'xxx.git'
+git remote set-url origin 'xxx.git'
 ```
 
