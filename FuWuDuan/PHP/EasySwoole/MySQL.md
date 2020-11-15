@@ -6,9 +6,7 @@
 
 ### 连接池模式
 
-EasySwoole没有提供现成的mysql连接池，所以这里需要自行实现一个。需要用到pool通用连接池和框架提供的mysqli客户端组件。
-
-首先添加依赖。
+EasySwoole没有提供现成的mysql连接池，所以这里需要自行实现一个。需要用到pool通用连接池和框架提供的mysqli客户端组件，先添加依赖。
 
 ```shell
 composer require easyswoole/pool
@@ -21,12 +19,8 @@ composer require easyswoole/mysqli
 use EasySwoole\Mysqli\Client;
 use EasySwoole\Pool\ObjectInterface;
 
-class MysqliObject extends Client implements ObjectInterface
+class MysqliClient extends Client implements ObjectInterface
 {
-    /**
-     * MysqliObject constructor.
-     * @param \EasySwoole\Mysqli\Config $config
-     */
     public function __construct(\EasySwoole\Mysqli\Config $config)
     {
         parent::__construct($config);
@@ -39,7 +33,6 @@ class MysqliObject extends Client implements ObjectInterface
 
     function objectRestore()
     {
-        // TODO: Implement objectRestore() method.
     }
 
     function beforeUse(): ?bool
@@ -69,19 +62,11 @@ use EasySwoole\Pool\AbstractPool;
 
 class MysqliPool extends AbstractPool
 {
-    /**
-     * MysqliPool constructor.
-     * @param \EasySwoole\Pool\Config $config
-     * @throws \EasySwoole\Pool\Exception\Exception
-     */
     public function __construct(\EasySwoole\Pool\Config $config)
     {
         parent::__construct($config);
     }
 
-    /**
-     * @return MysqliObject
-     */
     protected function createObject()
     {
         // 从配置文件获取配置
@@ -89,7 +74,7 @@ class MysqliPool extends AbstractPool
         // 创建mysqli配置类
         $mysqliConfig = new \EasySwoole\Mysqli\Config($configData);
         // 创建一个mysqli客户端
-        return new MysqliObject($mysqliConfig);
+        return new MysqliClient($mysqliConfig);
     }
 }
 ```
@@ -107,7 +92,7 @@ $mysqliPoolConfig->setMaxObjectNum(5);
 \EasySwoole\Pool\Manager::getInstance()->register(new MysqliPool($mysqliPoolConfig), 'mysql-pool');
 ```
 
-使用的话就很简单了。需要注意的就是记得归还mysqli客户端对象。
+使用的话就很简单了。需要注意的就是，用完之后记得归还mysqli客户端对象。
 
 ```php
 // 获取连接池对象
@@ -121,11 +106,24 @@ $dbData = $mysqliClient->execBuilder();
 $mysqlPool->recycleObj($mysqliClient);
 ```
 
+自主实现的MySQL连接池如果想实现事务操作也需要自行编码，需要用到\Swoole\Coroutine\MySQL类中的begin()，commit()，rollback()等事务操作方法。这个类在Client类执行execBuilder()方法的时候（就是构造完语句最终开始执行的时候调用的方法），通过Client类的connect()方法构造。所以如果想主动控制事务，需要把connect()方法的调用提到外层。这个方法是幂等的，所以不会影响内部的逻辑。
+
+```php
+$mysqlPool = Manager::getInstance()->get('mysql-pool');
+$mysqliClient = $mysqlPool->getObj();
+$mysqliClient->connect();
+// 开启事务
+$mysqliClient->mysqlClient()->begin();
+$mysqliClient->queryBuilder()->get('table_name');
+$dbResult1 = $mysqliClient->execBuilder();
+// 提交事务
+$mysqliClient->mysqlClient()->commit();
+$mysqlPool->recycleObj($mysqliClient);
+```
+
 ### ORM模式
 
-ORM模式的使用相对简单一点，不需要想自定义MySQL连接池那样额外创建什么东西。
-
-首先还是安装依赖。
+ORM模式的使用相对简单一点，不需要想自定义MySQL连接池那样额外创建什么东西。首先还是安装依赖。
 
 ```shell
 composer require easyswoole/pool
@@ -146,4 +144,5 @@ $ormConfig->setMaxObjectNum(10);
 \EasySwoole\ORM\DbManager::getInstance()->addConnection(new \EasySwoole\ORM\Db\Connection($ormConfig));
 ```
 
-然后是具体的ORM使用流程了。
+这样ORM的连接池就配置好了，ORM会自行调用，然后是具体的ORM使用流程了，另外ORM模式框架自身提供了事务操作。如果有需要访问不同数据库的需求，在构造连接池的时候，设定一个名字就可以了，然后再ORM模型中配置使用的连接池的名字。默认情况下这两个配置的名字都叫default。
+
