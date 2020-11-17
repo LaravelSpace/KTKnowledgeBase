@@ -1,24 +1,12 @@
-```json
-{
-  "updated_by": "KelipuTe",
-  "updated_at": "2020-06-29",
-  "tags": "Homestead,Vagrant,Laravel"
-}
-```
+## 使用Homestead搭建Laravel开发环境
 
----
+### 安装VirtualBox和Vagrant
 
-## 使用 Homestead 搭建 Laravel 开发环境
+虽然官方推荐了很多虚拟机软件，但这里推荐VirtualBox。
 
-#### 安装 VirtualBox 和 Vagrant
+### 安装Homestead Vagrant Box
 
-虽然官方推荐了很多虚拟机软件，但这里推荐 VirtualBox。
-
-#### 安装 Homestead Vagrant Box
-
-安装 VirtualBox 和 Vagrant 后，打开命令行通过 `$ vagrant box add laravel/homestead` 命令安装 Homestead Vagrant Box。
-
-这个过程需要下载 box，正常情况下的输出如下：
+安装VirtualBox和Vagrant后，打开命令行通过`$ vagrant box add laravel/homestead`命令安装Homestead Vagrant Box。这个过程需要下载box，正常情况下的输出如下：
 
 ```
 C:\Users\Administrator>vagrant box add laravel/homestead
@@ -42,26 +30,20 @@ Download redirected to host: vagrantcloud-files-production.s3.amazonaws.com
 ==> box: Successfully added box 'laravel/homestead' (v9.5.1) for 'virtualbox'!
 ```
 
-我用的是 **Windows 10** 操作系统，下载下来的 box 默认放置在 **C:\Users\Administrator\.vagrant.d\boxes** 目录。
-
-如果下载失败可以尝试使用下载器下载，下载链接从命令行的输出中可以找到。下载完成后使用 `vagrant box add` 命令添加。
-
-可以使用 `$ vagrant box list` 命令查看已经添加的 box。
+我用的是**Windows 10**操作系统，下载下来的box默认放置在**C:\Users\Administrator\.vagrant.d\boxes**目录。如果下载失败可以尝试使用下载器下载，下载链接从命令行的输出中可以找到。下载完成后使用`vagrant box add`命令添加。可以使用`$ vagrant box list`命令查看已经添加的box。
 
 ```
 $ vagrant box list
 laravel/homestead (virtualbox, 9.5.1)
 ```
 
-#### 下载 Homestead 项目代码
+### 下载Homestead项目代码
 
-首先下载并安装 git ，然后克隆代码。安装 git 是为了后续操作的方便。
+首先下载并安装git ，然后克隆代码。安装git是为了后续操作的方便。通过`$ git clone https://github.com/laravel/homestead.git`命令克隆最新的代码。克隆完成后，使用git bash命令行窗口，先执行`git checkout release`切换到稳定版，克隆时默认是master分支。
 
-通过 `$ git clone https://github.com/laravel/homestead.git` 命令克隆最新的代码。克隆完成后，使用 git bash 命令行，先执行 `git checkout release` 切换到稳定版，克隆时默认是 master 分支。
+然后，在Homestead根目录中使用`$ bash init.sh`命令来进行初始化，创建Homestead.yaml等配置文件。在Windows 操作系统里，可也以通过执行目录下的**init.bat**文件来进行初始化。
 
-然后，在 Homestead 根目录中使用 `$ bash init.sh` 命令来进行初始化，创建 Homestead.yaml 等配置文件。在 Windows 操作系统里，可也以通过执行目录下的 **init.bat** 文件来进行初始化。
-
-#### 配置 Homestead.yaml 文件
+### 配置Homestead.yaml文件
 
 ```yaml
 folders:
@@ -73,20 +55,18 @@ sites:
       to: /home/vagrant/code/public # 映射的具体路径
 ```
 
-Homestead 提供了很多常用的软件，在项目中可以根据需要进行合理配置。
+Homestead提供了很多常用的软件，在项目中可以根据需要进行合理配置。
 
-#### 启动 Homestead
+### 启动Homestead
 
-在完成上面的安装步骤后，就可以使用 `vagrant up` 命令启动虚拟机。
-
-这里如果没有配置过 ssh，会碰到如下的报错：
+在完成上面的安装步骤后，就可以使用`vagrant up`命令启动虚拟机。这里如果没有配置过 ssh，会碰到如下的报错：
 
 ```
 $ vagrant up
 Check your Homestead.yaml (or Homestead.json) file, the path to your private key does not exist.
 ```
 
-如果安装了 git，可以使用 `ssh-keygen` 命令创建 ssh key。这里直接默认回车到底就行。
+如果安装了git，可以使用`ssh-keygen`命令创建ssh key。这里直接默认回车到底就行。
 
 ```
 Administrator@DESKTOP-P1770NP MINGW64 /e/WorkspacePHP/Homestead (release)
@@ -114,11 +94,11 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-启动完成后，虚拟机内的Nginx服务器就已经运行了，这是就可以通过配置的IP或者域名访问项目了。
+启动完成后，虚拟机内的Nginx服务器就已经运行了，就可以通过配置的IP或者域名访问项目了。
 
-#### Homestead 端口转发
+### Homestead 端口转发
 
-执行 `$ vagrant up` 启动虚拟机的时候会输出一些配置信息。
+执行`$ vagrant up`启动虚拟机的时候会输出一些配置信息。
 
 ```
 $ vagrant up
@@ -166,14 +146,13 @@ Bringing machine 'homestead' up with 'virtualbox' provider...
 ==> homestead: flag to force provisioning. Provisioners marked to run always will still run.
 ```
 
-这里我们可以看到本来 mysql 的 3306 端口应该被转发到 33060 端口，但是这里应该是由于什么原因，被转发到 2200 端口了，所以从外部使用 Navicate 等工具连接虚拟机的 mysql 时，端口号就要填 2200 而不是默认配置的 33060。
+Homestead默认配置mysql的3306端口应该被转发到33060端口，但是可以看到这里应该是由于什么原因，被转发到2200端口了，所以从外部使用Navicate等工具连接虚拟机的mysql时，端口号就要填2200而不是默认配置的33060。如果端口访问不通可以把默认的和配置的端口都尝试一下。
 
-#### 使用命令行进入虚拟机
+### 使用命令行进入虚拟机
 
-虚拟机启动完成后，可以使用 `$ vagrant ssh` 登入虚拟机。
+虚拟机启动完成后，可以使用`$ vagrant ssh`登入虚拟机。
 
 ```
-Administrator@DESKTOP-P1770NP MINGW64 /e/WorkspacePHP/Homestead (release)
 $ vagrant ssh
 Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-96-generic x86_64)
 
@@ -192,7 +171,7 @@ _                               _                 _
 32 updates are security updates.
 ```
 
-这里 **~** 目录下 **code** 文件夹就是上面配置的同步文件夹，会同步外部系统的代码。
+这里**~**目录下**code**文件夹就是上面配置的同步文件夹，会同步外部系统的代码。
 
 ```
 vagrant@homestead:~$ ll
@@ -218,9 +197,9 @@ drwx------  2 vagrant vagrant 4096 May 18 09:59 .ssh/
 -rw-r--r--  1 vagrant vagrant  297 Apr 28 02:03 .wget-hsts
 ```
 
-#### Homestead 上不同的 PHP 版本
+### Homestead上不同的PHP版本
 
-查看当前正在使用的 PHP 版本，默认是最高版本。
+查看当前正在使用的PHP版本，默认是最高版本。
 
 ```
 vagrant@homestead:~$ php -v
@@ -230,7 +209,7 @@ Zend Engine v3.4.0, Copyright (c) Zend Technologies
     with Zend OPcache v7.4.5, Copyright (c), by Zend Technologies
 ```
 
-使用 `$ update-alternatives --display php` 命令可以查看所有 PHP 版本和当前正在使用的版本。
+使用`$ update-alternatives --display php`命令可以查看所有PHP版本和当前正在使用的版本。
 
 ```
 vagrant@homestead:~$ update-alternatives --display php
@@ -253,7 +232,7 @@ php - manual mode
   slave php.1.gz: /usr/share/man/man1/php7.4.1.gz
 ```
 
-Homestead 提供了切换 PHP 版本的命令。这里切换到 PHP7.2 版本
+Homestead提供了切换PHP版本的命令。这里切换到PHP7.2版本
 
 ```
 vagrant@homestead:~$ php72
@@ -285,25 +264,14 @@ Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
     with Zend OPcache v7.2.30-1+ubuntu18.04.1+deb.sury.org+1, Copyright (c) 1999-2018, by Zend Technologies
 ```
 
-也可以通过 `$ update-alternatives --config php` 命令切换 PHP 版本。执行后，会列出当前 PHP 所有版本和编号。输入编号，切换到指定的版本。
+也可以通过`$ update-alternatives --config php`命令切换PHP版本。执行后，会列出当前PHP所有版本和编号。输入编号，切换到指定的版本。
 
-#### 虚拟机访问不通的问题
+### 虚拟机访问不通的问题
 
-如果出现启动虚拟机后访问不通 192.168.10.10 的问题，可以尝试使用 `$ vagrant provision` 命令重新应用更改 vagrant 配置，然后使用 `$ vagrant reload` 命令重启虚拟机。 
+如果出现启动虚拟机后访问不通192.168.10.10的问题，可以尝试使用`$ vagrant provision`命令重新应用更改vagrant配置，然后使用`$ vagrant reload`命令重启虚拟机。 
 
-如果修改了 Homestead 的配置，也需要使用上面的命令重新应用更改 vagrant 配置，并重启虚拟机。
+如果修改了Homestead的配置，也需要使用上面的命令重新应用更改vagrant配置，并重启虚拟机。
 
-#### 关闭虚拟机
+### 关闭虚拟机
 
-使用 `$ vagrant halt` 命令关闭虚拟机。
-
----
-
-## 参考
-
-[Laravel 6 中文文档 Homestead](https://learnku.com/docs/laravel/6.x/homestead/5127)
-
-[Laravel 7 中文文档 Homestead](https://learnku.com/docs/laravel/7.x/homestead/7450)
-
-[homestead.test 拒绝了我们的连接请求](https://learnku.com/laravel/t/7772/homesteadtest-refused-our-connection-request)
-
+使用`$ vagrant halt`命令关闭虚拟机。

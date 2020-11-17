@@ -1,16 +1,6 @@
-```json
-{
-  "updated_by": "KelipuTe",
-  "updated_at": "2020-06-29",
-  "tags": "Homestead,Vagrant,Swoole"
-}
-```
+## 在Homestead中安装Swoole扩展
 
----
-
-## 在 Homestead 里安装 swoole 扩展
-
-这里推荐使用 **pec**l 安装，执行 `$ pecl install swoole` 命令安装 swoole 扩展。这里有可能会出现下面两种问题。
+这里推荐使用**pecl**安装，执行`$ pecl install swoole`命令安装Swoole扩展。这里有可能会出现下面两种问题。
 
 第一种问题：
 
@@ -20,7 +10,7 @@ WARNING: channel "pecl.php.net" has updated its protocols, use "pecl channel-upd
 Cannot install, php_dir for channel "pecl.php.net" is not writeable by the current user
 ```
 
-这种按照提示执行 `$ sudo pecl channel-update pecl.php.net` 就可以。
+这种按照提示执行`$ sudo pecl channel-update pecl.php.net`就可以。
 
 ```
 vagrant@homestead:~$ sudo pecl channel-update pecl.php.net
@@ -35,7 +25,7 @@ vagrant@homestead:~$ pecl install swoole
 Cannot install, php_dir for channel "pecl.php.net" is not writeable by the current user
 ```
 
-需要在前面加 `$ sudo`
+需要在前面加`$ sudo`
 
 ```
 vagrant@homestead:~$ sudo pecl install swoole
@@ -50,7 +40,7 @@ Zend Module Api No:      20170718
 Zend Extension Api No:   320170718
 ```
 
-安装 swoole 时的部分配置，这里按需配置就行。
+安装Swoole时的部分配置，这里按需配置就行。
 
 ```
 enable sockets supports? [no] : yes
@@ -70,9 +60,7 @@ configuration option "php_ini" is not set to php.ini location
 You should add "extension=swoole.so" to php.ini
 ```
 
-最后要在**正在使用**的 PHP 版本的 php.ini 中添加 swoole 扩展。
-
-可以通过 `$ php -i | grep php.ini` 命令，查看 php.ini 文件的位置。
+最后要在**正在使用**的PHP版本的php.ini中添加swoole扩展。可以通过`$ php -i | grep php.ini`命令，查看php.ini文件的位置。
 
 ```
 vagrant@homestead:/etc/php/7.2/fpm$ php -i | grep php.ini
@@ -80,24 +68,19 @@ Configuration File (php.ini) Path => /etc/php/7.2/cli
 Loaded Configuration File => /etc/php/7.2/cli/php.ini
 ```
 
-这里需要注意使用 `$ sudo vim php.ini` 打开并编辑文件，默认没有文件的写权限。
-
-保存后，使用 `$ php -m`  命令查看扩展是否生效。
-
-```
-vagrant@homestead:/etc/php/7.2/cli$ php -m | grep swoole
-swoole
-```
+这里需要注意使用`$ sudo vim php.ini`打开并编辑文件，默认没有文件的写权限，直接打开会报下面的错。
 
 ```
 [ErrorException]
 file_put_contents(./composer.json): failed to open stream: Permission denied
 ```
 
+保存后，使用`$ php -m`命令查看扩展是否生效。
+
+```
+vagrant@homestead:/etc/php/7.2/cli$ php -m | grep swoole
+swoole
+```
 
 
----
 
-## 参考
-
-[centos7.2安装swoole扩展](https://www.jianshu.com/p/fa2cbf1a9e26)
