@@ -1,14 +1,4 @@
-```json
-{
-  "updated_at": "2020-06-29",
-  "updated_by": "KelipuTe",
-  "tags": "Stellaris"
-}
-```
-
----
-
-## Stellaris —— 群星
+## Stellaris--群星
 
 ### 控制台
 
@@ -74,7 +64,7 @@
 
 ### MOD
 
-#### 舰R MOD 事件
+#### 舰RMOD事件
 
 | 事件ID          | 事件描述                     |
 | --------------- | ---------------------------- |

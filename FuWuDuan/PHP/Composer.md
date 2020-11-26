@@ -4,13 +4,13 @@
 
 
 ```shell
-# 全局切换镜像（这里用的是阿里云的镜像）
+#全局切换镜像（这里用的是阿里云的镜像）
 composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-# 全局取消镜像配置
+#全局取消镜像配置
 composer config -g --unset repos.packagist
-# 只配置当前项目镜像
+#只配置当前项目镜像
 composer config repo.packagist composer https://mirrors.aliyun.com/composer/
-# 取消当前项目镜像配置
+#取消当前项目镜像配置
 composer config --unset repos.packagist
 ```
 

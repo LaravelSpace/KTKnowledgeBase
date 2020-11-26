@@ -1,14 +1,4 @@
-```json
-{
-  "updated_by": "KelipuTe",
-  "updated_at": "2020-07-28",
-  "tags": "Apache,PHP,Laravel"
-}
-```
-
----
-
-## 为Laravel框架配置Apache服务
+## 在Apache上部署Laravel框架
 
 ### 在Windows10操作系统下的Apache服务中配置Laravel框架
 
@@ -53,11 +43,11 @@ More information about this error may be available in the server error log.
 
 ##### 问题1的解决方案1
 
-检查一下Apache配置中的AllowOverride选项是否配置为**AllowOverride All**。如果配置的是**AllowOverride None**时是会忽略.htaccess的，这时框架提供的.htaccess文件就无法发挥作用。
+检查一下Apache配置中的AllowOverride选项是否配置为`AllowOverride All`。如果配置的是`AllowOverride None`时是会忽略.htaccess的，这时框架提供的.htaccess文件就无法发挥作用。
 
 ##### 问题1的解决方案2
 
-去掉 public/.htaccess 中的下面这部分代码。这么做可以解决问题但是不建议这么干，不到万不得已别改官方提供的配置文件。
+去掉public/.htaccess中的下面这部分代码。这么做可以解决问题，但是不建议这么干，不到万不得已，不要修改官方提供的配置文件。
 
 ```
 <IfModule mod_negotiation.c>
@@ -104,8 +94,8 @@ More information about this error may be available in the server error log.
 
 ---
 
-## 参考
+| 参考来源                                                     |
+| ------------------------------------------------------------ |
+| [Laravel 7 中文文档--入门指南--安装](https://learnku.com/docs/laravel/7.x/installation/7447) |
+| [部署Laravel 失败 .htaccess: Options not allowed here](https://php.upupw.net/apache/6/517.html) |
 
-[Laravel 7 中文文档--入门指南--安装](https://learnku.com/docs/laravel/7.x/installation/7447)
-
-[部署Laravel 失败 .htaccess: Options not allowed here](https://php.upupw.net/apache/6/517.html)

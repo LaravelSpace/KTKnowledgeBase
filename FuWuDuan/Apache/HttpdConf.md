@@ -1,13 +1,3 @@
-```json
-{
-  "updated_by": "KelipuTe",
-  "updated_at": "2020-06-29",
-  "tags": "Apache,PHP"
-}
-```
-
----
-
 ## 配置Apache的httpd.conf文件
 
 ### 在Windows10操作系统下的Apache服务的配置
@@ -117,16 +107,16 @@ DocumentRoot "E:\WorkspacePHP"
 最后在配置文件最后添加PHP模块，让Apache可以解析PHP代码。
 
 ```
-# 指定 PHP 的配置文件 php.ini 所在的目录
+#指定PHP的配置文件php.ini所在的目录
 PHPIniDir "{path to php}\php-7.1.23"
-# 指定 Apache 加载 PHP 模块
+#指定Apache加载PHP模块
 LoadModule php7_module "{path to php}\php-7.1.23\php7apache2_4.dll"
 AddType application/x-httpd-php .php .html .htm
 ```
 
 #### 安装Apache服务
 
-当配置都完成之后，以管理员身份运行Win10的**cmd.exe**。进入Apache根目录的bin目录，执行 `httpd –k install` 安装Apache服务。这时会把Apache服务注册为Win10的系统服务。默认的服务名是Apache2.4，你可以从**我的电脑=>右击=>服务和应用程序=>服务**里面找到这个Apache服务。
+当配置都完成之后，以管理员身份运行Win10的**cmd.exe**。进入Apache根目录的bin目录，执行`httpd –k install`安装Apache服务。这时会把Apache服务注册为Win10的系统服务。默认的服务名是Apache2.4，你可以从**我的电脑=>右击=>服务和应用程序=>服务**里面找到这个Apache服务。
 
 ##### 问题1
 
@@ -143,7 +133,7 @@ make_sock: could not bind to address 0.0.0.0:80
 
 ##### 问题2的解决方案
 
-打开 cmd.exe 通过 `$ netstat -ano` 命令查看端口占用情况，找到调用相关端口的进程和进程PID。然后打开任务管理器，在**查看**菜单中选择**选择列**选项并勾选PID，点击确定。之后就可以通过PID查看占用端口的程序，协调或关闭占用端口的程序就可以解决这个问题。
+打开cmd.exe通过`$ netstat -ano`命令查看端口占用情况，找到调用相关端口的进程和进程PID。然后打开任务管理器，在**查看**菜单中选择**选择列**选项并勾选PID，点击确定。之后就可以通过PID查看占用端口的程序，协调或关闭占用端口的程序就可以解决这个问题。
 
 #### 报错日志
 
@@ -151,4 +141,4 @@ make_sock: could not bind to address 0.0.0.0:80
 
 #### 测试Apache
 
-完成后在浏览器访问http://localhost:8010会出现：**It Works** 字样或者出现默认配置页index.html和index.php的页面。
+完成后在浏览器访问http://localhost:8010会出现：**It Works**字样或者出现默认配置页index.html和index.php的页面。

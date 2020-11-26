@@ -1,13 +1,3 @@
-```json
-{
-  "updated_at": "2020-06-29",
-  "updated_by": "KelipuTe",
-  "tags": "Minecraft"
-}
-```
-
----
-
-## Minecraft ——  我的世界
+## Minecraft--我的世界
 
 地图种子：4062851530216095332
