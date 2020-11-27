@@ -21,7 +21,7 @@ composer config --unset repos.packagist
 ##### 报错1
 
 ```
-> composer self-update
+$ composer self-update
 Updating to version beb64914a37205f6748552d764d9531d99c7f41e (snapshot channel).
    Downloading (100%)
 Failed to decode response: zlib_decode(): data error
@@ -41,7 +41,7 @@ self-update [-r|--rollback] [--clean-backups] [--no-progress] [--update-keys] [-
 ### 安装ip2region包时报错
 
 ```
-composer require zoujingli/ip2region
+$ composer require zoujingli/ip2region
 Using version ^1.0 for zoujingli/ip2region
 ./composer.json has been updated
 Loading composer repositories with package information
