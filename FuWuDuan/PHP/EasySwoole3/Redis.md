@@ -1,9 +1,5 @@
 ## 使用Redis
 
-### 客户端模式
-
-客户端模式没啥好说的。
-
 ### 连接池模式
 
 在EasySwoole中有两种方式实现redis连接池，一种是使用通用连接池组件自定义实现，另一种是直接安装Redis-Pool组件。
@@ -59,3 +55,6 @@ $dbData = $redisObj->get('test-redis-pool');
 // 释放redis连接
 $redisPool->recycleObj($redisObj);
 ```
+
+### 客户端模式
+

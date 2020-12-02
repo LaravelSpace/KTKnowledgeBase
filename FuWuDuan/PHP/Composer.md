@@ -14,6 +14,8 @@ composer config repo.packagist composer https://mirrors.aliyun.com/composer/
 composer config --unset repos.packagist
 ```
 
+比较推荐使用只配置当前项目镜像，因为这个配置可以被带到composer.json里去。即使换了环境，再次执行composer命令时也会使用镜像。
+
 ### 更新composer
 
 使用composer时，会遇到提示composer版本超过60天，建议更新的提示。这个时候可以使用`composer self-update`命令更新composer。
