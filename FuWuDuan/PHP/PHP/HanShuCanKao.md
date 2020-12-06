@@ -1,17 +1,6 @@
-```json
-{
-  "title": "CGI,FastCHI,PHP-CGI,PHP-FPM 的关系",
-  "updated_at": "2020-06-20",
-  "updated_by": "KelipuTe",
-  "tags": "PHP,PHP 手册"
-}
-```
+## PHP手册--函数参考
 
----
-
-## PHP 手册 —— 函数参考
-
-#### 变量与类型相关扩展 —— [数组](https://www.php.net/manual/zh/book.array.php)
+#### 变量与类型相关扩展--[数组](https://www.php.net/manual/zh/book.array.php)
 
 http_build_query() 函数会把true值转换成1，如果一定要true字符串，赋值的时候用true的字符串值不要直接使用布尔值
 

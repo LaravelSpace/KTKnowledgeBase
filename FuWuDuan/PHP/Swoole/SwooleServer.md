@@ -32,6 +32,20 @@ reactor_num必须小于或等于worker_num。如果设置的reactor_num大于wor
 
 配置Task进程的数量，没有默认值，未配置则不启动task。配置此参数后将会启用task功能。所以Server务必要注册onTask、onFinish2个事件回调函数。如果没有注册，服务器程序将无法启动。Task进程是同步阻塞的。最大值不得超过swoole_cpu_num()*1000。Task进程内不能使用Swoole\Server->task()方法。
 
+#### daemonize
+
+守护进程化，默认值为0。设置daemonize为1时，程序将转入后台作为守护进程运行。长时间运行的服务器端程序必须启用此项。如果不启用守护进程，当ssh终端退出后，程序将被终止运行。启用守护进程后，CWD（当前目录）环境变量的值会发生变更，相对路径的文件读写会出错，PHP程序中必须使用绝对路径。标准输入和输出会被重定向到log_file。如果未设置log_file，将重定向到/dev/null，所有打印屏幕的信息都会被丢弃。
+
+#### reload_async
+
+设置异步重启开关，默认值为true。设置异步重启开关。设置为true时，将启用异步安全重启特性，Worker进程会等待异步事件完成后再退出。reload_async开启的主要目的是为了保证服务重载时，协程或异步任务能正常结束。
+
+#### max_wait_time
+
+设置Worker进程收到停止服务通知后最大等待时间，默认值为3。经常会碰到由于worker阻塞卡顿导致worker无法正常reload，无法满足一些生产场景，例如发布代码热更新需要reload进程。所以，加入了进程重启超时时间的选项。
+
+管理进程收到重启、关闭信号后或者达到max_request时，管理进程会重起该worker进程。分以下几个步骤：1、底层会增加一个(max_wait_time)秒的定时器，触发定时器后，检查进程是否依然存在，如果是，会强制杀掉，重新拉一个进程。2、需要在onWorkerStop回调里面做收尾工作，需要在max_wait_time秒内做完收尾。3、依次向目标进程发送SIGTERM信号，杀掉进程。
+
 #### log_file
 
 指定Swoole错误日志文件。在Swoole运行期发生的异常信息会记录到这个文件中，默认会打印到屏幕。
@@ -48,16 +62,6 @@ reactor_num必须小于或等于worker_num。如果设置的reactor_num大于wor
 | SWOOLE_LOG_ROTATION_DAILY        | 每日   | v4.5.2   |
 | SWOOLE_LOG_ROTATION_HOURLY       | 每小时 | v4.5.8   |
 | SWOOLE_LOG_ROTATION_EVERY_MINUTE | 每分钟 | v4.5.8   |
-
-#### reload_async
-
-设置异步重启开关，默认值为true。设置异步重启开关。设置为true时，将启用异步安全重启特性，Worker进程会等待异步事件完成后再退出。reload_async开启的主要目的是为了保证服务重载时，协程或异步任务能正常结束。
-
-#### max_wait_time
-
-设置Worker进程收到停止服务通知后最大等待时间，默认值为3。经常会碰到由于worker阻塞卡顿导致worker无法正常reload，无法满足一些生产场景，例如发布代码热更新需要reload进程。所以，加入了进程重启超时时间的选项。
-
-管理进程收到重启、关闭信号后或者达到max_request时，管理进程会重起该worker进程。分以下几个步骤：1、底层会增加一个(max_wait_time)秒的定时器，触发定时器后，检查进程是否依然存在，如果是，会强制杀掉，重新拉一个进程。2、需要在onWorkerStop回调里面做收尾工作，需要在max_wait_time秒内做完收尾。3、依次向目标进程发送SIGTERM信号，杀掉进程。
 
 ### start()方法
 
@@ -89,4 +93,4 @@ reload()方法用于安全地重启所有Worker/Task进程。后端服务器随�
 Swoole\Server->stop(int $workerId = -1, bool $waitEvent = false): bool
 ```
 
-stop()方法用于使当前Worker进程停止运行，并立即触发onWorkerStop回调函数。异步IO服务器在调用stop退出进程时，可能仍然有事件在等待。这时如果进程强制退出，这些流程处理的数据就会丢失了。设置$waitEvent=true后，底层会使用异步安全重启策略。先通知Manager进程，重新启动一个新的Worker来处理新的请求。当前旧的Worker会等待事件，直到事件循环为空或者超过max_wait_time后，退出进程，最大限度的保证异步事件的安全性。
+stop()方法用于使当前Worker进程停止运行，并立即触发onWorkerStop回调函数。异步IO服务器在调用stop退出进程时，可能仍然有事件在等待。这时如果进程强制退出，这些流程处理的数据就会丢失了。设置`$waitEvent=true`后，底层会使用异步安全重启策略。先通知Manager进程，重新启动一个新的Worker来处理新的请求。当前旧的Worker会等待事件，直到事件循环为空或者超过max_wait_time后，退出进程，最大限度的保证异步事件的安全性。

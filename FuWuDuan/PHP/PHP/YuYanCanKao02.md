@@ -1,15 +1,4 @@
-```json
-{
-  "title": "PHP 手册 -- 语言参考02",
-  "updated_at": "2020-06-22",
-  "updated_by": "KelipuTe",
-  "tags": "PHP,PHP 手册"
-}
-```
-
----
-
-## PHP 手册 —— [语言参考](https://www.php.net/manual/zh/langref.php) 02
+## PHP手册--[语言参考](https://www.php.net/manual/zh/langref.php)02
 
 ### [类与对象](https://www.php.net/manual/zh/language.oop5.php)
 

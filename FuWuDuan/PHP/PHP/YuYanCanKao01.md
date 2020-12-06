@@ -1,21 +1,14 @@
-```json
-{
-  "title": "PHP 手册 -- 语言参考01",
-  "updated_at": "2020-06-20",
-  "updated_by": "KelipuTe",
-  "tags": "PHP,PHP 手册"
-}
-```
+## PHP手册--语言参考01
 
----
+### 类型
 
-## PHP 手册 —— [语言参考](https://www.php.net/manual/zh/langref.php) 01
+#### Float浮点型
 
-### [类型](https://www.php.net/manual/zh/language.types.php)
+浮点数的精度有限。尽管取决于系统，PHP通常使用IEEE754双精度格式，则由于取整而导致的最大相对误差为1.11e-16。非基本数学运算可能会给出更大误差，并且要考虑到进行复合运算时的误差传递。
 
-#### [Float 浮点型](https://www.php.net/manual/zh/language.types.float.php)
+此外，以十进制能够精确表示的有理数如0.1或0.7，无论有多少尾数都不能被内部所使用的二进制精确表示，因此不能在不丢失一点点精度的情况下转换为二进制的格式。这就会造成混乱的结果：例如，`floor((0.1+0.7)*10)`通常会返回7而不是预期中的8，因为该结果内部的表示其实是类似7.9999999999999991118...。
 
-PHP 程序里对 float 类型尽量做二次处理（取整数、取 2 位小数等），防止出现 2.23 变成 2.229999999997 这样的情况。
+所以，PHP程序里对float类型尽量做二次处理（取整数、取2位小数等），防止出现2.23变成2.229999999997这样的情况。而且，永远不要相信浮点数结果精确到了最后一位，也永远不要比较两个浮点数是否相等。如果确实需要更高的精度，应该使用[任意精度数学函数](https://www.php.net/manual/zh/ref.bc.php)或者[gmp函数](https://www.php.net/manual/zh/ref.gmp.php)。
 
 #### [String 字符串](https://www.php.net/manual/zh/language.types.string.php)
 
