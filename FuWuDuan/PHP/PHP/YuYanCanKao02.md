@@ -1,308 +1,351 @@
-## PHP手册--[语言参考](https://www.php.net/manual/zh/langref.php)02
+## PHP手册--语言参考02
 
-### [类与对象](https://www.php.net/manual/zh/language.oop5.php)
+### 运算符
 
-#### [基本概念](https://www.php.net/manual/zh/language.oop5.basic.php)
+#### 运算符优先级
 
-$this 是一个到主叫对象的引用（通常是该方法所从属的对象，但如果是从第二个对象静态调用时也可能是另一个对象）。
-
-要创建一个类的实例，必须使用 new 关键字。当创建新对象时该对象总是被赋值，除非该对象定义了构造函数并且在出错时抛出了一个异常。类应在被实例化之前定义（某些情况下则必须这样）。如果在 new 之后跟着的是一个包含有类名的字符串 string，则该类的一个实例被创建。如果该类属于一个命名空间，则必须使用其完整名称。
-
-在类定义内部，可以用 new self 和 new parent 创建新对象。当把一个对象已经创建的实例赋给一个新变量时，新变量会访问同一个实例，就和用该对象赋值一样。此行为和给函数传递入实例时一样。可以用克隆给一个已创建的对象建立一个新实例。
+++和--运算符的优先级位于前面。
 
 ```php
-class SimpleClass
-{
-    public $var;
-}
+$a = 1;
+// 输出 3：2+1
+echo $a + $a++;
+// 输出 4：2+2
+echo $a + ++$a;
 
-$instance = new SimpleClass();
-$assigned = $instance;
-$reference = &$instance;
-
-$instance->var = '$assigned will have this value';
-// $instance and $reference become null
-$instance = null;
-
-var_dump($instance);
-var_dump($reference);
-var_dump($assigned);
+$i = 1;
+$array = [];
+$array[$i] = $i++;
+// array(1){[2] =>int(1)}
 ```
 
-以上例程会输出：
+#### 赋值运算符
+
+赋值运算将原变量的值拷贝到新变量中（传值赋值），所以改变其中一个并不影响另一个。这也适合于在密集循环中拷贝一些值例如大数组。在PHP中普通的传值赋值行为有个例外就是碰到对象object时，在PHP5中是以引用赋值的，除非明确使用了clone关键字来拷贝。
+
+PHP支持引用赋值，使用`$var=&$othervar;`语法。引用赋值意味着两个变量指向了同一个数据，没有拷贝任何东西。new运算符自动返回一个引用，因此在PHP7.0.0及之后的版本中禁止对new的结果进行引用赋值；PHP5.3.0及之后的版本则发出一条E_DEPRECATED错误信息；在更早的版本中发出的是E_STRICT。
+
+#### 位运算符
+
+| 例子     | 名称               | 结果                                              |
+| -------- | ------------------ | ------------------------------------------------- |
+| `$a&$b`  | And（按位与）      | 将把$a和$b中都为1的位设为1。                      |
+| `$a|$b`  | Or（按位或）       | 将把$a和$b中任何一个为1的位设为1。                |
+| `$a^$b`  | Xor（按位异或）    | 将把$a和$b中一个为1另一个为0的位设为1。           |
+| `~$a`    | Not（按位取反）    | 将$a中为0的位设为1，反之亦然。                    |
+| `$a<<$b` | Shiftleft（左移）  | 将$a中的位向左移动$b次（每一次移动都表示乘以2）。 |
+| `$a>>$b` | Shiftright（右移） | 将$a中的位向右移动$b次（每一次移动都表示除以2）。 |
+
+#### 比较运算符
+
+常规的比较运算符很常见了，下面是两个比较容易忽略的。
+
+| 例子    | 名称                       | 结果                                                         |
+| ------- | -------------------------- | ------------------------------------------------------------ |
+| $a<>$b  | 不等                       | TRUE，如果类型转换后$a不等于$b。                             |
+| $a<=>$b | 太空船运算符（组合比较符） | 当$a小于、等于、大于$b时分别返回一个小于、等于、大于0的integer值。PHP7起开始提供。 |
+
+由于浮点数float的内部表达方式，不应比较两个浮点数float是否相等。
+
+如果比较一个数字和字符串或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。此规则也适用于switch语句。当用===或!==进行比较时则不进行类型转换，因为此时类型和数值都要比对。
+
+对于多种类型，比较运算符根据下表比较（按顺序）。
+
+| 运算数1类型              | 运算数2类型              | 结果                                                         |
+| ------------------------ | ------------------------ | ------------------------------------------------------------ |
+| null或string             | string                   | 将NULL转换为""，进行数字或词汇比较                           |
+| bool或null               | 任何其它类型             | 转换为bool，FALSE<TRUE                                       |
+| object                   | object                   | 内置类可以定义自己的比较，不同类不能比较，相同类和数组同样方式比较属性（PHP4中），PHP5有其自己的[说明](https://www.php.net/manual/zh/language.oop5.object-comparison.php) |
+| string，resource或number | string，resource或number | 将字符串和资源转换成数字，按普通数学比较                     |
+| array                    | array                    | 具有较少成员的数组较小，如果运算数1中的键不存在于运算数2中则数组无法比较，否则挨个值比较（见下例） |
+| object                   | 任何其它类型             | object总是更大                                               |
+| array                    | 任何其它类型             | array总是更大                                                |
+
+三元运算符："?:"。表达式(expr1)?(expr2):(expr3)在expr1求值为TRUE时的值为expr2，在expr1求值为FALSE时的值为expr3。自PHP5.3起，可以省略三元运算符中间那部分。表达式expr1?:expr3在expr1求值为TRUE时返回expr1，否则返回expr3。注意三元运算符是个语句，因此其求值不是变量，而是语句的结果。
+
+建议避免将三元运算符堆积在一起使用。当在一条语句中使用多个三元运算符时，将会按照从左往右计算的顺序。如果一定要堆积使用，建议将每一组三元运算符及其参数使用括号分组。
+
+PHP7开始存在"??"（NULL合并）运算符。当expr1为NULL，表达式(expr1)??(expr2)等同于expr2，否则为expr1。尤其要注意，当不存在左侧的值时，此运算符也和isset()一样不会产生警告。对于array键尤其有用。NULL合并运算符是一个表达式，产生的也是表达式结果，而不是变量。
+
+值得注意的一点。??运算符是以判断$a变量是否存在于上下文环境中作为条件，而?:不具备这种判断。所以??运算符可用于判断$a变量不存在的情况，而使用?:判断一个未定义的变量，PHP会抛出异常。所以下面的例子，用?:和??分别判断一个赋值为0的变量的时候，结果是不一样的。
 
 ```php
-NULL
-NULL
-object(SimpleClass)#1 (1) {
-    ["var"]=>
-    string(30) "$assigned will have this value"
+$a = 0; $c = 1; $b = $a ?? $c;
+// a:0,b:0,c:1
+$a = 0; $c = 1; $b = $a ? $a : $c;
+// a:0,b:1,c:1
+```
+
+### 流程控制
+
+#### for
+
+下面这段代码可能执行很慢，因为每次循环时都会重新执行 count() 方法，计算一遍数组的长度。
+
+```php
+$people = array(
+    array('name' => 'Kalle', 'salt' => 856412),
+    array('name' => 'Pierre', 'salt' => 215863)
+);
+
+for ($i = 0; $i < count($people); ++$i) {
+    $people[$i]['salt'] = rand(000000, 999999);
 }
 ```
 
-可以通过 parent:: 来访问被覆盖的方法或属性。当覆盖方法时，参数必须保持一致否则 PHP 将发出 E_STRICT 级别的错误信息。但构造函数例外，构造函数可在被覆盖时使用不同的参数。
-
-自 PHP 5.5 起，关键词 class 也可用于类名的解析。使用 `ClassName::class` 你可以获取一个字符串，包含了类 ClassName 的完全限定名称。这对使用了 命名空间 的类尤其有用。
-
-#### [属性](https://www.php.net/manual/zh/language.oop5.properties.php)
-
-属性中的变量可以初始化，但是初始化的值必须是常数，这里的常数是指 PHP 脚本在编译阶段时就可以得到其值，而不依赖于运行时的信息才能求值。
-
-为了向后兼容 PHP 4，PHP 5 声明属性依然可以直接使用关键字 var 来替代（或者附加于）public，protected 或 private。但是已不再需要 var 了。如果直接使用 var 声明属性，而没有用 public，protected 或 private 之一，PHP 5 会将其视为 public。 
-
-在类的成员方法里面，可以用 **->**（对象运算符）：`$this->property`（其中 property 是该属性名）这种方式来访问非静态属性。静态属性则是用 **::**（双冒号）：`self::$property` 来访问。
-
-#### [类常量](https://www.php.net/manual/zh/language.oop5.constants.php)
-
-可以把在类中始终保持不变的值定义为常量。在定义和使用常量的时候不需要使用 $ 符号。常量的值必须是一个定值，不能是变量，类属性，数学运算的结果或函数调用。接口（interface）中也可以定义常量。
-
-自 PHP 5.3.0 起，可以用一个变量来动态调用类。但该变量的值不能为关键字（如 self，parent 或 static）。
+由于数组的长度始终不变，可以用一个中间变量来储存数组长度以优化而不是不停调用 count() 方法。下面这段代码 count() 方法只会被执行一次。
 
 ```php
-class MyClass
-{
-    const constant = 'constant value';
+$people = array(
+    array('name' => 'Kalle', 'salt' => 856412),
+    array('name' => 'Pierre', 'salt' => 215863)
+);
 
-    function showConstant()
-    {
-        echo self::constant . "\n";
+for ($i = 0, $size = count($people); $i < $size; ++$i) {
+    $people[$i]['salt'] = rand(000000, 999999);
+}
+```
+
+#### foreach
+
+使用引用赋值，可以修改数组元素。但需要注意的是，数组最后一个元素的引用在foreach循环之后仍会保留。建议使用unset()将其销毁。
+
+```php
+$arr = [1, 2, 3, 4, 5];
+foreach ($arr as &$value) {
+    $value = $value * 2;
+}
+// $arr:[2, 4, 6, 8, 10]
+unset($value);
+```
+
+引用仅在被遍历的数组可以被引用时才可用（例如是个变量）。以下代码是无法运行的。
+
+```php
+foreach ([1, 2, 3, 4, 5] as &$value) {
+    $value = $value * 2;
+}
+```
+
+foreach循环的功能可以通过while循环、list()、each()一起使用实现，下面两端代码的功能完全相同。
+
+```php
+$arr = array("one", "two", "three");
+foreach ($arr as $value) {
+    echo "Value: $value<br />\n";
+}
+while (list(, $value) = each($arr)) {
+    echo "Value: $value<br>\n";
+}
+
+$arr = array("one", "two", "three");
+foreach ($arr as $key => $value) {
+    echo "Key: $key; Value: $value<br />\n";
+}
+while (list($key, $value) = each($arr)) {
+    echo "Key: $key; Value: $value<br />\n";
+}
+```
+
+#### break
+
+break结束当前for，foreach，while，do-while或者switch结构的执行。break可以接受一个可选的数字参数来决定跳出几重循环。 
+
+```php
+$i = 0;
+while (++$i) {
+    switch ($i) {
+        case 5:
+            echo "At 5<br />\n";
+            break 1;  /* 只退出 switch. */
+        case 10:
+            echo "At 10; quitting<br />\n";
+            break 2;  /* 退出 switch 和 while 循环 */
+        default:
+            break;
     }
 }
-
-echo MyClass::constant . "\n";
-
-$classname = "MyClass";
-// 自 PHP 5.3.0 起
-echo $classname::constant . "\n";
-
-$class = new MyClass();
-$class->showConstant();
-// 自 PHP 5.3.0 起
-echo $class::constant . "\n"; 
 ```
 
-####  [构造函数和析构函数](https://www.php.net/manual/zh/language.oop5.decon.php)
+#### continue
 
-如果子类中定义了构造函数则不会隐式调用其父类的构造函数。要执行父类的构造函数，需要在子类的构造函数中调用 parent::__construct()。如果子类没有定义构造函数则会如同一个普通的类方法一样从父类继承（假如没有被定义为 private 的话）。
+continue在循环结构用用来跳过本次循环中剩余的代码并在条件求值为真时开始执行下一次循环。 continue接受一个可选的数字参数来决定跳过几重循环到循环结尾。默认值是1，即跳到当前循环末尾。 注意在PHP中switch语句被认为是可以使用continue的一种循环结构。
 
-PHP 5 引入了析构函数的概念，这类似于其它面向对象的语言，如 C++。析构函数会在到某个对象的所有引用都被删除或者当对象被显式销毁时执行。和构造函数一样，父类的析构函数不会被引擎暗中调用。要执行父类的析构函数，必须在子类的析构函数体中显式调用 parent::__destruct()。此外也和构造函数一样，子类如果自己没有定义析构函数则会继承父类的。析构函数即使在使用 exit() 终止脚本运行时也会被调用。在析构函数中调用 exit() 将会中止其余关闭操作的运行。试图在析构函数（在脚本终止时被调用）中抛出一个异常会导致致命错误。
+另外在使用continue时，不要省略结尾的分号。下面的例子不会获得预期的结果。因为整个`continueprint"$i\n";`被当做单一的表达式而求值，所以print()函数只有在`$i==2`为真时才被调用（print()的值被当成了上述的可选数字参数而传递给了continue）。
 
-#### [对象继承](https://www.php.net/manual/zh/language.oop5.inheritance.php)
+```php
+for ($i = 0; $i < 5; ++$i) {
+    if ($i == 2)
+        continue
+        print "$i\n";
+}
+```
 
-除非使用了自动加载，否则一个类必须在使用之前被定义。如果一个类扩展了另一个，则父类必须在子类之前被声明。此规则适用于类继承其它类与接口。
+#### switch
 
-#### [Static（静态）关键字](https://www.php.net/manual/zh/language.oop5.static.php)
+switch/case作的是松散比较（==）。case表达式可以是任何求值为简单类型的表达式，即整型或浮点数以及字符串。不能用数组或对象，除非它们被解除引用成为简单类型。
 
-声明类属性或方法为静态，就可以不实例化类而直接访问。静态属性只能被初始化为文字或常量，不能使用表达式。可以把静态属性初始化为整数或数组，但不能初始化为另一个变量或函数返回值，也不能指向一个对象。
+注意和其它语言不同，continue语句作用到switch上的作用类似于break。如果在循环中有一个switch并希望continue到外层循环中的下一轮循环，用continue2。
 
-由于静态方法不需要通过对象即可调用，所以伪变量 $this 在静态方法中不可用。静态属性不能通过一个类已实例化的对象来访问（但静态方法可以）。静态属性不可以由对象通过 -> 操作符来访问。用静态方式调用一个非静态方法会导致一个 E_STRICT 级别的错误。
+switch语句一行接一行地执行。开始时没有代码被执行。仅当一个case语句中的值和switch表达式的值匹配时PHP才开始执行语句，直到switch的程序段结束或者遇到第一个break语句为止。如果不在case的语句段最后写上break的话，PHP将继续执行下一个case中的语句段。
 
-自 PHP 5.3.0 起，可以用一个变量来动态调用类。但该变量的值不能为关键字 self，parent 或 static。 
+在一个case中的语句也可以为空，这样只不过将控制转移到了下一个case中的语句。一个case的特例是default，它匹配了任何和其它case都不匹配的情况。
+
+#### return
+
+如果在一个函数中调用return语句，将立即结束此函数的执行并将它的参数作为函数的值返回。return也会终止eval()语句或者脚本文件的执行。
+
+如果在全局范围中调用，则当前脚本文件中止运行。如果当前脚本文件是被include的或者require的，则控制交回调用文件。此外，如果当前脚本是被include的，则return的值会被当作include调用的返回值。如果在主脚本文件中调用return，则脚本中止运行。如果当前脚本文件是在php.ini中的配置选项auto_prepend_file或者auto_append_file所指定的，则此脚本文件中止运行。
+
+- 注意既然return是语言结构而不是函数，因此其参数没有必要用括号将其括起来。通常都不用括号，实际上也应该不用，这样可以降低PHP的负担。
+- 如果没有提供参数，则一定不能用括号，此时返回NULL。如果调用return时加上了括号却又没有参数会导致解析错误。
+- 当用引用返回值时永远不要使用括号，这样行不通。只能通过引用返回变量，而不是语句的结果。如果使用return($a);时其实不是返回一个变量，而是表达式($a)的值（当然，此时该值也正是$a的值）
+
+#### require，include
+
+include，语句包含并运行指定文件。被包含文件先按参数给出的路径寻找，如果没有给出目录（只有文件名）时则按照include_path指定的目录寻找。如果在include_path下没找到该文件则include最后才在调用脚本文件所在的目录和当前工作目录下寻找。如果最后仍未找到文件则include结构会发出一条警告；这一点和require不同，后者会发出一个致命错误。
+
+require和include几乎完全一样，除了处理失败的方式不同之外。require在出错时产生E_COMPILE_ERROR级别的错误。换句话说将导致脚本中止而include只产生警告（E_WARNING），脚本会继续运行。
+
+如果定义了路径——不管是绝对路径（在Windows下以盘符或者\开头，在Unix/Linux下以/开头）还是当前目录的相对路径（以.或者..开头）——include_path都会被完全忽略。例如一个文件以../开头，则解析器会在当前目录的父目录下寻找该文件。
+
+#### require_once，include_once
+
+include_once语句在脚本执行期间包含并运行指定文件。此行为和include语句类似，唯一区别是如果该文件中已经被包含过，则不会再次包含。如同此语句名字暗示的那样，只会包含一次。include_once可以用于在脚本执行期间同一个文件有可能被包含超过一次的情况下，想确保它只被包含一次以避免函数重定义，变量重新赋值等问题。
+
+require_once语句和require语句完全相同，唯一区别是PHP会检查该文件是否已经被包含过，如果是则不会再次包含。
+
+#### goto
+
+goto操作符可以用来跳转到程序中的另一位置。该目标位置可以用目标名称加上冒号来标记，而跳转指令是goto之后接上目标位置的标记。PHP中的goto有一定限制，目标位置只能位于同一个文件和作用域，也就是说无法跳出一个函数或类方法，也无法跳入到另一个函数。也无法跳入到任何循环或者switch结构中。可以跳出循环或者switch，通常的用法是用goto代替多层的break。
+
+### 函数
+
+#### 用户自定义函数
+
+通常函数无需在调用之前被定义，除非一个函数是有条件被定义的，必须在调用函数之前定义。或者是函数中的函数，也需要在被调用之前定义。
+
+在PHP中可以调用递归函数，但是要避免递归函数／方法调用超过100-200层，因为可能会使堆栈崩溃从而使当前脚本终止。无限递归可视为编程错误。
+
+#### 函数的参数
+
+通过参数列表可以传递信息到函数，即以逗号作为分隔符的表达式列表，参数是从左向右求值的。PHP支持按值传递参数（默认），通过引用传递参数以及默认参数，也支持可变长度参数列表。函数可以定义C++风格的标量参数默认值，PHP允许使用数组array和特殊类型NULL作为默认参数。默认值必须是常量表达式，不能是诸如变量，类成员，或者函数调用等。注意当使用默认参数时，任何默认参数必须放在任何非默认参数的右侧；否则，函数将不会按照预期的情况工作。
+
+默认情况下，函数参数通过值传递（因而即使在函数内部改变参数的值，它并不会改变函数外部的值）。如果希望允许函数修改它的参数值，必须通过引用传递参数。如果想要函数的一个参数总是通过引用传递，可以在函数定义中该参数的前面加上符号`&`。
+
+在PHP5中，类型声明也被称为类型提示。类型声明允许函数在调用时要求参数为特定类型。如果给出的值类型不对，那么将会产生一个错误：在PHP5中，这将是一个可恢复的致命错误，而在PHP7中将会抛出一个TypeError异常。为了指定一个类型声明，类型应该加到参数名前。这个声明可以通过将参数的默认值设为NULL来实现允许传递NULL。
+
+默认情况下，如果能做到的话，PHP将会强迫错误类型的值转为函数期望的标量类型。例如，一个函数的一个参数期望是string，但传入的是integer，最终函数得到的将会是一个string类型的值。
+
+```php
+function test(string $param) {
+    echo param;
+}
+```
+
+可以基于每一个文件开启严格模式。在严格模式中，只有一个与类型声明完全相符的变量才会被接受，否则将会抛出一个TypeError。唯一的一个例外是可以将integer传给一个期望float的函数。严格类型适用于在启用严格模式的文件内的函数调用，而不是在那个文件内声明的函数。一个没有启用严格模式的文件内调用了一个在启用严格模式的文件中定义的函数，那么将会遵循调用者的偏好（弱类型），而这个值将会被转换。严格类型仅用于标量类型声明，也正是因为如此，这需要PHP7.0.0或更新版本，因为标量类型声明也是在那个版本中添加的。
+
+PHP在用户自定义函数中支持可变数量的参数列表。在PHP5.6及以上的版本中，由`...`语法实现；在PHP5.5及更早版本中，使用函数func_num_args()，func_get_arg()，和func_get_args()。
+
+#### 返回值
+
+值通过使用可选的返回语句返回。可以返回包括数组和对象的任意类型。返回语句会立即中止函数的运行，并且将控制权交回调用该函数的代码行。如果省略了return，则返回值为NULL。函数不能返回多个值，但可以通过返回一个数组来得到类似的效果。
+
+从函数返回一个引用，必须在函数声明和指派返回值给一个变量时都使用引用运算符`&`。
+
+```php
+function &returns_reference()
+{
+    return $someref;
+}
+$newref = &returns_reference();
+```
+
+PHP7增加了对返回值类型声明的支持。就如类型声明一样，返回值类型声明将指定该函数返回值的类型。同样，返回值类型声明也与有效类型中可用的参数类型声明一致。
+
+```php
+function sum($a, $b): float {
+    return $a + $b;
+}
+```
+
+严格类型也会影响返回值类型声明。在默认的弱模式中，如果返回值与返回值的类型不一致，则会被强制转换为返回值声明的类型。在强模式中，返回值的类型必须正确，否则将会抛出一个TypeError异常。当覆盖一个父类方法时，子类方法的返回值类型声明必须与父类一致。如果父类方法没有定义返回类型，那么子类方法可以定义任意的返回值类型声明。
+
+#### 可变函数
+
+PHP支持可变函数的概念。这意味着如果一个变量名后有圆括号，PHP将寻找与变量的值同名的函数，并且尝试执行它。可变函数可以用来实现包括回调函数，函数表在内的一些用途。可变函数不能用于例如echo，print，unset()，isset()，empty()，include，require以及类似的语言结构。需要使用自己的包装函数来将这些结构用作可变函数。
+
+```php
+function foo() {
+    echo "In foo()<br />\n";
+}
+$func = 'foo';
+// This calls foo()
+$func();
+
+// 使用 echo 的包装函数
+function echoit($string)
+{
+    echo $string;
+}
+$func = 'echoit';
+// This calls echoit()
+$func('test');
+```
+
+也可以用可变函数的语法来调用一个对象的方法。 
 
 ```php
 class Foo
 {
-    public static $my_static = 'foo';
-
-    public function staticValue()
+    function Variable()
     {
-        return self::$my_static;
+        $name = 'Bar';
+        // This calls the Bar() method
+        $this->$name();
     }
 
-    public static function aStaticMethod()
+    function Bar()
     {
-        // ...
+        echo "This is Bar";
     }
 }
-
-echo Foo::my_static . "\n";
-Foo::aStaticMethod();
 
 $foo = new Foo();
-print $foo::$my_static . "\n";
-// Undefined "Property" my_static
-print $foo->my_static . "\n";
-
-$classname = "Foo";
-// 自 PHP 5.3.0 起
-echo $classname::my_static . "\n";
-$classname::aStaticMethod(); 
+$funcname = "Variable";
+// This calls $foo->Variable()
+$foo->$funcname();
 ```
 
-#### [抽象类](https://www.php.net/manual/zh/language.oop5.abstract.php)
-
-任何一个类，如果它里面至少有一个方法是被声明为抽象的，那么这个类就必须被声明为抽象的。
-
-继承一个抽象类的时候，子类必须定义父类中的所有抽象方法；另外，这些方法的访问控制必须和父类中一样（或者更为宽松）。此外方法的调用方式必须匹配，即类型和所需参数数量必须一致。
-
-#### [对象接口](https://www.php.net/manual/zh/language.oop5.interfaces.php)
-
-接口中定义的所有方法都必须是公有，这是接口的特性。需要注意的是，在接口中定义一个构造方法是被允许的。
-
-在 PHP 5.3.9 之前，实现多个接口时，接口中的方法不能有重名，因为这可能会有歧义。在最近的 PHP 版本中，只要这些重名的方法签名相同，这种行为就是允许的。接口也可以继承，通过使用 extends 操作符。
-
-接口中也可以定义常量。接口常量和类常量的使用完全相同，但是不能被子类或子接口所覆盖。
-
-#### Trait
-
-我们先来看看软件开发中的两种常用代码复用模式，继承和组合。继承：强调父类与子类的关系，即子类是父类的一个特殊类型。组合：强调整体与局部的关系，侧重的一种需要的关系。
-
-软件开发中有一条原则，叫做组合优于继承。这是因为从耦合度来看，继承要高于组合。底层的代码应当多使用组合，而具体的业务逻辑或顶层代码应当多使用继承，这样能够大大提高的开发效率。继承关系中，子类与父类保持着高度的依赖关系，加上 PHP 不支持多继承，为了避免重写编写代码，很多功能都被统一封装到父类中。这样做有两个坏处：一是随着继承的层数和子类的增加，代码复杂度不断增加，大量的方法都将面临着重写；二是这些功能对于一些子类来说可能是不必要的，破坏了代码的封装性。
-
-Trait  的提出弥补了 PHP 对组合支持的不足，一个 Trait 就相当于一个模块，Trait 可包含属性、方法 与 抽象方法，不同的 Trait 以组合的方式注入到类中。通过逗号分隔，在 use 声明列出多个 Trait，可以都插入到一个类中。其它 Trait 也能够使用 trait。在 Trait 定义时通过使用一个或多个 Trait，能够组合其它 trait 中的部分或全部成员。但是无法通过 Trait 自身来实例化。从基类继承的成员会被 Trait 插入的成员所覆盖。优先顺序是来自当前类的成员覆盖了 Trait 的方法，而 Trait 则覆盖了被继承的方法。为了对使用的类施加强制要求，Trait 支持抽象方法的使用。
-
-如果两个 Trait 都插入了一个同名的方法，如果没有明确解决冲突将会产生一个致命错误。为了解决多个 trait 在同一个类中的命名冲突，需要使用 `insteadof` 操作符来明确指定使用冲突方法中的哪一个。以上方式仅允许排除掉其它方法，`as` 操作符可以为某个方法引入别名。注意，as 操作符不会对方法进行重命名，也不会影响其方法。
+当调用静态方法时，函数调用要比静态属性优先。
 
 ```php
-trait A
+class Foo
 {
-    public function smallTalk()
+    static $variable = 'static property';
+    static function Variable()
     {
-        echo 'a';
-    }
-
-    public function bigTalk()
-    {
-        echo 'A';
+        echo 'Method Variable called';
     }
 }
 
-trait B
-{
-    public function smallTalk()
-    {
-        echo 'b';
-    }
-
-    public function bigTalk()
-    {
-        echo 'B';
-    }
-}
-
-class Talker
-{
-    use A, B {
-        B::smallTalk insteadof A;
-        A::bigTalk insteadof B;
-    }
-}
-
-class Aliased_Talker
-{
-    use A, B {
-        B::smallTalk insteadof A;
-        A::bigTalk insteadof B;
-        B::bigTalk as talk;
-    }
-}
+// This prints 'static property'. It does need a $variable in this scope.
+echo Foo::$variable; 
+$variable = "Variable";
+// This calls $foo->Variable() reading $variable in this scope.
+Foo::$variable();  
 ```
 
-使用 as 语法还可以用来调整方法的访问控制。
+#### 内部（内置）函数
 
-```php
-trait HelloWorld
-{
-    public function sayHello()
-    {
-        echo 'Hello World!';
-    }
-}
-// 修改 sayHello 的访问控制
-class MyClass1
-{
-    use HelloWorld {
-        sayHello as protected;
-    }
-}
-// 给方法一个改变了访问控制的别名
-// 原版 sayHello 的访问控制则没有发生变化
-class MyClass2
-{
-    use HelloWorld {
-        sayHello as private myPrivateHello;
-    }
-}
-```
+PHP有很多标准的函数和结构。还有一些函数需要和特定地PHP扩展模块一起编译，否则在使用它们的时候就会得到一个致命的"未定义函数"错误。如果传递给函数的参数类型与实际的类型不一致，例如将一个array传递给一个string类型的变量，那么函数的返回值是不确定的。在这种情况下，通常函数会返回NULL。但这仅仅是一个惯例，并不一定如此。
 
-Trait 可以定义属性。 Trait 定义了一个属性后，类就不能定义同样名称的属性，否则会产生 fatal error。 有种情况例外：属性是兼容的（同样的访问可见度、初始默认值）。在 PHP 7.0 之前，属性是兼容的，则会有 E_STRICT 的提醒。
+#### 匿名函数
 
-```php
-trait PropertiesTrait
-{
-    public $same = true;
-    public $different = false;
-}
+匿名函数（Anonymous functions），也叫闭包函数（closures），允许临时创建一个没有指定名称的函数。匿名函数目前是通过Closure类来实现的，最经常用作回调函数（callback）参数的值。闭包函数也可以作为变量的值来使用，PHP会自动把此种表达式转换成内置类Closure的对象实例。把一个Closure对象赋值给一个变量的方式与普通变量赋值的语法是一样的。
 
-class PropertiesExample
-{
-    use PropertiesTrait;
+闭包可以从父作用域中继承变量，任何此类变量都应该用use语言结构传递进去。如果没有使用use而是直接使用变量，那么匿名函数定义的时候这个变量是什么就是什么，后续匿名函数外部继续修改此变量，对匿名函数来说是无效的。
 
-    // PHP 7.0.0 后没问题，之前版本是 E_STRICT 提醒
-    public $same = true;
-    // 致命错误
-    public $different = true;
-}
-```
+PHP7.1起，不能传入此类变量：superglobals、$this或者和参数重名，这些变量都必须在函数或类的头部声明。从父作用域中继承变量与使用全局变量是不同的。全局变量存在于一个全局的范围，无论当前在执行的是哪个函数。而闭包的父作用域是定义该闭包的函数（不一定是调用它的函数）
 
-Trait 可以使用静态属性和定义静态方法。
-
-#### [匿名类](https://www.php.net/manual/zh/language.oop5.anonymous.php)
-
-PHP 7 开始支持匿名类。可以传递参数到匿名类的构造器，也可以扩展（extend）其他类、实现接口（implement interface），以及像其他普通的类一样使用 trait。声明的同一个匿名类，所创建的对象都是这个类的实例。
-
-#### [重载](https://www.php.net/manual/zh/language.oop5.overloading.php)
-
-PHP所提供的"重载"（overloading）是指动态地"创建"类属性和方法。我们是通过魔术方法（magic methods）来实现的。当调用当前环境下未定义或不可见的类属性或方法时，重载方法会被调用。所有的重载方法都必须被声明为 public。
-
-属性重载，在给不可访问属性赋值时，__set() 会被调用。读取不可访问属性的值时，__get() 会被调用。当对不可访问属性调用 isset() 或 empty() 时，__isset() 会被调用。当对不可访问属性调用 unset() 时，__unset() 会被调用。
-
-参数 `$name` 是指要操作的变量名称。__set() 方法的 `$value` 参数指定了 `$name` 变量的值。
-
-```php
-public __set ( string $name , mixed $value ) : void
-public __get ( string $name ) : mixed
-public __isset ( string $name ) : bool
-public __unset ( string $name ) : void
-```
-
-方法重载， 在对象中调用一个不可访问方法时，__call() 会被调用。在静态上下文中调用一个不可访问方法时，__callStatic() 会被调用。
-
-$name 参数是要调用的方法名称。$arguments 参数是一个枚举数组，包含着要传递给方法 $name 的参数。
-
-```php
-public __call ( string $name , array $arguments ) : mixed
-public static __callStatic ( string $name , array $arguments ) : mixed
-```
-
-#### [对象复制](https://www.php.net/manual/zh/language.oop5.cloning.php)
-
-对象复制可以通过 clone 关键字来完成（如果可能，这将调用对象的 __clone() 方法）。对象中的 __clone() 方法不能被直接调用。`$copy_of_object = clone $object;`。当对象被复制后，PHP 5 会对对象的所有属性执行一个浅复制（shallow copy）。所有的引用属性仍然会是一个指向原来的变量的引用。
-
-当复制完成时，如果定义了 __clone() 方法，则新创建的对象（复制生成的对象）中的 __clone() 方法会被调用，可用于修改属性的值（如果有必要的话）。克隆以后，两个对象互不干扰。
-
-#### [对象比较](https://www.php.net/manual/zh/language.oop5.object-comparison.php)
-
-当使用比较运算符（==）比较两个对象变量时，比较的原则是：如果两个对象的属性和属性值 都相等，而且两个对象是同一个类的实例，那么这两个对象变量相等。而如果使用全等运算符（===），这两个对象变量一定要指向某个类的同一个实例（即同一个对象）。
-
-#### [类型约束](https://www.php.net/manual/zh/language.oop5.typehinting.php)
-
-函数的参数可以指定必须为对象（在函数原型里面指定类的名字），接口，数组（PHP 5.1 起）或者 callable（PHP 5.4 起）。不过如果使用 NULL 作为参数的默认值，那么在调用函数的时候依然可以使用 NULL 作为实参。类型约束允许 NULL 值。
-
-如果一个类或接口指定了类型约束，则其所有的子类或实现也都如此。类型约束不能用于标量类型如 int 或 string，Traits 也不允许。函数调用的参数与定义的参数类型不一致时，会抛出一个可捕获的致命错误。类型约束不只是用在类的成员函数里，也能使用在函数里。
-
-#### [对象和引用](https://www.php.net/manual/zh/language.oop5.references.php)
-
-在 PHP 5 的对象编程经常提到的一个关键点是“默认情况下对象是通过引用传递的”。但其实这不是完全正确的。PHP 的引用是别名，就是两个不同的变量名字指向相同的内容。在 PHP 5，一个对象变量已经不再保存整个对象的值。只是保存一个标识符来访问真正的对象内容。当对象作为参数传递，作为结果返回，或者赋值给另外一个变量，另外一个变量跟原来的不是引用的关系，只是他们都保存着同一个标识符的拷贝，这个标识符指向同一个对象的真正内容。
-
-#### [对象序列化](https://www.php.net/manual/zh/language.oop5.serialization.php)
-
-所有 PHP 里面的值都可以使用函数 serialize() 来返回一个包含字节流的字符串来表示。unserialize() 函数能够重新把字符串变回 PHP 原来的值。序列化一个对象将会保存对象的所有变量，但是不会保存对象的方法，只会保存类的名字。
-
-为了能够 unserialize() 一个对象，这个对象的类必须已经定义过。如果序列化类 A 的一个对象，将会返回一个跟类A相关，而且包含了对象所有变量值的字符串。如果要想在另外一个文件中解序列化一个对象，这个对象的类必须在解序列化之前定义，可以通过包含一个定义该类的文件或使用函数 spl_autoload_register() 来实现。
-
----
-
-## 参考
-
-[PHP 核心特性 - Trait](https://learnku.com/articles/35908)
+当在类的上下文中声明匿名函数时，当前的类会自动与之绑定，使得$this在函数的作用域中可用。如果不需要当前类的自动绑定，可以使用静态匿名函数替代。 匿名函数允许被定义为静态化。这样可以防止当前类自动绑定到它们身上，对象在运行时也可能不会被绑定到它们上面。
