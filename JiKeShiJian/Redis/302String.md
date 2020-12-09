@@ -18,7 +18,7 @@
 
 这种布局方式也被称为embstr编码方式。当然，当字符串大于44字节时，SDS的数据量就开始变多了，Redis就不再把SDS和RedisObject布局在一起了，而是会给SDS分配独立的空间，并用指针指向SDS结构。这种布局方式被称为raw编码模式。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\String_img02.jpg)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\String_img02.jpg)
 
 到这里，就可以实际计算这个键值对使用的空间了。两个Long类型的整数可以直接用int编码的RedisObject保存。每个int编码的RedisObject元数据部分占8字节，指针部分被直接赋值为8字节的整数了。此时，每个ID会使用16字节，加起来一共是32字节。但是，另外的32字节呢？
 
@@ -26,7 +26,7 @@
 
 除了上面的两个RedisObject，Redis还会使用一个全局哈希表保存所有键值对，哈希表的每一项是一个dictEntry的结构体，用来指向一个键值对。dictEntry结构中有三个8字节的指针，分别指向key、value以及下一个dictEntry，三个指针共24字节，如下图所示：
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\String_img04.jpg)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\String_img04.jpg)
 
 但是，这三个指针只有24字节，为什么会占用了32字节呢？这就要提到Redis使用的内存分配库jemalloc了。jemalloc在分配内存时，会根据我们申请的字节数N，找一个比N大，但是最接近N的2的幂次数作为分配的空间，这样可以减少频繁分配的次数。举个例子。如果你申请6字节空间，jemalloc实际会分配8字节空间；如果你申请24字节空间，jemalloc则会分配32字节。
 
@@ -36,7 +36,7 @@
 
 Redis有一种底层数据结构，叫压缩列表（ziplist），这是一种非常节省内存的结构。压缩列表的表头有三个字段zlbytes、zltail和zllen，分别表示列表长度、列表尾的偏移量，以及列表中的entry个数。压缩列表尾还有一个zlend，表示列表结束。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\String_img06.jpg)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\String_img06.jpg)
 
 压缩列表之所以能节省内存，就在于它是用一系列连续的entry保存数据。这些entry会挨个儿放置在内存中，不需要再用额外的指针进行连接，这样就可以节省指针所占用的空间。每个entry的元数据包括下面几部分。len：表示自身长度，4字节；encoding：表示编码方式，1字节；content（key）：保存实际数据。
 

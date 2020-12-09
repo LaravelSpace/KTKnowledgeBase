@@ -4,7 +4,7 @@
 
 Redis实例在运行时，要和许多对象进行交互，这些不同的交互就会涉及不同的操作。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\ZuSe_img02.jpg)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\ZuSe_img02.jpg)
 
 ### 和客户端交互时的阻塞点
 

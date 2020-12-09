@@ -1,4 +1,4 @@
-## CGI,FastCGI,PHP-CGI,PHP-FPM的关系
+## CGI，FastCGI，PHP-CGI，PHP-FPM的关系
 
 ### 问题背景
 
@@ -6,11 +6,11 @@
 
 举个例子，如果客户端请求的是index.html，那么WebServer会去文件系统中找到这个文件，发送给浏览器，这里分发的是静态数据。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM02.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM02.png)
 
 如果请求的是index.php，根据配置文件，WebServer知道这个不是静态文件，需要去找PHP解析器来处理，那么就会把这个请求简单处理，然后交给PHP解析器。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM04.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM04.png)
 
 当WebServer收到index.php这个请求后，会启动对应的CGI程序，这里就是PHP的解析器。接下来PHP解析器会解析php.ini文件，初始化执行环境，然后处理请求，再以规定CGI规定的格式返回处理后的结果，退出进程，WebServer再把结果返回给浏览器。这就是一个完整的动态PHPWeb访问流程。
 
@@ -43,7 +43,7 @@
 
 SAPI，即是Server Application Programming Interface的首字母缩写，意思是服务器端应用编程接口。这是PHP内核提供给外部调用其服务的接口，即外部系统可以通过SAPI来调用PHP提供的编译脚本、执行脚本的服务。PHP默认提供了很多种SAPI，常见的提供给Apache和Nginx的php7_module、CGI、FastCGI，给IIS的ISAPI，以及Shell的CLI。下面详细描述Apache、SAPI、PHP的关系。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM06.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM06.png)
 
 从上图中，可以看出SAPI处于中间位置，SAPI提供了一个和外部通信的接口，使得PHP可以和其他应用（Apache，Nginx等）进行数据交互。在Apache中调用PHP脚本执行的过程为：Apache=>httpd=>php7_module=>SAPI=>PHP。
 
@@ -67,7 +67,7 @@ FastCGI进程管理器需要单独启动。启动FastCGI后，会生成一个Fas
 
 ### FastCGI的工作原理
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM08.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\CGI_FPM08.png)
 
 1、WebServer启动时载入FastCGI进程管理器（Apache Module或IIS ISAPI等）。
 
@@ -80,18 +80,5 @@ FastCGI进程管理器需要单独启动。启动FastCGI后，会生成一个Fas
 ### PHP-FPM
 
 PHP-FPM：全称PHP FastCGI进程管理器（FastCGI Process Manager）。PHP-FPM就是PHP中的FastCGI进程管理器。PHP-FPM的管理对象是PHP-CGI。PHP-FPM提供了更好的PHP进程管理方式，可以有效控制内存和进程、可以平滑重载PHP配置。
-
----
-
-| 参考来源                                                     |
-| ------------------------------------------------------------ |
-| [CGI、FastCGI和php-fpm概念和区别](https://blog.csdn.net/IT_10/article/details/92801153) |
-| [CGI、FastCGI和PHP-FPM关系详解](https://www.cnblogs.com/zzx-hjl/p/10583849.html) |
-| [简单了解下CGI、FastCGI和php-fpm的概念和区别和运行原理](https://www.cnblogs.com/wt645631686/p/8065103.html) |
-| [PHP中的SAPI是什么？如何实现？（图文）](https://www.php.cn/php-weizijiaocheng-410435.html) |
-| [Go 和 PHP 在运行的时候有什么区别和优势](https://learnku.com/articles/44432) |
-
-
-
 
 

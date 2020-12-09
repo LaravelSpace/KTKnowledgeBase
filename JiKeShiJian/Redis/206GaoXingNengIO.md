@@ -40,7 +40,7 @@ Linux中的IO多路复用机制是指一个线程处理多个IO流，就是我�
 
 下图就是基于多路复用的Redis IO模型。图中的多个FD就是刚才所说的多个套接字。Redis网络框架调用epoll机制，让内核监听这些套接字。此时，Redis线程不会阻塞在某一个特定的监听或已连接套接字上，也就是说，不会阻塞在某一个特定的客户端请求处理上。正因为此，Redis可以同时和多个客户端连接并处理请求，从而提升并发性。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\ShuJuJieGou_img06.jpg)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\ShuJuJieGou_img06.jpg)
 
 为了在请求到达时能通知到Redis线程，select/epoll提供了基于事件的回调机制，即针对不同事件的发生，调用相应的处理函数。回调机制基于事件工作，select/epoll一旦监测到FD上有请求到达时，就会触发相应的事件。这些事件会被放进一个事件队列，Redis单线程对该事件队列不断进行处理。这样，Redis无需一直轮询是否有请求实际发生，这就可以避免造成CPU资源浪费。同时，Redis在对事件队列中的事件进行处理时，会调用相应的处理函数，这就实现了基于事件的回调。因为Redis一直在对事件队列进行处理，所以能及时响应客户端请求，提升Redis的响应性能。
 

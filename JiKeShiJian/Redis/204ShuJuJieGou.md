@@ -18,7 +18,7 @@ String（字符串）、List（列表）、Hash（哈希）、Set（集合）和
 
 为了实现从键到值的快速访问，Redis使用了一个哈希表来保存所有键值对。一个哈希表，其实就是一个数组，数组的每个元素称为一个哈希桶。一个哈希表是由多个哈希桶组成的，每个哈希桶中保存了键值对数据。因为这个哈希表保存了所有的键值对，所以，可以称为全局哈希表。哈希表的最大好处就是让我们可以用O(1)的时间复杂度来快速查找到键值对。我们只需要计算键的哈希值，就可以知道它所对应的哈希桶位置，然后就可以访问相应的entry元素。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\ShuJuJieGou_img02.jpg)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\ShuJuJieGou_img02.jpg)
 
 ### 哈希表操作变慢
 
@@ -42,7 +42,7 @@ String（字符串）、List（列表）、Hash（哈希）、Set（集合）和
 
 有序链表只能逐一查找元素，导致操作起来非常缓慢，于是就出现了跳表。具体来说，跳表在链表的基础上，增加了多级索引，通过索引位置的几个跳转，实现数据的快速定位。当数据量很大时，跳表的查找复杂度就是O(logN)。
 
-![]()![ShuJuJieGou_img04](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\ShuJuJieGou_img04.jpg)
+![]()![ShuJuJieGou_img04](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\ShuJuJieGou_img04.jpg)
 
 ### 整数数组和压缩列表
 

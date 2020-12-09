@@ -40,4 +40,4 @@ Bitmap支持用BITOP命令对多个Bitmap按位做与或异或的操作，操作
 
 不过，需要注意的是，HyperLogLog的统计规则是基于概率完成的，所以它给出的统计结果是有一定误差的，标准误算率是0.81%。这也就意味着，你使用HyperLogLog统计的UV是100万，但实际的UV可能是101万。虽然误差率不算大，但是，如果你需要精确统计结果的话，最好还是继续用Set或Hash类型。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\JiKeShiJian\Redis\TongJi_img02.jpg)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\JiKeShiJian\Redis\TongJi_img02.jpg)

@@ -32,18 +32,18 @@ xdebug.show_local_vars = 0
 
 1、 配置PHP，菜单栏File=>Settings=>Languages & Frameworks=>PHP。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug02.png)
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug04.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug02.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug04.png)
 
 2、配置Xdebug，这里的参数都是上面在php.ini中配置的。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug06.png)
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug08.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug06.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug08.png)
 
 3、配置服务器。PHPStrom右上角**Edit Configurations**新建一个**PHP Remote Debug**。这里的参数根据具体的项目配置。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug10.png)
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug12.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug10.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\Xdebug12.png)
 
 ### 调试
 

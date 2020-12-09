@@ -2,5 +2,5 @@
 
 ### EasySwoole的生命周期
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\easyswoole_lifecycle.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\easyswoole_lifecycle.png)
 

@@ -29,19 +29,19 @@ $ php -S localhost:8000 -t public index.php
 
 当考虑像array和object这样的复合类型时，事情就稍微有点复杂。与标量(scalar)类型的值不同，array和object类型的变量把它们的成员或属性存在自己的符号表中。例如：`$a=['meaning'=>'life','number'=>42];`，将生成三个zval变量容器。`xdebug_debug_zval('a');`，将会输出`a:(refcount=1,is_ref=0)=array('meaning'=>(refcount=1,is_ref=0)='life','number'=>(refcount=1,is_ref=0)=42)`。这三个zval变量容器是：a，meaning和number。增加和减少refcount的规则和上面提到的一样。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu02.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu02.png)
 
 如果再添加一个元素并把值设置为数组中已存在的元素，例如：`$a['life']=$a['meaning'];`。这时`xdebug_debug_zval('a');`，将会输出`a:(refcount=1,is_ref=0)=array('meaning'=>(refcount=2,is_ref=0)='life','number'=>(refcount=1,is_ref=0)=42,'life'=>(refcount=2,is_ref=0)='life')`。从以上的Xdebug输出信息，我们看到原有的数组元素和新添加的数组元素关联到同一个refcount=2的zval变量容器。尽管Xdebug的输出显示两个值为'life'的zval变量容器，其实是同一个。函数xdebug_debug_zval()不显示这个信息，但是你能通过显示内存指针信息来看到。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu04.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu04.png)
 
 如果添加一个数组本身作为数组元素，这里要用引用操作符，否则php将生成一个复制。`$a=array('one');$a[]=&$a;`。这时`xdebug_debug_zval('a');`，将会输出`a:(refcount=2,is_ref=1)=array(0=>(refcount=1,is_ref=0)='one',1=>(refcount=2,is_ref=1)=...)`。能看到数组变量(a)同时也是这个数组的第二个元素(1)指向的变量容器中refcount为2。上面的输出结果中的"..."说明发生了递归操作，显然在这种情况下意味着"..."指向原始数组。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu06.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu06.png)
 
 跟刚刚一样，对一个变量调用unset()，将删除这个符号，且它指向的变量容器中的引用次数也减1。所以，如果我们在执行完上面的代码后，对变量$a调用unset()，那么变量$a和数组元素1所指向的变量容器的引用次数减1，从2变成1。这时这个zval变量容器会变成`(refcount=1,is_ref=1)=array(0=>(refcount=1,is_ref=0)='one',1=>(refcount=1,is_ref=1)=...)`。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu08.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\YinYongJiShu08.png)
 
 尽管不再有某个作用域中的任何符号指向这个结构(就是变量容器)，由于数组元素1仍然指向数组本身，所以这个容器不能被清除。因为没有另外的符号指向它，用户没有办法清除这个结构，结果就会导致内存泄漏。庆幸的是，php将在脚本执行结束时清除这个数据结构，但是在php清除之前，将耗费不少内存。如果你要实现分析算法，或者要做其他像一个子元素指向它的父元素这样的事情，这种情况就会经常发生。当然，同样的情况也会发生在对象上，实际上对象更有可能出现这种情况，因为对象总是隐式的被引用。
 
@@ -53,7 +53,7 @@ $ php -S localhost:8000 -t public index.php
 
 对算法的完全说明有点超出这部分内容的范围，将只介绍其中基础部分。首先，我们先要建立一些基本规则，如果一个引用计数增加，它将继续被使用，当然就不再在垃圾中。如果引用计数减少到零，所在变量容器将被清除(free)。就是说，仅仅在引用计数减少到非零值时，才会产生垃圾周期(garbage cycle)。其次，在一个垃圾周期中，通过检查引用计数是否减1，并且检查哪些变量容器的引用次数是零，来发现哪部分是垃圾。
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\HuiShouZhouQi02.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\HuiShouZhouQi02.png)
 
 为避免不得不检查所有引用计数可能减少的垃圾周期，这个算法把所有可能根(possible roots 都是zval变量容器)，放在根缓冲区(root buffer)中(用紫色来标记，称为疑似垃圾)，这样可以同时确保每个可能的垃圾根(possible garbage root)在缓冲区中只出现一次。仅仅在根缓冲区满了时，才对缓冲区内部所有不同的变量容器执行垃圾回收操作。看上图的步骤A。
 
@@ -96,7 +96,7 @@ for ( $i = 0; $i <= 100000; $i++ )
 }
 ```
 
-![](E:\GongZuoQu\KTZhiShiKu\TuPian\FuWuDuan\PHP\HuiShouZhouQi04.png)
+![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\HuiShouZhouQi04.png)
 
 在这个很理论性的例子中，我们创建了一个对象，这个对象中的一个属性被设置为指回对象本身。在循环的下一个重复(iteration)中，当脚本中的变量被重新复制时，就会发生典型性的内存泄漏。在这个例子中，两个变量容器是泄漏的(对象容器和属性容器)，但是仅仅能找到一个可能根：就是被unset的那个变量。
 
