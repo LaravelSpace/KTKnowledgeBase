@@ -16,13 +16,33 @@ composer config --unset repos.packagist
 
 比较推荐使用只配置当前项目镜像，因为这个配置可以被带到composer.json里去。即使换了环境，再次执行composer命令时也会使用镜像。
 
+### 安装指定版本的扩展
+
+```shell
+#安装5.5版本的xxx扩展
+$ composer require xxx ^5.5
+#安装dev-master版本的xxx扩展
+$ composer require xxx:dev-master
+```
+
+### 删除扩展
+
+```shell
+#移除一个
+$ composer remove xxx
+#移除多个
+$ composer remove xxx1 xxx2
+```
+
+移除扩展只是从composer.json文件中移除了扩展的依赖。扩展移除之后，扩展的代码还是在vender目录里的，只是不会被composer自动加载了。
+
 ### 更新composer
 
 使用composer时，会遇到提示composer版本超过60天，建议更新的提示。这个时候可以使用`composer self-update`命令更新composer。
 
 ##### 报错1
 
-```
+```shell
 $ composer self-update
 Updating to version beb64914a37205f6748552d764d9531d99c7f41e (snapshot channel).
    Downloading (100%)
@@ -42,7 +62,7 @@ self-update [-r|--rollback] [--clean-backups] [--no-progress] [--update-keys] [-
 
 ### 安装ip2region包时报错
 
-```
+```shell
 $ composer require zoujingli/ip2region
 Using version ^1.0 for zoujingli/ip2region
 ./composer.json has been updated
