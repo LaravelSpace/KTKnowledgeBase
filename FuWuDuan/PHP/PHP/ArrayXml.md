@@ -2,6 +2,19 @@
 
 这个需求有现成的扩展可以使用，这里介绍三个使用过的扩展：openlss/lib-array2xml、verdant/xml2array和spatie/array-to-xml。这三个扩展都可以进行数组和XML的相互转换。
 
+### 安装依赖
+
+```shell
+#openlss/lib-array2xml直接安装
+$ composer require openlss/lib-array2xml
+#spatie/array-to-xml需要根据PHP版本指定扩展的版本
+$ composer require spatie/array-to-xml ^2.15.0
+#verdant/xml2array只有开发版本
+$ composer require verdant/xml2array:dev-master
+```
+
+### 使用方式
+
 ```php
 $array = [
     'Info' => [
