@@ -22,6 +22,8 @@ public static function onRequest(Request $request, Response $response): bool
 }
 ```
 
+这里需要注意，上面面说的任意地方不包括协程内部。如果碰到需要在协程中使用$\_GET，$\_POST中的数据时，一定要在进入协程之前把数据取出来，然后传到协程里去。在协程中这些全局变量中的数据并不存在。
+
 ### 全局常量
 
 全局常量有多种实现方式。
