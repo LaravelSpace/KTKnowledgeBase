@@ -11,13 +11,11 @@
 ```php
 public static function mainServerCreate(EventRegister $register)
 {
-    // 实现安全使用$_GET,$_POST等全局变量
     GlobalParamHook::getInstance()->hookDefault();
 }
 
 public static function onRequest(Request $request, Response $response): bool
 {
-    // 实现安全使用$_GET,$_POST等全局变量
     GlobalParamHook::getInstance()->onRequest($request, $response);
 }
 ```

@@ -58,3 +58,4 @@ $redisPool->recycleObj($redisObj);
 
 ### 客户端模式
 
+。。。
