@@ -75,17 +75,6 @@
 | wg_lady.1 | 堕落妈开漫展，大小姐改造 |
 | wsg_shimakaze.1 | 奇怪的新舰娘，岛风获得            |
 | wg_crisis.2  | 消失的银河系们，联合舰队事件开始。<br>同时触发堕落妈跑路或者觉醒 |
-| wg_crisis.3  | 联合舰队第一个传送门                       |
-| wg_crisis.6  | 星系能源波动                               |
-| wg_crisis.7  | 来自另一个次元的我们                       |
-| wg_crisis.8  | 看起来我们有大麻烦了                       |
-| wg_crisis.22 | 反抗军介绍界面                             |
-| wg_crisis.23 | 反抗军外交界面                             |
-| wg_crisis.33 | 反抗军抵达                                 |
-| wg_crisis.34 | 反抗军抵达                                 |
-| wg_crisis.54 | 联合舰队第二个传送门                       |
-| wg_crisis.63 | 反抗军组建好舰队                           |
-| wg_crisis.95 | 联合舰队小型传送门                         |
 | wg_fe.22 [幻梦余烬国家id] | 觉醒烛幽誓约             |
 | wg_fe.23                  | 堕落妈觉醒为烛幽誓约     |
 | sofe_crisis.35            | 堕落妈评价星辰之子是伪神 |
