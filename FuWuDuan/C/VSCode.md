@@ -67,6 +67,7 @@ gcc version 8.1.0 (x86_64-posix-seh-rev0, Built by MinGW-W64 project)
 int main()
 {
     printf("hello world!");
+    
     return 0;
 }
 ```
@@ -115,3 +116,44 @@ Build finished successfully.
 
 终端将被任务重用，按任意键关闭。
 ```
+
+### 断点调试
+
+首先备份launch.json文件的内容，然后删了launch.json文件（如果里面有别的配置，稍后再加进去）。
+
+找一个源码文件，打上断点。点击菜单栏=>运行=>启动调试。在弹出的对话框中选择C++(GDB\LLDB)，然后再选择gcc.exe - 生成和调试活动文件。文件编译完成后，就会自动运行并进入调试状态。
+
+这个操作还会创建一个launch.json文件。
+
+```json
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "gcc.exe - 生成和调试活动文件",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "E:\\C\\mingw64\\bin",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "E:\\C\\mingw64\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: gcc.exe build active file"
+        }
+    ]
+}
+```
+

@@ -1,75 +1,114 @@
-```json
-{
-  "updated_at": "2020-07-22",
-  "updated_by": "KelipuTe",
-  "tags": "数据结构,Data Structure,算法,Algorithm,排序,Sort"
-}
-```
+## 排序
 
-## 排序算法准备工作
+### 选择排序
 
-在实现排序算法之前有一些全局通用的功能，这里提供一个抽象类供排序的具体实现类使用。
+选择排序（Selection Sort）是一种简单直观的排序算法。
 
-```php
-/**
- * Class PaiXuAbstract
- * @package App\SuanFa\PaiXu
- */
-abstract class PaiXuAbstract
-{
-    /**
-     * @var array [待排序序列]
-     */
-    protected $beforeSortList;
+它的工作原理：首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。
 
-    /**
-     * @var array [排序结果序列]
-     */
-    protected $afterSortList;
+表现最稳定的排序算法之一，无论什么数据进去，时间复杂度都是 $O(n^2)$，空间复杂度都是 $T(1)$。
 
-    /**
-     * @var int [排序次数]
-     */
-    protected $sortTimes;
+#### 排序步骤
 
-    /**
-     * @var array [排序步骤]
-     */
-    protected $sortSteps;
+n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结果。具体算法描述如下：
 
-    /**
-     * PaiXuAbstract constructor.
-     * @param array $beforeSortList
-     */
-    public function __construct($beforeSortList)
-    {
-        $this->beforeSortList = $beforeSortList;
-        $this->afterSortList = [];
-        $this->sortTimes = 0;
-        $this->sortSteps = [];
-        if (is_array($beforeSortList) && count($beforeSortList) > 0) {
-            $this->doSort();
-        }
-    }
+- 初始状态：无序区为R[1..n]，有序区为空；
+- 第i趟排序(i=1,2,3…n-1)开始时，当前有序区和无序区分别为R[1..i-1]和R(i..n）。该趟排序从当前无序区中-选出关键字最小的记录 R[k]，将它与无序区的第1个记录R交换，使R[1..i]和R[i+1..n)分别变为记录个数增加1个的新有序区和记录个数减少1个的新无序区；
+- n-1趟结束，数组有序化了。
 
-    /**
-     * 获取排序结果序列和排序过程细节
-     * @return array
-     */
-    public function getSortResult()
-    {
-        return [
-            'before_sort_list' => $this->beforeSortList,
-            'after_sort_list' => $this->afterSortList,
-            'sort_times' => $this->sortTimes,
-            'sort_steps' => $this->sortSteps,
-        ];
-    }
+#### 动图演示
 
-    /**
-     * 排序算法
-     * 这个方法需要各个调用的类自行编码
-     */
-    abstract protected function doSort();
-}
-```
+![](E:\GongZuoQu\ZhiShiKu\Image\ShuJuJieGou\XuanZePaiXu_img01.gif)
+
+### 插入排序
+
+插入排序（Insertion Sort）是一种简单直观的排序算法。
+
+它的工作原理：通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+
+时间复杂度$O(n^2)$，空间复杂度$T(1)$。
+
+#### 排序步骤
+
+一般来说，插入排序都采用in-place在数组上实现。具体算法描述如下：
+
+- 从第一个元素开始，该元素可以认为已经被排序；
+- 取出下一个元素，在已经排序的元素序列中从后向前扫描；
+- 如果该元素（已排序）大于新元素，将该元素移到下一位置；
+- 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置；
+- 将新元素插入到该位置后；
+- 重复步骤2~5。
+
+#### 动图演示
+
+![](E:\GongZuoQu\ZhiShiKu\Image\ShuJuJieGou\ChaRuPaiXu_img01.gif)
+
+### 冒泡排序
+
+冒泡排序（Bubble Sort）是一种简单的排序算法。
+
+它的工作原理：重复地走访过要排序的数列，一次比较两个元素，如果它们的顺序错误就把它们交换过来。走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。
+
+时间复杂度$O(n^2)$，空间复杂度$T(1)$。
+
+#### 排序步骤
+
+算法步骤如下：
+
+- 比较相邻的元素。如果第一个比第二个大，就交换它们两个；
+- 对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对，这样在最后的元素应该会是最大的数；
+- 针对所有的元素重复以上的步骤，除了最后一个；
+- 重复步骤1~3，直到排序完成。
+
+#### 动图演示
+
+![](E:\GongZuoQu\ZhiShiKu\Image\ShuJuJieGou\MaoPaoPaiXu_img01.gif)
+
+### 快速排序
+
+快速排序（Quick Sort）使用分治法来把一个序列分为两个序列。
+
+快速排序的平均时间复杂度 $O(n \log_2(n))$，空间复杂度 $T(1)$。在最糟情况下(即待排序序列是有序序列时)，最糟时间复杂度为 $O(n^2)$。
+
+#### 排序步骤
+
+算法步骤如下：
+
+- 从数列中挑出一个元素，称为 “基准”（pivot）；
+- 重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作；
+- 递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
+
+#### 动图演示
+
+![](E:\GongZuoQu\ZhiShiKu\Image\ShuJuJieGou\KuaiSuPaiXu_img01.gif)
+
+### 归并排序
+
+归并排序（Merge Sort）是建立在归并操作上的一种有效的排序算法。
+
+该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列。即先使每个子序列有序，再使子序列段间有序。若合并步骤是将两个有序表合并成一个有序表，称为2-路归并。 
+
+归并排序是一种稳定的排序方法。和选择排序一样，归并排序的性能不受输入数据的影响，但表现比选择排序好的多，因为始终都是 $O(n \log_2(n))$ 的时间复杂度。代价是需要额外的内存空间，空间复杂度 $T(n)$。
+
+#### 排序步骤
+
+算法步骤如下：
+
+- 把长度为n的输入序列分成两个长度为n/2的子序列；
+- 对这两个子序列分别采用归并排序；
+- 将两个排序好的子序列合并成一个最终的排序序列。
+
+#### 动图演示
+
+![](E:\GongZuoQu\ZhiShiKu\Image\ShuJuJieGou\GuiBingPaiXu_img01.gif)
+
+
+
+| 代码说明 | 代码位置                          |
+| -------- | --------------------------------- |
+| 插入排序 | CYangLi/suan_fa/cha_ru_pai_xu.c   |
+| 归并排序 | CYangLi/suan_fa/gui_bing_pai_xu.c |
+| 快速排序 | CYangLi/suan_fa/kuai_su_pai_xu.c  |
+| 冒泡排序 | CYangLi/suan_fa/mao_pao_pai_xu.c  |
+| 希尔排序 | CYangLi/suan_fa/xi_er_pai_xu.c    |
+| 选择排序 | CYangLi/suan_fa/xuan_ze_pai_xu.c  |
