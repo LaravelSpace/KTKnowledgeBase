@@ -104,11 +104,11 @@ n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结�
 
 
 
-| 代码说明 | 代码位置                          |
-| -------- | --------------------------------- |
-| 插入排序 | CYangLi/suan_fa/cha_ru_pai_xu.c   |
-| 归并排序 | CYangLi/suan_fa/gui_bing_pai_xu.c |
-| 快速排序 | CYangLi/suan_fa/kuai_su_pai_xu.c  |
-| 冒泡排序 | CYangLi/suan_fa/mao_pao_pai_xu.c  |
-| 希尔排序 | CYangLi/suan_fa/xi_er_pai_xu.c    |
-| 选择排序 | CYangLi/suan_fa/xuan_ze_pai_xu.c  |
+| 代码说明 | 代码位置                                 |
+| -------- | ---------------------------------------- |
+| 插入排序 | CYangLi/suan_fa/pai_xu/cha_ru_pai_xu.c   |
+| 归并排序 | CYangLi/suan_fa/pai_xu/gui_bing_pai_xu.c |
+| 快速排序 | CYangLi/suan_fa/pai_xu/kuai_su_pai_xu.c  |
+| 冒泡排序 | CYangLi/suan_fa/pai_xu/mao_pao_pai_xu.c  |
+| 希尔排序 | CYangLi/suan_fa/pai_xu/xi_er_pai_xu.c    |
+| 选择排序 | CYangLi/suan_fa/pai_xu/xuan_ze_pai_xu.c  |
