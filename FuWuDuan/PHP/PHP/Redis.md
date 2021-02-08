@@ -1,0 +1,1 @@
+redis密码正确但是连不上去，redis加用户，然后auth参数变成username:password的格式

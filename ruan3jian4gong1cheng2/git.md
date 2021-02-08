@@ -77,3 +77,8 @@ Total 93146 (delta 67637), reused 88951 (delta 64013), pack-reused 0
 Removing duplicate objects: 100% (256/256), done.
 ```
 
+---
+
+| 参考来源                                                     |
+| ------------------------------------------------------------ |
+| [git长时间未清理无法拉取代码](https://blog.csdn.net/fenfeidexiatian/article/details/95308119) |

@@ -1,4 +1,4 @@
-## Stellaris--群星
+## Stellaris（群星）
 
 ### 控制台
 
