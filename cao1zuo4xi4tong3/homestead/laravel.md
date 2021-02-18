@@ -275,3 +275,11 @@ Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 ### 关闭虚拟机
 
 使用`$ vagrant halt`命令关闭虚拟机。
+
+---
+
+| 参考来源                                                     |
+| ------------------------------------------------------------ |
+| [Laravel 6 中文文档 Homestead](https://learnku.com/docs/laravel/6.x/homestead/5127) |
+| [Laravel 7 中文文档 Homestead](https://learnku.com/docs/laravel/7.x/homestead/7450) |
+| [homestead.test 拒绝了我们的连接请求](https://learnku.com/laravel/t/7772/homesteadtest-refused-our-connection-request) |

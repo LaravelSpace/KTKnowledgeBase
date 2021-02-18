@@ -1,3 +1,5 @@
+## 框架安装
+
 为你的新Electron应用创建一个新的空文件夹。 打开你的命令行工具，然后从该文件夹运行`npm init`
 
 npm 会帮助你创建一个基本的 `package.json` 文件。 其中的 `main` 字段所表示的脚本为应用的启动脚本，它将会在主进程中执行。 
@@ -100,13 +102,7 @@ electron_mirror=https://10.1.2.105/
 electron_mirror="https://npm.taobao.org/mirrors/electron/"
 ```
 
-在终端命令行输入
-
-```
-npm config ls -l 
-```
-
-查看.npmrc配置路径（如果没有，则执行npm config set registry https://registry.npm.taobao.org就会生成该文件）
+在终端命令行输入`npm config ls -l`查看.npmrc配置路径（如果没有，则执行`npm config set registry https://registry.npm.taobao.org`就会生成该文件）
 
 直接把上面那个加到这个文件里就行
 

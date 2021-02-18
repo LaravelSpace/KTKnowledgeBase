@@ -1,4 +1,4 @@
-## Windows中的一些小技巧
+## Windows常用操作
 
 ### hosts文件
 

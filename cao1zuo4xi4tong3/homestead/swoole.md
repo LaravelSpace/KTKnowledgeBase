@@ -82,5 +82,9 @@ vagrant@homestead:/etc/php/7.2/cli$ php -m | grep swoole
 swoole
 ```
 
+---
 
+| 参考来源                                                     |
+| ------------------------------------------------------------ |
+| [centos7.2安装swoole扩展](https://www.jianshu.com/p/fa2cbf1a9e26) |
 

@@ -8,11 +8,21 @@
 
 ### 目录结构
 
-目录结构的设计原则是清晰，不要为难自己用不擅长的方式去命名。目录结构和文件一般都拼音命名（例如：软件工程=>ruan3jian4gong1cheng2），也可以是外文（大驼峰，蛇形）。如果要对文件分组或排序，可以使用前缀，比如：[21文件名]、[22文件名]。目录结构建议控制在3-4层，如果3-4个关键字还找不到目标，那么就需要改进改进了。
+目录结构的设计原则是清晰，不要为难自己用不擅长的方式去命名。目录结构和文件一般都拼音命名（例如：软件工程=>ruan3jian4gong1cheng2），也可以是外文（大驼峰，蛇形）。中外文混用时，外文单词最后要加一个0。如果要对文件分组或排序，可以使用前缀，比如：[21文件名]、[22文件名]。目录结构建议控制在3-4层，如果3-4个关键字还找不到目标，那么就需要改进改进了。
 
 下面是项目的目录结构：
 
-- CaoZuoXiTong：操作系统和虚拟机
+- cao1zuo4xi4tong3：操作系统
+- - homestead
+  - - laravel：使用Homestead搭建Laravel开发环境
+    - redis：在Homestead中使用Redis
+    - swoole：在Homestead中安装Swoole扩展
+  - linux
+  - - shell
+    - - chang2yong4ming4ling4：常用shell命令
+      - ji4hua4ren4wu4：计划任务
+  - windows
+  - - chang2yong4cao1zuo4：Windows常用操作
 - FuWuDuan：服务端
 - GeekBang：极客时间（等待整理）
 - Image：图片目录
@@ -23,7 +33,10 @@
 - - [suan4fa3]：算法
   - - [dong4tai4gui1hua4]：动态规划
     - - dong4tai4gui1hua4：动态规划
+      - guo2wang2he2jin1kuang4：国王和金矿
       - pa2tai2jie1：爬台阶
+      - zui4chang2gong1gong4zi3xu4lie4：最长公共子序列
+      - zui4xiao3lu4jing4：最小路径
   - git：git常用命令
   - jia4gou4yan3jin4：架构演进
 - ShuJi：书籍
