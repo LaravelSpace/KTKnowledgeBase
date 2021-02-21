@@ -7,6 +7,7 @@
 - 在扩展中安装中文语言包（搜索Chinese），可以把操作界面替换成中文环境。
 - 在扩展中安装C/C++组件。
 - 在扩展中安装CodeRunner组件。
+- （可选）在扩展中安装Clang-Format代码格式化组件。
 
 ### 安装C/C++编译器
 
@@ -157,3 +158,23 @@ Build finished successfully.
 }
 ```
 
+### 代码格式化
+
+好像安装C/C++组件的时候会自动安装Clang-Format组件。在扩展窗口中选择C/C++，点击右侧的设置图标，选择扩展设置。或者点击菜单栏=>首选项=>设置，进去之后，在上面的输入框中输入`@ext:ms-vscode.cpptools`。这两个方式都可以找到C/C++的设置。
+
+找到C_Cpp: Formatting配置项检查一下是不是clangFormat，这个是默认配置一般不会变。在检查一下C_Cpp: Clang_format_style配置项是不是file，设置为file表示格式化的时候会先寻找Clang-Format组件的格式化配置文件。
+
+接着在项目根目录新建一个**.clang-format**文件，这个文件就是上面的格式化配置文件，详细的配置可以去Clang-Format的文档里去看，在扩展窗口组件的描述页面就可以点进去。
+
+```
+# 每行字符的限制，0表示没有限制
+ColumnLimit: 0
+# 缩进宽度
+IndentWidth: 4
+# 连续空行的最大数量
+MaxEmptyLinesToKeep: 1
+# 缩进case标签
+IndentCaseLabels: true
+```
+
+配置完成就可以格式化代码了，默认快捷键是`shift+alt+f`，也可以右击选择格式化文档。
