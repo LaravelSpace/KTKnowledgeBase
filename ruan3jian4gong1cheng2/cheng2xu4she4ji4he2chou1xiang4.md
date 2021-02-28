@@ -1,13 +1,3 @@
-```json
-{
-  "updated_by": "KelipuTe",
-  "updated_at": "2020-06-29",
-  "tags": "软件工程"
-}
-```
-
----
-
 ## 程序设计和抽象 —— Programming and Abstraction
 
 
