@@ -2,7 +2,7 @@
 
 ### PHPStrom注释格式设置
 
-注释格式设置在代码格式设置的地方，菜单栏**File=>Settings=>Editor=>Code Style=>PHP**。
+注释格式设置在代码格式设置的地方，菜单栏=>File=>Settings=>Editor=>Code Style=>PHP。
 
 ![](E:\GongZuoQu\ZhiShiKu\TuPian\FuWuDuan\PHP\PHPStrom02.png)
 

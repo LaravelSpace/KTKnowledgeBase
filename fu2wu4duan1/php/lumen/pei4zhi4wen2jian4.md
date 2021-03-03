@@ -2,7 +2,7 @@
 
 ### 在Lumen中使用Laravel的配置方式
 
-想在Lumen中如果想使用Laravel的配置方式，可以把Lumen源代码中Laravel的配置文件复制到config目录下。配置文件可以在**vendor\laravel\lumen-framework\config**目录下找到。例如：如果在Lumen中想同时连接两个数据库。这个时候需要把vendor的config目录下的database.php配置文件，复制到config目录下。使用方式和在Laravel中的使用方式是一样的。
+想在Lumen中如果想使用Laravel的配置方式，可以把Lumen源代码中Laravel的配置文件复制到config目录下。配置文件可以在`vendor\laravel\lumen-framework\config`目录下找到。例如：如果在Lumen中想同时连接两个数据库。这个时候需要把vendor的config目录下的database.php配置文件，复制到config目录下。使用方式和在Laravel中的使用方式是一样的。
 
 ### 在Laravel中同时连接两个数据库
 

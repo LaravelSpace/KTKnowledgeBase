@@ -2,14 +2,14 @@
 
 ### 安装Redis扩展
 
-1、使用Composer安装扩展。
+注释格式设置在代码格式设置的地方，菜单栏=>File=>Settings=>Editor=>Code Style=>PHP。
 
 ```
 $ composer require predis/predis
 $ composer require illuminate/redis
 ```
 
-安装时需要注意版本。直接执行上面的命令安装illuminate/redis时会安装最新版本的扩展，如果Lumen是较低的版本，有可能会安装不成功。这个时候就需要指定illuminate/redis的版本。例如：为**Lumen 5.6.***安装illuminate/redis扩展时，可以使用`$ composer require illuminate/redis=5.6.*`命令指定版本。
+安装时需要注意版本。直接执行上面的命令安装illuminate/redis时会安装最新版本的扩展，如果Lumen是较低的版本，有可能会安装不成功。这个时候就需要指定illuminate/redis的版本。例如：为`Lumen 5.6.*`安装illuminate/redis扩展时，可以使用`$ composer require illuminate/redis=5.6.*`命令指定版本。
 
 2、在bootstrap/app.php文件中注册Redis服务。
 

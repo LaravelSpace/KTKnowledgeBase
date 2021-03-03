@@ -4,7 +4,7 @@
 
 Coroutine\System，系统相关API的协程封装。此模块在v4.4.6正式版本后可用。v4.4.6以前的版本，请使用Co短名或Swoole\Coroutine调用，Co::sleep或Swoole\Coroutine::sleep。v4.4.6及以后版本官方推荐使用Co\System::sleep或Swoole\Coroutine\System::sleep。(向下兼容，v4.4.6版本以前的写法也是可以的，无需修改)
 
-#### fread()
+##### fread()
 
 ```php
 Swoole\Coroutine\System::fread(resource $handle, int $length = 0): string|false
@@ -14,7 +14,7 @@ Swoole\Coroutine\System::fread(resource $handle, int $length = 0): string|false
 
 v4.0.4以下版本fread方法不支持非文件类型的stream，如STDIN、Socket，请勿使用fread操作此类资源。v4.0.4以上版本fread方法支持了非文件类型的stream资源，底层会自动根据stream类型选择使用AIO线程池或EventLoop实现。
 
-#### fwrite()
+##### fwrite()
 
 ```php
 Swoole\Coroutine\System::fwrite(resource $handle, string $data, int $length = 0): int|false
@@ -24,7 +24,7 @@ Swoole\Coroutine\System::fwrite(resource $handle, string $data, int $length = 0)
 
 v4.0.4以下版本fread方法不支持非文件类型的stream，如STDIN、Socket，请勿使用fread操作此类资源。v4.0.4以上版本fread方法支持了非文件类型的stream资源，底层会自动根据stream类型选择使用AIO线程池或EventLoop实现。
 
-#### fgets()
+##### fgets()
 
 ```php
 Swoole\Coroutine\System::fgets(resource $handle): string|false
@@ -36,7 +36,7 @@ Swoole\Coroutine\System::fgets(resource $handle): string|false
 
 fgets函数仅可用于文件类型的stream资源，Swoole版本>=v4.4.4可用。
 
-#### readFile()
+##### readFile()
 
 ```php
 Swoole\Coroutine\System::readFile(string $filename): string|false
@@ -44,7 +44,7 @@ Swoole\Coroutine\System::readFile(string $filename): string|false
 
 协程方式读取文件。`string $filename`是文件名。读取成功返回字符串内容，读取失败返回false，可使用swoole_last_error获取错误信息。readFile()方法没有尺寸限制，读取的内容会存放在内存中，因此读取超大文件时可能会占用过多内存。
 
-#### writeFile()
+##### writeFile()
 
 ```php
 Swoole\Coroutine\System::writeFile(string $filename, string $fileContent, int $flags): bool
@@ -52,7 +52,7 @@ Swoole\Coroutine\System::writeFile(string $filename, string $fileContent, int $f
 
 协程方式写入文件。`string $filename`是文件名，必须有可写权限，文件不存在会自动创建。打开文件失败会立即返回false。`string $fileContent`是写入到文件的内容，最大可写入4M。`int $flags`是写入的选项，默认会清空当前文件内容，可以使用FILE_APPEND表示追加到文件末尾。写入成功返回true，写入失败返回false。
 
-#### sleep()
+##### sleep()
 
 ```php
 Swoole\Coroutine\System::sleep(float $seconds): void
