@@ -1,8 +1,8 @@
-## 异常处理
+## 异常
 
 ### 启动时异常
 
-在执行`php easyswoole start`时输出以下异常信息：
+在执行启动服务时输出以下异常信息：
 
 ```
 [2020-11-10 17:17:52][debug][error]:[EasySwoole\Task\Worker bind /home/vagrant/code/Temp/EasySwoole.TaskWorker.0.sock fail case Operation not permitted at file:/home/vagrant/code/vendor/easyswoole/component/src/Process/Socket/AbstractUnixProcess.php line:31]
