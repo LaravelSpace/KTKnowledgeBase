@@ -41,7 +41,7 @@
 >  /   \
 > 2    3
 >  \      \
->   5     4
+>  5     4
 
 - 前序（先序）遍历（Pre Order Traversal，NLR）：根左右，12534。
 - 中序遍历（In Order Traversal，LNR）：左根右，25134。
