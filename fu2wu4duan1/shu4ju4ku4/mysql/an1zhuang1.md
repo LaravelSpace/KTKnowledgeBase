@@ -1,14 +1,3 @@
-```json
-{
-  "title": "在 Windows 中安装 MySql",
-  "updated_at": "2020-06-29",
-  "updated_by": "KelipuTe",
-  "tags": "Windows,Mysql"
-}
-```
-
----
-
 ﻿## 在 Windows 中安装 MySql
 
 #### 下载 MySql

@@ -1,11 +1,3 @@
-## MySQL 知识点整理
-
-#### 数据类型
-
-tinyint(1) 和 tinyint(4) 都可以存储 127。
-
-
-
 ```
 SELECT /*!40001 SQL_NO_CACHE */ * FROM table_name
 ```
