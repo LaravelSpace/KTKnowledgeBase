@@ -1,22 +1,24 @@
-﻿## 在 Windows 中安装 MySql
+## 安装MySQL
 
-#### 下载 MySql
+### 在Windows中安装MySQL
 
-这里用的是**解压版**的 **mysql-5.7.18**。
+##### 下载MySQL
 
-#### 安装 MySql
+这里用的是解压版的mysql-5.7.18。
 
-解压 mysql-5.7.18-winx64.rar 到合适的位置
+##### 安装MySQL
 
-#### 添加系统环境变量
+解压mysql-5.7.18-winx64.rar到合适的位置。
 
-**新建**变量：**MYSQL_HOME** => C:\Learning\MySQL\mysql-5.7.18-winx64（你的MySQL根目录）
+##### 添加系统环境变量
 
-**追加**变量：**PATH** => `%MYSQL_HOME%\bin`（你的MySQL根目录下bin文件夹）
+新建变量：MYSQL_HOME=>...\mysql-5.7.18-winx64（你的MySQL根目录）
 
-#### 配置 **my.ini** 文件
+追加变量：PATH=>`%MYSQL_HOME%\bin`（你的MySQL根目录下bin文件夹）
 
-在 mysql 的根目录下面新建一个 my.ini 文件，在 my.ini 文件里面写上如下代码后，保存
+##### 配置my.ini文件
+
+在mysql的根目录新建my.ini文件。
 
 ```
 [mysql]
@@ -41,71 +43,58 @@ default-storage-engine=INNODB
 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 ```
 
-#### 新增 **data/** 文件夹
+##### 新增data文件夹
 
-在 mysql 根目录下新建一个文件夹命名为 data
+在mysql根目录下新建data文件夹
 
-#### 安装 MySql 服务
+##### 安装MySQL服务
 
-打开 cmd.exe 进入根目录下的 bin 目录输入 `mysqld install`。出现安装成功说明就OK了。
+用命令行进入根目录下的bin目录，输入`mysqld install`命令。出现安装成功说明就OK了。
 
-#### 启动 MySql 服务器
+##### 启动MySQL服务器
 
-在 **我的电脑==>右击==>管理==>服务和应用程序==>服务** 界面找到 MySQL 服务并启动。
+`我的电脑=>右击=>管理=>服务和应用程序=>服务`，找到MySQL服务并启动。
 
-如果出现问题：
+如果发生下面的报错，就先清空mysql根目录下的data文件夹。然后，用命令行进入bin目录，输入`mysqld --initialize`命令执行初始化。最后，在设备管理器服务管理内再次启动mysql服务器。
 
-```
-本地计算机上的 MySQL 服务启动后停止。某些服务在未由其他服务或程序使用时将自动停止？
-```
+> 本地计算机上的 MySQL 服务启动后停止。某些服务在未由其他服务或程序使用时将自动停止？
 
-将 mysql 的根目录下 data 文件夹清空。然后，打开 cmd.exe 进入 bin 目录输入 `mysqld --initialize` 执行初始化。在设备管理器服务管理内再次启动 mysql 服务器
+##### 修改登录密码
 
-#### 修改登录密码
-
-在 mysql 的根目录下 data 文件夹内找到 **DESKTOP-P1770NP.err** （**DESKTOP-P1770NP.err**就是系统用户名.err，每台电脑不一样）
-
-用记事本打开 DESKTOP-P1770NP.err 找到如下内容：
+在mysql根目录下data文件夹内，找到**DESKTOP-P1770NP.err**文件。（.err文件的名字每台电脑不一样）用记事本打开.err文件找到如下内容：
 
 ```
 2017-04-17T04:50:22.777490Z 1 [Note] A temporary password is generated for root@localhost: &Ga/k>jYy2Z1
 ```
 
-`&Ga/k>jYy2Z1` 就是 mysql 在安装时，随机生成的 root 账号的密码。
+用命令行登录mysql服务： `mysql -u root -p`。`&Ga/k>jYy2Z1` 就是mysql在安装时，随机生成的root账号的密码。可以用命令修改密码为new_password：`mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';`。还可以用命令`set password for root@localhost = password('new_password');`修改密码。
 
-打开 cmd.exe 输入 `mysql -u root -p`。然后，输入密码 &Ga/k>jYy2Z1，登陆成功。
-在 mysql 操作界面，输入如下命令修改密码：`mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';` 
-修改成功，new_password 就是新密码。
+### MySQL8.0
 
-修改密码的命令还可以是：`set password for root@localhost = password('new_password');`
+Navicat连接MySQL报错：
 
-## mysql 8.0
+```
+Authentication plugin 'caching_sha2_password' cannot be loaded
+```
 
-navicat 连接 MySQL 报错 Authentication plugin 'caching_sha2_password' cannot be loaded
+##### 解决方案1
 
-解决方案1
+适用场景：第一次构建容器/安装、已安装完成后新增用户
 
-适用场景
+配置mysql.cnf配置默认身份验证插件：
 
-    第一次构建容器/安装
-    
-    已安装完成后新增用户
-
-配置
-
-配置 mysql.cnf 配置默认身份验证插件
-
+```
 [mysqld]
 default_authentication_plugin = mysql_native_password
+```
 
-解决方案2
+##### 解决方案2
 
-适用场景
+适用场景：MySQL已成功安装完成后
 
-MySQL 已成功安装完成后
+查看身份验证类型：
 
-查看身份验证类型
-
+```
 mysql> use mysql;
 Database changed
 
@@ -120,26 +109,31 @@ mysql> SELECT Host, User, plugin from user;
 | localhost | root             | caching_sha2_password |
 +-----------+------------------+-----------------------+
 5 rows in set (0.00 sec)
+```
 
+发现root用户的验证器插件为caching_sha2_password。
 
+修改身份验证类型(同时会修改密码)。
 
-root 用户的验证器插件为 caching_sha2_password
-修改身份验证类型(修改密码)
-
+```
 mysql> ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
 Query OK, 0 rows affected (0.00 sec)
 
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
 Query OK, 0 rows affected (0.01 sec)
+```
 
 
-使生效
+让设置生效
 
+```
 mysql> FLUSH PRIVILEGES;
+```
 
 
 验证是否生效
 
+```
 mysql> SELECT Host, User, plugin from user;
 +-----------+------------------+-----------------------+
 | Host      | User             | plugin                |
@@ -151,21 +145,6 @@ mysql> SELECT Host, User, plugin from user;
 | localhost | root             | mysql_native_password |
 +-----------+------------------+-----------------------+
 5 rows in set (0.00 sec)
+```
 
 
-解决方案3
-
-
-// 登录Mysql(需要输入密码)
-mysql -u root -p
-
-// 选择数据库(这一步不可省略)
-use mysql
-
-// 查看plugin设置
-select host, user, plugin from user;
-
-// 可以看到root的plugin是caching_sha2_password，我们希望改成mysql_native_password
-ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY 'xxxxx';
-
-// 大功告成
