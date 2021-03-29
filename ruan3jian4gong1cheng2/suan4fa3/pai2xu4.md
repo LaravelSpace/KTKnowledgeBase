@@ -88,11 +88,11 @@
 
 ---
 
-| 代码说明 | 代码位置                                 |
-| -------- | ---------------------------------------- |
-| 冒泡排序 | CYangLi/suan_fa/pai_xu/mao_pao_pai_xu.c  |
-| 插入排序 | CYangLi/suan_fa/pai_xu/cha_ru_pai_xu.c   |
-| 选择排序 | CYangLi/suan_fa/pai_xu/xuan_ze_pai_xu.c  |
-| 希尔排序 | CYangLi/suan_fa/pai_xu/xi_er_pai_xu.c    |
-| 归并排序 | CYangLi/suan_fa/pai_xu/gui_bing_pai_xu.c |
-| 快速排序 | CYangLi/suan_fa/pai_xu/kuai_su_pai_xu.c  |
+| 代码说明 | 代码位置                                    |
+| -------- | ------------------------------------------- |
+| 冒泡排序 | CYangLi/suan4fa3/pai2xu4/mao4pao4pai2xu4.c  |
+| 插入排序 | CYangLi/suan4fa3/pai2xu4/cha1ru4pai2xu4.c   |
+| 选择排序 | CYangLi/suan4fa3/pai2xu4/xuan3ze2pai2xu4.c  |
+| 希尔排序 | CYangLi/suan4fa3/pai2xu4/xi1er3pai2xu4.c    |
+| 归并排序 | CYangLi/suan4fa3/pai2xu4/gui1bing4pai2xu4.c |
+| 快速排序 | CYangLi/suan4fa3/pai2xu4/kuai4su4pai2xu4.c  |
