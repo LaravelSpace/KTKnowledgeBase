@@ -32,4 +32,4 @@
 
 | 代码说明  | 代码位置                                      |
 | --------- | --------------------------------------------- |
-| 队列-链式 | CYangLi/shu4ju4jie2gou4/dui4lie4_lian4biao3.c |
+| 队列-链表 | CYangLi/shu4ju4jie2gou4/dui4lie4_lian4biao3.c |

@@ -39,13 +39,9 @@
 
 计算后缀表达式，碰到数字就入栈，碰到操作符就出栈两个数字，计算之后的结果再入栈。最后栈里的那个数字就是表达式计算的结果。
 
-### 八皇后问题
-
-
-
 ---
 
 | 代码说明   | 代码位置                                        |
 | ---------- | ----------------------------------------------- |
-| 栈-链式    | CYangLi/shu4ju4jie2gou4/zhan4_lian4biao3.c      |
+| 栈-链表    | CYangLi/shu4ju4jie2gou4/zhan4_lian4biao3.c      |
 | 后缀表达式 | CYangLi/shu4ju4jie2gou4/hou4zhui4biao3da2shi4.c |
